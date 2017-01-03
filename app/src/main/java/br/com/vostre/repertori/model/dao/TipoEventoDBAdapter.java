@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.TipoEvento;
@@ -31,16 +32,22 @@ public class TipoEventoDBAdapter {
 
         if(tipoEvento.getId() != null){
             cv.put("_id", tipoEvento.getId());
+        } else{
+            cv.put("_id", UUID.randomUUID().toString());
         }
 
-        cv.put("id_remoto", tipoEvento.getIdRemoto());
         cv.put("nome", tipoEvento.getNome());
+        cv.put("slug", tipoEvento.getSlug());
         cv.put("status", tipoEvento.getStatus());
-        cv.put("data_cadastro", DataUtils.dataParaBanco(tipoEvento.getDataCadastro()));
+
+        if(tipoEvento.getDataCadastro() != null){
+            cv.put("data_cadastro", DataUtils.dataParaBanco(tipoEvento.getDataCadastro()));
+        }
+
         cv.put("data_recebimento", DataUtils.dataParaBanco(tipoEvento.getDataRecebimento()));
         cv.put("ultima_alteracao", DataUtils.dataParaBanco(tipoEvento.getUltimaAlteracao()));
 
-        if(database.update("tipo_evento", cv, "id_remoto = "+tipoEvento.getIdRemoto(), null) < 1){
+        if(database.update("tipo_evento", cv, "_id = '"+tipoEvento.getId()+"'", null) < 1){
             retorno = database.insert("tipo_evento", null, cv);
             database.close();
             return retorno;
@@ -58,14 +65,14 @@ public class TipoEventoDBAdapter {
     }
 
     public List<TipoEvento> listarTodos(){
-        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, id_remoto " +
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
                 "FROM tipo_evento", null);
         List<TipoEvento> tipoEventos = new ArrayList<TipoEvento>();
 
         if(cursor.moveToFirst()){
             do{
                 TipoEvento umTipoEvento = new TipoEvento();
-                umTipoEvento.setId(cursor.getInt(0));
+                umTipoEvento.setId(cursor.getString(0));
 
                 umTipoEvento.setNome(cursor.getString(1));
                 umTipoEvento.setStatus(cursor.getInt(2));
@@ -73,7 +80,7 @@ public class TipoEventoDBAdapter {
                 umTipoEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
                 umTipoEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
                 umTipoEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
-                umTipoEvento.setIdRemoto(cursor.getInt(6));
+                umTipoEvento.setSlug(cursor.getString(6));
 
                 tipoEventos.add(umTipoEvento);
             } while (cursor.moveToNext());
@@ -86,23 +93,27 @@ public class TipoEventoDBAdapter {
     }
 
     public TipoEvento carregar(TipoEvento tipoEvento){
-        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, id_remoto " +
-                "FROM tipo_evento WHERE _id = ?", new String[]{String.valueOf(tipoEvento.getIdRemoto())});
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
+                "FROM tipo_evento WHERE _id = ?", new String[]{tipoEvento.getId()});
 
         TipoEvento umTipoEvento = null;
 
         if(cursor.moveToFirst()){
             do{
                 umTipoEvento = new TipoEvento();
-                umTipoEvento.setId(cursor.getInt(0));
+                umTipoEvento.setId(cursor.getString(0));
 
                 umTipoEvento.setNome(cursor.getString(1));
                 umTipoEvento.setStatus(cursor.getInt(2));
 
-                umTipoEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                if(cursor.getString(3) != null){
+                    umTipoEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                }
+
+
                 umTipoEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
                 umTipoEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
-                umTipoEvento.setIdRemoto(cursor.getInt(6));
+                umTipoEvento.setSlug(cursor.getString(6));
 
             } while (cursor.moveToNext());
         }

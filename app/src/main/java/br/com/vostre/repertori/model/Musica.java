@@ -23,6 +23,7 @@ public class Musica extends EntidadeBase {
 
     private String nome;
     private String tom;
+    private String slug;
     private Artista artista;
 
     public String getNome() {
@@ -49,6 +50,14 @@ public class Musica extends EntidadeBase {
         this.artista = artista;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
@@ -56,16 +65,17 @@ public class Musica extends EntidadeBase {
 
         for(int i = 0; i < qtdDados; i++){
 
-            progressDialog.setProgress(i+1);
+            //progressDialog.setProgress(i+1);
 
             JSONObject object =  dados.getJSONObject(i);
             Musica umMusica = new Musica();
-            umMusica.setIdRemoto(object.getInt("id"));
+            umMusica.setId(object.getString("id"));
             umMusica.setNome(object.getString("nome"));
+            umMusica.setSlug(object.getString("slug"));
             umMusica.setTom(object.getString("tom"));
 
             Artista umArtista = new Artista();
-            umArtista.setIdRemoto(object.getInt("id_artista"));
+            umArtista.setId(object.getString("artista"));
             umArtista = artistaDBHelper.carregar(context, umArtista);
 
             umMusica.setArtista(umArtista);

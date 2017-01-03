@@ -16,9 +16,9 @@ public class MusicaDBHelper extends SQLiteOpenHelper {
 
     private static final int DBVERSION = RepDBHelper.DBVERSION;
     private static final String DBNAME = RepDBHelper.DBNAME;
-    public static final String DBCREATE = "CREATE TABLE musica (_id integer primary key, nome text NOT NULL, " +
+    public static final String DBCREATE = "CREATE TABLE musica (_id text primary key, nome text NOT NULL, " +
             "tom text NOT NULL, id_artista integer NOT NULL, status integer NOT NULL, data_cadastro text, " +
-            "data_recebimento text, ultima_alteracao text, id_remoto integer);";
+            "data_recebimento text, ultima_alteracao text, slug text);";
     RepDBHelper repDBHelper;
 
     public MusicaDBHelper(Context context){

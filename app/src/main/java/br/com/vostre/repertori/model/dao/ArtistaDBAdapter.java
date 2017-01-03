@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.utils.DataUtils;
@@ -30,16 +31,22 @@ public class ArtistaDBAdapter {
 
         if(artista.getId() != null){
             cv.put("_id", artista.getId());
+        } else{
+            cv.put("_id", UUID.randomUUID().toString());
         }
 
-        cv.put("id_remoto", artista.getIdRemoto());
         cv.put("nome", artista.getNome());
+        cv.put("slug", artista.getSlug());
         cv.put("status", artista.getStatus());
-        cv.put("data_cadastro", DataUtils.dataParaBanco(artista.getDataCadastro()));
+
+        if(artista.getDataCadastro() != null){
+            cv.put("data_cadastro", DataUtils.dataParaBanco(artista.getDataCadastro()));
+        }
+
         cv.put("data_recebimento", DataUtils.dataParaBanco(artista.getDataRecebimento()));
         cv.put("ultima_alteracao", DataUtils.dataParaBanco(artista.getUltimaAlteracao()));
 
-        if(database.update("artista", cv, "id_remoto = "+artista.getIdRemoto(), null) < 1){
+        if(database.update("artista", cv, "_id = '"+artista.getId()+"'", null) < 1){
             retorno = database.insert("artista", null, cv);
             database.close();
             return retorno;
@@ -57,22 +64,25 @@ public class ArtistaDBAdapter {
     }
 
     public List<Artista> listarTodos(){
-        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, id_remoto " +
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
                 "FROM artista", null);
         List<Artista> artistas = new ArrayList<Artista>();
 
         if(cursor.moveToFirst()){
             do{
                 Artista umArtista = new Artista();
-                umArtista.setId(cursor.getInt(0));
+                umArtista.setId(cursor.getString(0));
 
                 umArtista.setNome(cursor.getString(1));
                 umArtista.setStatus(cursor.getInt(2));
 
-                umArtista.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                if(cursor.getString(3) != null){
+                    umArtista.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                }
+
                 umArtista.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
                 umArtista.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
-                umArtista.setIdRemoto(cursor.getInt(6));
+                umArtista.setSlug(cursor.getString(6));
 
                 artistas.add(umArtista);
             } while (cursor.moveToNext());
@@ -85,23 +95,26 @@ public class ArtistaDBAdapter {
     }
 
     public Artista carregar(Artista artista){
-        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, id_remoto " +
-                "FROM artista WHERE id_remoto = ?", new String[]{String.valueOf(artista.getIdRemoto())});
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
+                "FROM artista WHERE _id = ?", new String[]{artista.getId()});
 
         Artista umArtista = null;
 
         if(cursor.moveToFirst()){
             do{
                 umArtista = new Artista();
-                umArtista.setId(cursor.getInt(0));
+                umArtista.setId(cursor.getString(0));
 
                 umArtista.setNome(cursor.getString(1));
                 umArtista.setStatus(cursor.getInt(2));
 
-                umArtista.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                if(cursor.getString(3) != null){
+                    umArtista.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                }
+
                 umArtista.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
                 umArtista.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
-                umArtista.setIdRemoto(cursor.getInt(6));
+                umArtista.setSlug(cursor.getString(6));
 
             } while (cursor.moveToNext());
         }

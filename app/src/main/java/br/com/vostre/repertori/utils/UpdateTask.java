@@ -48,13 +48,14 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
     protected void onPreExecute() {
 
         //super.onPreExecute();
-        progressDialog = new ProgressDialog(ctx);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setMessage("Progresso");
-        progressDialog.setCancelable(false);
-        if(!progressDialog.isShowing()){
-            progressDialog.show();
-        }
+//        progressDialog = new ProgressDialog(ctx);
+//        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//        progressDialog.setMessage("Progresso");
+//        progressDialog.setCancelable(false);
+//
+//        if(!progressDialog.isShowing()){
+//            progressDialog.show();
+//        }
 
 //        viewLog.setText("");
 //        viewLog.append("Iniciando atualização."+System.getProperty("line.separator")+System.getProperty("line.separator"));
@@ -65,8 +66,8 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
 
 //        viewLog.append("Fim da atualização."+System.getProperty("line.separator"));
 
-        progressDialog.dismiss();
-        progressDialog = null;
+//        progressDialog.dismiss();
+//        progressDialog = null;
         listener.onUpdateTaskResultsSucceeded(aBoolean);
 
     }
@@ -104,28 +105,26 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             int qtdArtistas = artistas.length();
 
             if(qtdArtistas > 0){
-                ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(ctx);
-
-                mostraProgressBar(progressDialog, qtdArtistas, "Atualizando Artistas...");
+                //mostraProgressBar(progressDialog, qtdArtistas, "Atualizando Artistas...");
 
                 artista.atualizarDados(artistas, qtdArtistas, progressDialog, ctx);
 
-                escondeProgressBar(progressDialog);
+                //escondeProgressBar(progressDialog);
                 publishProgress(qtdArtistas+" artista(s) atualizado(s)."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Tipos de Evento");
             } else{
                 publishProgress("Artistas já atualizados."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Tipos de Evento");
             }
-/*
+
             int qtdTiposEvento = tiposEvento.length();
 
             if(qtdTiposEvento > 0){
-                mostraProgressBar(progressDialog, qtdTiposEvento, "Atualizando Tipos de Evento...");
+                //mostraProgressBar(progressDialog, qtdTiposEvento, "Atualizando Tipos de Evento...");
 
                 tipoEvento.atualizarDados(tiposEvento, qtdTiposEvento, progressDialog, ctx);
 
-                escondeProgressBar(progressDialog);
+                //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdTiposEvento+ " tipo(s) de evento atualizado(s)."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Eventos");
@@ -137,11 +136,11 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             int qtdEventos = eventos.length();
 
             if(qtdEventos > 0){
-                mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
 
                 evento.atualizarDados(eventos, qtdEventos, progressDialog, ctx);
 
-                escondeProgressBar(progressDialog);
+                //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdEventos+ " evento(s) atualizado(s)."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Músicas");
@@ -153,11 +152,11 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             int qtdMusicas = musicas.length();
 
             if(qtdMusicas > 0){
-                mostraProgressBar(progressDialog, qtdMusicas, "Atualizando Musicas...");
+                //mostraProgressBar(progressDialog, qtdMusicas, "Atualizando Musicas...");
 
                 musica.atualizarDados(musicas, qtdMusicas, progressDialog, ctx);
 
-                escondeProgressBar(progressDialog);
+                //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdMusicas+" música(s) atualizada(s)."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Músicas Eventos");
@@ -169,11 +168,11 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             int qtdMusicasEventos = musicasEventos.length();
 
             if(qtdMusicasEventos > 0){
-                mostraProgressBar(progressDialog, qtdMusicasEventos, "Atualizando Músicas Eventos...");
+                //mostraProgressBar(progressDialog, qtdMusicasEventos, "Atualizando Músicas Eventos...");
 
                 musicaEvento.atualizarDados(musicasEventos, qtdMusicasEventos, progressDialog, ctx);
 
-                escondeProgressBar(progressDialog);
+                //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdMusicasEventos+" música(s) evento(s) atualizada(s)."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Comentários Eventos");
@@ -185,11 +184,11 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             int qtdComentariosEventos = comentariosEventos.length();
 
             if(qtdComentariosEventos > 0){
-                mostraProgressBar(progressDialog, qtdComentariosEventos, "Atualizando Comentários Eventos...");
+                //mostraProgressBar(progressDialog, qtdComentariosEventos, "Atualizando Comentários Eventos...");
 
                 comentarioEvento.atualizarDados(comentariosEventos, qtdComentariosEventos, progressDialog, ctx);
 
-                escondeProgressBar(progressDialog);
+                //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdComentariosEventos+" Comentário(s) Evento(s) atualizada(s)."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"");
@@ -197,7 +196,7 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
                 publishProgress("Comentários Eventos já atualizadas."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"");
             }
-*/
+
         } /*catch (ParseException e) {
             e.printStackTrace();
             return false;
@@ -214,9 +213,9 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
         //super.onProgressUpdate(values);
 //        viewLog.append(values[0]);
 
-        if(!values[1].equals("")){
-            progressDialog.setMessage(values[1]);
-        }
+//        if(!values[1].equals("")){
+//            progressDialog.setMessage(values[1]);
+//        }
 
     }
 

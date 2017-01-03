@@ -8,18 +8,17 @@ import java.util.Calendar;
 
 public class EntidadeBase {
 
-    private Integer id;
-    private Integer idRemoto;
+    private String id;
     private Integer status;
     private Calendar dataCadastro;
     private Calendar dataRecebimento;
     private Calendar ultimaAlteracao;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -53,13 +52,5 @@ public class EntidadeBase {
 
     public void setUltimaAlteracao(Calendar ultimaAlteracao) {
         this.ultimaAlteracao = ultimaAlteracao;
-    }
-
-    public Integer getIdRemoto() {
-        return idRemoto;
-    }
-
-    public void setIdRemoto(Integer idRemoto) {
-        this.idRemoto = idRemoto;
     }
 }

@@ -66,22 +66,22 @@ public class MusicaEvento extends EntidadeBase {
 
         for(int i = 0; i < qtdDados; i++){
 
-            progressDialog.setProgress(i+1);
+            //progressDialog.setProgress(i+1);
 
             JSONObject object =  dados.getJSONObject(i);
             MusicaEvento umMusicaEvento = new MusicaEvento();
-            umMusicaEvento.setIdRemoto(object.getInt("id"));
+            umMusicaEvento.setId(object.getString("id"));
             umMusicaEvento.setObservacao(object.getString("observacao"));
             umMusicaEvento.setOrdem(object.getInt("ordem"));
 
             Musica umaMusica = new Musica();
-            umaMusica.setIdRemoto(object.getInt("id_musica"));
+            umaMusica.setId(object.getString("musica"));
             umaMusica = musicaDBHelper.carregar(context, umaMusica);
 
             umMusicaEvento.setMusica(umaMusica);
 
             Evento umEvento = new Evento();
-            umEvento.setIdRemoto(object.getInt("id_evento"));
+            umEvento.setId(object.getString("evento"));
             umEvento = eventoDBHelper.carregar(context, umEvento);
 
             umMusicaEvento.setEvento(umEvento);

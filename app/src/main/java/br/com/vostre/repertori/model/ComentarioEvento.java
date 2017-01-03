@@ -46,15 +46,15 @@ public class ComentarioEvento extends EntidadeBase {
 
         for(int i = 0; i < qtdDados; i++){
 
-            progressDialog.setProgress(i+1);
+            //progressDialog.setProgress(i+1);
 
             JSONObject object =  dados.getJSONObject(i);
             ComentarioEvento umComentarioEvento = new ComentarioEvento();
-            umComentarioEvento.setIdRemoto(object.getInt("id"));
+            umComentarioEvento.setId(object.getString("id"));
             umComentarioEvento.setTexto(object.getString("texto"));
 
             Evento umEvento = new Evento();
-            umEvento.setIdRemoto(object.getInt("id_evento"));
+            umEvento.setId(object.getString("evento"));
             umEvento = eventoDBHelper.carregar(context, umEvento);
 
             umComentarioEvento.setEvento(umEvento);

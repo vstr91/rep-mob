@@ -22,6 +22,7 @@ public class Evento extends EntidadeBase {
     private String nome;
     private Calendar data;
     private TipoEvento tipoEvento;
+    private String slug;
 
     public String getNome() {
         return nome;
@@ -47,6 +48,14 @@ public class Evento extends EntidadeBase {
         this.tipoEvento = tipoEvento;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         EventoDBHelper eventoDBHelper = new EventoDBHelper(context);
@@ -54,16 +63,17 @@ public class Evento extends EntidadeBase {
 
         for(int i = 0; i < qtdDados; i++){
 
-            progressDialog.setProgress(i+1);
+            //progressDialog.setProgress(i+1);
 
             JSONObject object =  dados.getJSONObject(i);
             Evento umEvento = new Evento();
-            umEvento.setIdRemoto(object.getInt("id"));
+            umEvento.setId(object.getString("id"));
             umEvento.setNome(object.getString("nome"));
+            umEvento.setSlug(object.getString("slug"));
             umEvento.setData(DataUtils.bancoParaData(object.getString("data")));
 
             TipoEvento umTipoEvento = new TipoEvento();
-            umTipoEvento.setIdRemoto(object.getInt("id_tipo_evento"));
+            umTipoEvento.setId(object.getString("tipo_evento"));
             umTipoEvento = tipoEventoDBHelper.carregar(context, umTipoEvento);
 
             umEvento.setTipoEvento(umTipoEvento);

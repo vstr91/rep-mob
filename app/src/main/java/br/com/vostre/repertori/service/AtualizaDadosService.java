@@ -120,7 +120,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     public void onTarefaAssincronaResultSucceeded(Map<String, Object> map) {
 
         JSONObject jObj = (JSONObject) map.get("json");
-        dataUltimoAcesso = (String) map.get("dataMensagem");
+        dataUltimoAcesso = (String) map.get("dataUltimoAcesso");
 
         int status = 0;
 
@@ -194,8 +194,12 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     }
 
     public void setDataUltimoAcesso(Context context, String dataUltimoAcesso){
-        ParametroDBHelper parametroDBHelper = new ParametroDBHelper(context);
-        parametroDBHelper.gravarUltimoAcesso(context, dataUltimoAcesso);
+
+        if(dataUltimoAcesso != null){
+            ParametroDBHelper parametroDBHelper = new ParametroDBHelper(context);
+            parametroDBHelper.gravarUltimoAcesso(context, dataUltimoAcesso);
+        }
+
     }
 
 

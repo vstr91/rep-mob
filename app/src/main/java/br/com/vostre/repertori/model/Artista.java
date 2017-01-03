@@ -21,6 +21,7 @@ public class Artista extends EntidadeBase {
 
     private String nome;
     private ArrayList<Musica> musicas;
+    private String slug;
 
     public String getNome() {
         return nome;
@@ -38,21 +39,30 @@ public class Artista extends EntidadeBase {
         this.musicas = musicas;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
 
         for(int i = 0; i < qtdDados; i++){
 
-            progressDialog.setProgress(i+1);
+            //progressDialog.setProgress(i+1);
 
             JSONObject object =  dados.getJSONObject(i);
             Artista umArtista = new Artista();
-            umArtista.setIdRemoto(object.getInt("id"));
+            umArtista.setId(object.getString("id"));
             umArtista.setNome(object.getString("nome"));
+            umArtista.setSlug(object.getString("slug"));
             umArtista.setStatus(object.getInt("status"));
             umArtista.setDataRecebimento(Calendar.getInstance());
-            umArtista.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
+            umArtista.setUltimaAlteracao(DataUtils.apiParaData(object.getString("ultima_alteracao")));
 
             artistaDBHelper.salvarOuAtualizar(context, umArtista);
 

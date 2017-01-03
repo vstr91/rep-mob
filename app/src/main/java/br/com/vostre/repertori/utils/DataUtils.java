@@ -12,12 +12,25 @@ import java.util.Calendar;
 public class DataUtils {
 
     public static String dataParaBanco(Calendar data){
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         return df.format(data.getTime());
     }
 
     public static Calendar bancoParaData(String data){
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            cal.setTime(df.parse(data));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return cal;
+    }
+
+    public static Calendar apiParaData(String data){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         Calendar cal = Calendar.getInstance();
 
         try {
