@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.0.1_1f6cb3dc45528a2c47fd609f1ac1335102abbffe\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="ef2b4090973cb503f6c6edac6bc06d3ff7347041">
+        <dex dex="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_031a9e53baf2e7a6334ef3e9469a3fdd55c8aea0\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.0.1_cf1c91ceb01875f36ce2c6a7aa7cf46e1a2a6cca\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\exploded-aar\com.android.support\design\23.0.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
+        <dex dex="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.0.1_239dacdb539ee96c3e98226fd7dee6d1913ddd98\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-23.0.1_036f4056b3d2d72b31b52b8a67819924f99f0388\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.0.1_0aa1f58c1632c071b9ca4c25c74abdfd0a2c9b0d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="b69552bd9db341c21466f08dec1ef21ab6db69ad">
+        <dex dex="C:\Users\Almir\AndroidStudioProjects\Repertori\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_72ddf52a97d6fcabd26cf6ce2559985a07792318\classes.dex" />
+    </item>
+
+</items>
