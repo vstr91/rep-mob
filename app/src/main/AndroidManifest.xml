@@ -21,7 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RepertorioActivity"></activity>
+        <activity
+            android:name=".RepertorioActivity"
+            android:label="@string/title_activity_repertorio" />
+        <activity
+            android:name=".EventosActivity"
+            android:label="@string/title_activity_eventos" />
+        <activity android:name=".MusicaDetalheActivity" />
+        <activity android:name=".EventoDetalheActivity" />
+        <activity android:name=".BaseActivity"></activity>
     </application>
 
 </manifest>

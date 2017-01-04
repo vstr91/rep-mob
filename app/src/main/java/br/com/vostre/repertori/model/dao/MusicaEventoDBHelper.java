@@ -7,6 +7,8 @@ import android.util.Log;
 
 import java.util.List;
 
+import br.com.vostre.repertori.model.Evento;
+import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
 
 /**
@@ -42,6 +44,16 @@ public class MusicaEventoDBHelper extends SQLiteOpenHelper {
     public List<MusicaEvento> listarTodos(Context context){
         MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodos();
+    }
+
+    public List<Evento> listarTodosPorMusica(Context context, Musica musica){
+        MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorMusica(musica);
+    }
+
+    public List<Musica> listarTodosPorEvento(Context context, Evento evento){
+        MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorEvento(evento);
     }
 
     public long salvarOuAtualizar(Context context, MusicaEvento musicaEvento){

@@ -114,6 +114,54 @@ public class MusicaEventoDBAdapter {
         return musicaEventos;
     }
 
+    public List<Evento> listarTodosPorMusica(Musica umaMusica){
+        Cursor cursor = database.rawQuery("SELECT id_evento FROM musica_evento WHERE id_musica = ? AND status != 2", new String[]{umaMusica.getId()});
+        List<Evento> eventos = new ArrayList<Evento>();
+
+        if(cursor.moveToFirst()){
+
+            EventoDBHelper eventoDBHelper = new EventoDBHelper(context);
+
+            do{
+
+                Evento evento = new Evento();
+                evento.setId(cursor.getString(0));
+                evento = eventoDBHelper.carregar(context, evento);
+
+                eventos.add(evento);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return eventos;
+    }
+
+    public List<Musica> listarTodosPorEvento(Evento umEvento){
+        Cursor cursor = database.rawQuery("SELECT id_musica FROM musica_evento WHERE id_evento = ? AND status != 2", new String[]{umEvento.getId()});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+
+            do{
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(0));
+                musica = musicaDBHelper.carregar(context, musica);
+
+                musicas.add(musica);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
     public MusicaEvento carregar(MusicaEvento musicaEvento){
         Cursor cursor = database.rawQuery("SELECT _id, observacao, ordem, id_musica, id_evento, status, data_cadastro, " +
                 "data_recebimento, ultima_alteracao FROM musica_evento WHERE _id = ?",
