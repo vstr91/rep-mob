@@ -4,13 +4,15 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="br.com.vostre.repertori.MainActivity">
-
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <include layout="@layout/toolbar"></include>
 
         <Button
             android:text="Repertório"

@@ -44,6 +44,16 @@ public class EventoDBHelper extends SQLiteOpenHelper {
         return adapter.listarTodos();
     }
 
+    public List<Evento> listarTodosAteHoje(Context context){
+        EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAteHoje();
+    }
+
+    public List<Evento> listarTodosAPartirDeHoje(Context context){
+        EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAPartirDeHoje();
+    }
+
     public long salvarOuAtualizar(Context context, Evento evento){
         EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.salvarOuAtualizar(evento);

@@ -107,6 +107,47 @@ public class MusicaDBAdapter {
         return musicas;
     }
 
+    public List<Musica> listarTodosPorSituacao(int situacao){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug FROM musica WHERE status = ?", new String[]{String.valueOf(situacao)});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+
+            do{
+                Musica umMusica = new Musica();
+                umMusica.setId(cursor.getString(0));
+
+                umMusica.setNome(cursor.getString(1));
+                umMusica.setTom(cursor.getString(2));
+
+                Artista artista = new Artista();
+                artista.setId(cursor.getString(3));
+                artista = artistaDBHelper.carregar(context, artista);
+                umMusica.setArtista(artista);
+
+                umMusica.setStatus(cursor.getInt(4));
+
+                if(cursor.getString(5) != null){
+                    umMusica.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                umMusica.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                umMusica.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                umMusica.setSlug(cursor.getString(8));
+
+                musicas.add(umMusica);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
     public Musica carregar(Musica musica){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
                 "ultima_alteracao, slug FROM musica WHERE _id = ?", new String[]{musica.getId()});

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Repertori</string>
+    <string name="title_activity_repertorio">Repertório</string>
+    <string name="title_activity_eventos">Eventos</string>
 </resources>
