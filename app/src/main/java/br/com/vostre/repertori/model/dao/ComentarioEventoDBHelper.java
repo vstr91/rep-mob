@@ -8,6 +8,8 @@ import android.util.Log;
 import java.util.List;
 
 import br.com.vostre.repertori.model.ComentarioEvento;
+import br.com.vostre.repertori.model.Evento;
+import br.com.vostre.repertori.model.Musica;
 
 /**
  * Created by Almir on 24/02/2016.
@@ -42,6 +44,11 @@ public class ComentarioEventoDBHelper extends SQLiteOpenHelper {
     public List<ComentarioEvento> listarTodos(Context context){
         ComentarioEventoDBAdapter adapter = new ComentarioEventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodos();
+    }
+
+    public List<ComentarioEvento> listarTodosPorEvento(Context context, Evento evento){
+        ComentarioEventoDBAdapter adapter = new ComentarioEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorEvento(evento);
     }
 
     public long salvarOuAtualizar(Context context, ComentarioEvento comentarioEvento){

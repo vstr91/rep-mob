@@ -11,11 +11,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import br.com.vostre.repertori.adapter.ComentarioList;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
@@ -28,6 +31,8 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     TextView textViewData;
     ListView listViewMusicas;
     MusicaList adapterMusicas;
+    ListView listViewComentarios;
+    ComentarioList adapterComentarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +40,9 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         setContentView(R.layout.activity_evento_detalhe);
 
         List<Musica> musicas;
+        List<ComentarioEvento> comentarios;
         MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
+        ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
         EventoDBHelper eventoDBHelper = new EventoDBHelper(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -46,6 +53,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         textViewData = (TextView) findViewById(R.id.textViewData);
         listViewMusicas = (ListView) findViewById(R.id.listViewMusicas);
+        listViewComentarios = (ListView) findViewById(R.id.listViewComentarios);
 
         Evento evento = new Evento();
         evento.setId(getIntent().getStringExtra("evento"));
@@ -55,6 +63,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         textViewData.setText(DataUtils.toString(evento.getData()));
 
         musicas = musicaEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
+        comentarios = comentarioEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
 
         adapterMusicas =
                 new MusicaList(this, android.R.layout.simple_spinner_dropdown_item, musicas);
@@ -65,7 +74,13 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         listViewMusicas.setOnItemClickListener(this);
         listViewMusicas.setEmptyView(findViewById(R.id.textViewListaVazia));
 
+        adapterComentarios =
+                new ComentarioList(this, android.R.layout.simple_spinner_dropdown_item, comentarios);
 
+        adapterComentarios.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+        listViewComentarios.setAdapter(adapterComentarios);
+        listViewComentarios.setEmptyView(findViewById(R.id.textViewListaComentarioVazia));
 
     }
 

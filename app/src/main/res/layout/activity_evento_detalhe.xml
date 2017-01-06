@@ -24,37 +24,65 @@
             <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:id="@+id/textViewNome"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:layout_weight=".23" />
 
             <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:id="@+id/textViewData"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:layout_weight=".25" />
 
             <TextView
                 android:text="Repertório"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:id="@+id/textView"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textAlignment="center"
-                android:paddingTop="10dp" />
+                android:paddingTop="10dp"
+                android:layout_weight=".5" />
 
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/listViewMusicas" />
+                android:id="@+id/listViewMusicas"
+                android:layout_height="0dp"
+                android:layout_weight="1.5" />
+
+            <TextView
+                android:text="Comentários"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/textView2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_weight=".25"
+                android:gravity="center" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/listViewComentarios" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nenhuma música encontrada"
                 android:id="@+id/textViewListaVazia"
+                android:padding="5dp"
+                android:gravity="center"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nenhum comentário encontrado"
+                android:id="@+id/textViewListaComentarioVazia"
                 android:padding="5dp"
                 android:gravity="center"
                 android:visibility="gone" />

@@ -104,6 +104,46 @@ public class ComentarioEventoDBAdapter {
         return comentarioEventos;
     }
 
+    public List<ComentarioEvento> listarTodosPorEvento(Evento umEvento){
+        Cursor cursor = database.rawQuery("SELECT _id, texto, id_evento, status, data_cadastro, " +
+                "data_recebimento, ultima_alteracao FROM comentario_evento WHERE id_evento = ? AND status != 2",
+                new String[]{umEvento.getId()});
+        List<ComentarioEvento> comentarios = new ArrayList<ComentarioEvento>();
+
+        if(cursor.moveToFirst()){
+
+            EventoDBHelper eventoDBHelper = new EventoDBHelper(context);
+
+            do{
+                ComentarioEvento umComentarioEvento = new ComentarioEvento();
+                umComentarioEvento.setId(cursor.getString(0));
+
+                umComentarioEvento.setTexto(cursor.getString(1));
+
+                Evento evento = new Evento();
+                evento.setId(cursor.getString(2));
+                evento = eventoDBHelper.carregar(context, evento);
+                umComentarioEvento.setEvento(evento);
+
+                umComentarioEvento.setStatus(cursor.getInt(3));
+
+                if(cursor.getString(4) != null){
+                    umComentarioEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(4)));
+                }
+
+                umComentarioEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(5)));
+                umComentarioEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(6)));
+
+                comentarios.add(umComentarioEvento);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return comentarios;
+    }
+
     public ComentarioEvento carregar(ComentarioEvento comentarioEvento){
         Cursor cursor = database.rawQuery("SELECT _id, texto, id_evento, status, data_cadastro, data_recebimento, " +
                 "ultima_alteracao FROM comentario_evento WHERE _id = ?",
