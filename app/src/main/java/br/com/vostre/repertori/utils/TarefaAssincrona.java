@@ -27,7 +27,7 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
-    Map<String, Object> parametrosPost = new HashMap<>();
+    Map<String, String> parametrosPost = new HashMap<>();
     String umaURL = null;
     String method = null;
     JSONArray jsonArray = null;
@@ -38,7 +38,7 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
     TarefaAssincronaListener listener;
     boolean isBackground;
 
-    public TarefaAssincrona(String url, String method, Context context, Map<String, Object> params, boolean isBackground) {
+    public TarefaAssincrona(String url, String method, Context context, Map<String, String> params, boolean isBackground) {
 
         this.umaURL = url;
         this.parametrosPost = params;
@@ -92,19 +92,22 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
 
             if (method.equals("POST")) {
 
-                Map<String, String> paramsPost = new HashMap<String, String>();
-                paramsPost.put("Email", "your_email");
-                paramsPost.put("Passwd", "your_password");
+                try {
+                    HttpURLConnection conn = HttpUtils.sendPostRequest(umaURL, parametrosPost);
+                    String[] resposta = HttpUtils.readMultipleLinesRespone();
 
-                HttpURLConnection conn = HttpUtils.sendPostRequest(umaURL, paramsPost);
-                String[] resposta = HttpUtils.readMultipleLinesRespone();
+                    HttpUtils.disconnect();
 
-                HttpUtils.disconnect();
+                    String json = resposta[0];
+                    jsonObj = new JSONObject(json);
 
-                String json = Arrays.toString(resposta);
+                    map.put("json", (Object) jsonObj);
 
-                jsonObj = new JSONObject(json);
-                map.put("json", (Object) jsonObj);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             } else if (method == "GET") {
 

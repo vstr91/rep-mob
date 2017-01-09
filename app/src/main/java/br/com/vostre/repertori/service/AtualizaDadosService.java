@@ -16,6 +16,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
@@ -26,6 +28,8 @@ import br.com.vostre.repertori.listener.ServerUtilsListener;
 import br.com.vostre.repertori.listener.TarefaAssincronaListener;
 import br.com.vostre.repertori.listener.TokenTaskListener;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
+import br.com.vostre.repertori.model.ComentarioEvento;
+import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
 import br.com.vostre.repertori.utils.Constants;
 import br.com.vostre.repertori.utils.Crypt;
@@ -98,6 +102,9 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         Crypt crypt = new Crypt();
 
         String tokenCriptografado = null;
+        List<ComentarioEvento> comentarios;
+        ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
+
         try {
             tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
 
@@ -105,10 +112,37 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             dataUltimoAcesso = dataUltimoAcesso.equals("") ? "-" : dataUltimoAcesso;
 
             String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
+            String urlEnvio = Constants.URLSERVIDORENVIO+tokenCriptografado+"/"+dataUltimoAcesso;
 //            String url = Constants.URLSERVIDORMSG+tokenCriptografado+"/-";
 
+            comentarios = comentarioEventoDBHelper.listarTodosAEnviar(getApplicationContext());
+
+            String json = "{\"comentarios\":[";
+            int cont = 1;
+            registros = comentarios.size();
+
+            for(ComentarioEvento umComentario : comentarios){
+
+                if(cont < registros){
+                    json = json.concat(umComentario.toJson()+",");
+                } else{
+                    json = json.concat(umComentario.toJson());
+                }
+
+                cont++;
+
+            }
+
+            json = json.concat("]}");
+
+            Map<String, String> map = new HashMap<>();
+            map.put("dados", json);
+            map.put("total", String.valueOf(registros));
+
+            TarefaAssincrona utEnvio = new TarefaAssincrona(urlEnvio, "POST", AtualizaDadosService.this, map, true);
             TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
             ut.setOnResultListener(this);
+            utEnvio.execute();
             ut.execute();
         } catch (Exception e) {
             e.printStackTrace();

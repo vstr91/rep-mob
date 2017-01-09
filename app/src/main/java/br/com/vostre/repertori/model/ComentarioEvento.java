@@ -2,6 +2,7 @@ package br.com.vostre.repertori.model;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.text.format.DateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,11 +62,23 @@ public class ComentarioEvento extends EntidadeBase {
             umComentarioEvento.setStatus(object.getInt("status"));
             umComentarioEvento.setDataRecebimento(Calendar.getInstance());
             umComentarioEvento.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
+            umComentarioEvento.setEnviado(0);
 
             comentarioEventoDBHelper.salvarOuAtualizar(context, umComentarioEvento);
 
         }
 
+    }
+
+    public String toJson(){
+
+        String resultado = "";
+
+        resultado = "{\"id\": \""+this.getId()+"\", \"texto\": \""+this.getTexto()+"\", \"evento\": \""+this.getEvento().getId()+"\",  " +
+                "\"data_cadastro\": \""+ DataUtils.dataParaBanco(this.getDataCadastro())+"\"}";
+
+
+        return resultado;
     }
 
 }

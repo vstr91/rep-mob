@@ -150,7 +150,6 @@ public class MusicaEventoDBAdapter {
 
                 Musica musica = new Musica();
                 musica.setId(cursor.getString(0));
-                int o = cursor.getInt(1);
                 musica = musicaDBHelper.carregar(context, musica);
 
                 musicas.add(musica);

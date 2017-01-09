@@ -21,21 +21,21 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Almir\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
-        <dex dex="C:\Users\Almir\AndroidStudioProjects\rep-mob\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-23.0.1_d48584f76b508ca5c148c35fde42771ba102e193\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Almir\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.android.support\design\23.0.1\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
         sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
         <dex dex="C:\Users\Almir\AndroidStudioProjects\rep-mob\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.0.1_0ac7a26be1051a61b6b34584b17b795562b64b93\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Almir\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="C:\Users\Almir\AndroidStudioProjects\rep-mob\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-23.0.1_d48584f76b508ca5c148c35fde42771ba102e193\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -52,7 +52,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="8ea0445cf3eab298ec6218fa645d361e1e15878e">
+        sha1="bc3f8c8cc7e617c016dc7a7e42eeb4ede63beaa6">
         <dex dex="C:\Users\Almir\AndroidStudioProjects\rep-mob\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_70994a9eeb2065e727964db03d3d7461524adbbb\classes.dex" />
     </item>
     <item
@@ -61,7 +61,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="4c47337d457d099bbc3dbea7fa39638229d7e2f5">
+        sha1="090e5f65b396255a3dbcf90821da428547ede87d">
         <dex dex="C:\Users\Almir\AndroidStudioProjects\rep-mob\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_1c487cf8916e173fe89d4dfaee5761eb9ca8c040\classes.dex" />
     </item>
 

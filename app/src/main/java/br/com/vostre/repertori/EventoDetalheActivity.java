@@ -6,9 +6,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.vostre.repertori.adapter.ComentarioList;
@@ -32,18 +36,26 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     ListView listViewMusicas;
     MusicaList adapterMusicas;
     ListView listViewComentarios;
+    EditText editTextComentario;
+    Button btnComentario;
     ComentarioList adapterComentarios;
+    Evento evento;
+
+    List<Musica> musicas;
+    List<ComentarioEvento> comentarios;
+
+    MusicaEventoDBHelper musicaEventoDBHelper;
+    ComentarioEventoDBHelper comentarioEventoDBHelper;
+    EventoDBHelper eventoDBHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evento_detalhe);
 
-        List<Musica> musicas;
-        List<ComentarioEvento> comentarios;
-        MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
-        ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
-        EventoDBHelper eventoDBHelper = new EventoDBHelper(getApplicationContext());
+        musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
+        comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
+        eventoDBHelper = new EventoDBHelper(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,8 +66,12 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         textViewData = (TextView) findViewById(R.id.textViewData);
         listViewMusicas = (ListView) findViewById(R.id.listViewMusicas);
         listViewComentarios = (ListView) findViewById(R.id.listViewComentarios);
+        editTextComentario = (EditText) findViewById(R.id.editTextComentario);
+        btnComentario = (Button) findViewById(R.id.btnComentario);
 
-        Evento evento = new Evento();
+        btnComentario.setOnClickListener(this);
+
+        evento = new Evento();
         evento.setId(getIntent().getStringExtra("evento"));
         evento = eventoDBHelper.carregar(getApplicationContext(), evento);
 
@@ -63,7 +79,6 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         textViewData.setText(DataUtils.toString(evento.getData()));
 
         musicas = musicaEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
-        comentarios = comentarioEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
 
         adapterMusicas =
                 new MusicaList(this, android.R.layout.simple_spinner_dropdown_item, musicas);
@@ -74,13 +89,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         listViewMusicas.setOnItemClickListener(this);
         listViewMusicas.setEmptyView(findViewById(R.id.textViewListaVazia));
 
-        adapterComentarios =
-                new ComentarioList(this, android.R.layout.simple_spinner_dropdown_item, comentarios);
-
-        adapterComentarios.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
-
-        listViewComentarios.setAdapter(adapterComentarios);
-        listViewComentarios.setEmptyView(findViewById(R.id.textViewListaComentarioVazia));
+        atualizaComentarios();
 
     }
 
@@ -92,4 +101,44 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         intent.putExtra("musica", musica.getId());
         startActivity(intent);
     }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.btnComentario:
+                String comentario = editTextComentario.getText().toString();
+
+                if(!comentario.isEmpty()){
+                    ComentarioEvento comentarioEvento = new ComentarioEvento();
+                    comentarioEvento.setTexto(comentario);
+                    comentarioEvento.setStatus(0);
+                    comentarioEvento.setDataCadastro(Calendar.getInstance());
+                    comentarioEvento.setEnviado(-1);
+                    comentarioEvento.setEvento(evento);
+                    comentarioEvento.setUltimaAlteracao(Calendar.getInstance());
+                    comentarioEventoDBHelper.salvarOuAtualizar(getApplicationContext(), comentarioEvento);
+                    editTextComentario.setText("");
+                    atualizaComentarios();
+                    editTextComentario.clearFocus();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Por favor digite o comentário.", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+        }
+    }
+
+    private void atualizaComentarios(){
+        comentarios = comentarioEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
+        adapterComentarios =
+                new ComentarioList(this, android.R.layout.simple_spinner_dropdown_item, comentarios);
+
+        adapterComentarios.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+        listViewComentarios.setAdapter(adapterComentarios);
+        listViewComentarios.setEmptyView(findViewById(R.id.textViewListaComentarioVazia));
+        listViewComentarios.invalidate();
+    }
+
 }

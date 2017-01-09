@@ -19,7 +19,7 @@ public class ComentarioEventoDBHelper extends SQLiteOpenHelper {
     private static final int DBVERSION = RepDBHelper.DBVERSION;
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE comentario_evento (_id text primary key, texto text NOT NULL, " +
-            "id_evento integer NOT NULL, status integer NOT NULL, " +
+            "id_evento integer NOT NULL, status integer NOT NULL, enviado integer NOT NULL, " +
             "data_cadastro text, data_recebimento text, ultima_alteracao text);";
     RepDBHelper repDBHelper;
 
@@ -44,6 +44,11 @@ public class ComentarioEventoDBHelper extends SQLiteOpenHelper {
     public List<ComentarioEvento> listarTodos(Context context){
         ComentarioEventoDBAdapter adapter = new ComentarioEventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodos();
+    }
+
+    public List<ComentarioEvento> listarTodosAEnviar(Context context){
+        ComentarioEventoDBAdapter adapter = new ComentarioEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAEnviar();
     }
 
     public List<ComentarioEvento> listarTodosPorEvento(Context context, Evento evento){

@@ -10,6 +10,7 @@ public class EntidadeBase {
 
     private String id;
     private Integer status;
+    private Integer enviado;
     private Calendar dataCadastro;
     private Calendar dataRecebimento;
     private Calendar ultimaAlteracao;
@@ -53,4 +54,13 @@ public class EntidadeBase {
     public void setUltimaAlteracao(Calendar ultimaAlteracao) {
         this.ultimaAlteracao = ultimaAlteracao;
     }
+
+    public Integer getEnviado() {
+        return enviado;
+    }
+
+    public void setEnviado(Integer enviado) {
+        this.enviado = enviado;
+    }
+
 }

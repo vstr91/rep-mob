@@ -87,6 +87,27 @@
                 android:gravity="center"
                 android:visibility="gone" />
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editTextComentario"
+                    android:layout_weight="1"
+                    android:hint="Envie um comentário"
+                    android:gravity="bottom|left" />
+
+                <Button
+                    android:text="Enviar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/btnComentario"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
