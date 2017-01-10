@@ -102,6 +102,7 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
                     jsonObj = new JSONObject(json);
 
                     map.put("json", (Object) jsonObj);
+                    map.put("metodo", "POST");
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -123,6 +124,7 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
                 jsonArray = new JSONArray(json);
                 jsonObj = jsonArray.getJSONObject(0);
                 map.put("json", (Object) jsonObj);
+                map.put("metodo", "GET");
                 map.put("dataUltimoAcesso", dataUltimoAcesso);
 
             }

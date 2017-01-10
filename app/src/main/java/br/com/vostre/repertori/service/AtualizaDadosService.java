@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import br.com.vostre.repertori.listener.ServerUtilsListener;
 import br.com.vostre.repertori.listener.TarefaAssincronaListener;
 import br.com.vostre.repertori.listener.TokenTaskListener;
+import br.com.vostre.repertori.listener.UpdateSentTaskListener;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
 import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
@@ -36,6 +37,7 @@ import br.com.vostre.repertori.utils.Crypt;
 import br.com.vostre.repertori.utils.ServerUtils;
 import br.com.vostre.repertori.utils.TarefaAssincrona;
 import br.com.vostre.repertori.utils.TokenTask;
+import br.com.vostre.repertori.utils.UpdateSentTask;
 import br.com.vostre.repertori.utils.UpdateTask;
 
 /**
@@ -43,12 +45,15 @@ import br.com.vostre.repertori.utils.UpdateTask;
  */
 
 public class AtualizaDadosService extends Service implements ServerUtilsListener, TokenTaskListener, TarefaAssincronaListener,
-        UpdateTaskListener {
+        UpdateTaskListener, UpdateSentTaskListener {
 
     ServerUtils serverUtils;
     String dataUltimoAcesso;
     static final long TIME_TO_UPDATE = TimeUnit.MINUTES.toMillis(Constants.TEMPO_ATUALIZACAO);
     int registros = 0;
+    int registrosResposta = 0;
+
+    String tokenCriptografado;
 
     @Nullable
     @Override
@@ -101,7 +106,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
         Crypt crypt = new Crypt();
 
-        String tokenCriptografado = null;
+        tokenCriptografado = null;
         List<ComentarioEvento> comentarios;
         ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
 
@@ -111,7 +116,6 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             dataUltimoAcesso = getDataUltimoAcesso(this.getBaseContext());
             dataUltimoAcesso = dataUltimoAcesso.equals("") ? "-" : dataUltimoAcesso;
 
-            String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
             String urlEnvio = Constants.URLSERVIDORENVIO+tokenCriptografado+"/"+dataUltimoAcesso;
 //            String url = Constants.URLSERVIDORMSG+tokenCriptografado+"/-";
 
@@ -121,29 +125,31 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             int cont = 1;
             registros = comentarios.size();
 
-            for(ComentarioEvento umComentario : comentarios){
+            if(registros > 0){
+                for(ComentarioEvento umComentario : comentarios){
 
-                if(cont < registros){
-                    json = json.concat(umComentario.toJson()+",");
-                } else{
-                    json = json.concat(umComentario.toJson());
+                    if(cont < registros){
+                        json = json.concat(umComentario.toJson()+",");
+                    } else{
+                        json = json.concat(umComentario.toJson());
+                    }
+
+                    cont++;
+
                 }
 
-                cont++;
+                json = json.concat("]}");
 
+                Map<String, String> map = new HashMap<>();
+                map.put("dados", json);
+                map.put("total", String.valueOf(registros));
+
+                TarefaAssincrona utEnvio = new TarefaAssincrona(urlEnvio, "POST", AtualizaDadosService.this, map, true);
+
+                utEnvio.setOnResultListener(this);
+                utEnvio.execute();
             }
 
-            json = json.concat("]}");
-
-            Map<String, String> map = new HashMap<>();
-            map.put("dados", json);
-            map.put("total", String.valueOf(registros));
-
-            TarefaAssincrona utEnvio = new TarefaAssincrona(urlEnvio, "POST", AtualizaDadosService.this, map, true);
-            TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
-            ut.setOnResultListener(this);
-            utEnvio.execute();
-            ut.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -153,37 +159,79 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     @Override
     public void onTarefaAssincronaResultSucceeded(Map<String, Object> map) {
 
-        JSONObject jObj = (JSONObject) map.get("json");
-        dataUltimoAcesso = (String) map.get("dataUltimoAcesso");
+        if(map.get("metodo").equals("GET")){
+            JSONObject jObj = (JSONObject) map.get("json");
+            dataUltimoAcesso = (String) map.get("dataUltimoAcesso");
 
-        int status = 0;
+            int status = 0;
 
-        if(jObj != null){
-            try {
-                JSONArray metadados = jObj.getJSONArray("meta");
-                JSONObject objMetadados = metadados.getJSONObject(0);
+            if(jObj != null){
+                try {
+                    JSONArray metadados = jObj.getJSONArray("meta");
+                    JSONObject objMetadados = metadados.getJSONObject(0);
 
-                registros = objMetadados.getInt("registros");
-                status = objMetadados.getInt("status");
+                    registros = objMetadados.getInt("registros");
+                    status = objMetadados.getInt("status");
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(this, "Erro ao receber dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
             }
-        } else {
-            Toast.makeText(this, "Erro ao receber dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
-        }
 
-        if(registros > 0){
-            UpdateTask updateTask = new UpdateTask(jObj, getApplicationContext());
-            updateTask.setOnResultsListener(this);
-            updateTask.execute();
+            if(registros > 0){
+                UpdateTask updateTask = new UpdateTask(jObj, getApplicationContext());
+                updateTask.setOnResultsListener(this);
+                updateTask.execute();
+            } else{
+
+                if(dataUltimoAcesso != null){
+                    setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
+                }
+
+            }
         } else{
+            JSONObject jObj = (JSONObject) map.get("json");
 
-            if(dataUltimoAcesso != null){
-                setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
+            if(jObj != null){
+                try {
+                    JSONArray metadados = jObj.getJSONArray("meta");
+                    JSONObject objMetadados = metadados.getJSONObject(0);
+
+                    registrosResposta = objMetadados.getInt("registros");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(this, "Erro ao receber dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+            }
+
+            if(registrosResposta > 0){
+                UpdateSentTask updateSentTask = new UpdateSentTask(jObj, getApplicationContext());
+                updateSentTask.setOnResultsSentListener(this);
+                updateSentTask.execute();
+//                UpdateTask updateTask = new UpdateTask(jObj, getApplicationContext());
+//                updateTask.setOnResultsListener(this);
+//                updateTask.execute();
+            } else{
+
+                String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
+
+                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
+                ut.setOnResultListener(this);
+                ut.execute();
+
+//                if(dataUltimoAcesso != null){
+//                    setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
+//                }
+
             }
 
         }
+
+
 
     }
 
@@ -197,6 +245,19 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             Intent intent = new Intent("AtualizaDadosService");
             intent.putExtra("registros", registros);
             broadcaster.sendBroadcast(intent);
+        }
+
+    }
+
+    @Override
+    public void onUpdateSentTaskResultsSucceeded(boolean result) {
+
+        if(result){
+            String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
+
+            TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
+            ut.setOnResultListener(this);
+            ut.execute();
         }
 
     }
@@ -235,6 +296,5 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         }
 
     }
-
 
 }

@@ -221,7 +221,10 @@ public class ComentarioEventoDBAdapter {
                     umComentarioEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(4)));
                 }
 
-                umComentarioEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(5)));
+                if(cursor.getString(5) != null){
+                    umComentarioEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
                 umComentarioEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(6)));
 
             } while (cursor.moveToNext());

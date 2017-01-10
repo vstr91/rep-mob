@@ -70,6 +70,28 @@ public class ComentarioEvento extends EntidadeBase {
 
     }
 
+    public void atualizarDadosEnviados(JSONArray dados, int qtdDados, Context context) throws JSONException {
+
+        ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(context);
+        EventoDBHelper eventoDBHelper = new EventoDBHelper(context);
+
+        for(int i = 0; i < qtdDados; i++){
+
+            //progressDialog.setProgress(i+1);
+
+            String id =  dados.getString(i);
+            ComentarioEvento umComentarioEvento = new ComentarioEvento();
+            umComentarioEvento.setId(id);
+
+            umComentarioEvento = comentarioEventoDBHelper.carregar(context, umComentarioEvento);
+            umComentarioEvento.setEnviado(0);
+
+            comentarioEventoDBHelper.salvarOuAtualizar(context, umComentarioEvento);
+
+        }
+
+    }
+
     public String toJson(){
 
         String resultado = "";
