@@ -30,6 +30,30 @@ public class MusicaList extends ArrayAdapter<Musica> {
     }
 
     @Override
+    public void add(Musica row) {
+        super.add(row);
+        musicas.add(row);
+    }
+
+    @Override
+    public void insert(Musica row, int position) {
+        super.insert(row, position);
+        musicas.add(position, row);
+    }
+
+    @Override
+    public void remove(Musica row) {
+        super.remove(row);
+        musicas.remove(row);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        musicas.clear();
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.listview_musicas, null, true);

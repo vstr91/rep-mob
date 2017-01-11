@@ -45,7 +45,7 @@ import br.com.vostre.repertori.utils.UpdateTask;
  */
 
 public class AtualizaDadosService extends Service implements ServerUtilsListener, TokenTaskListener, TarefaAssincronaListener,
-        UpdateTaskListener, UpdateSentTaskListener {
+        UpdateTaskListener {
 
     ServerUtils serverUtils;
     String dataUltimoAcesso;
@@ -192,46 +192,44 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
             }
         } else{
-            JSONObject jObj = (JSONObject) map.get("json");
 
-            if(jObj != null){
-                try {
-                    JSONArray metadados = jObj.getJSONArray("meta");
-                    JSONObject objMetadados = metadados.getJSONObject(0);
+            String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
 
-                    registrosResposta = objMetadados.getInt("registros");
+            TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
+            ut.setOnResultListener(this);
+            ut.execute();
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Toast.makeText(this, "Erro ao receber dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
-            }
-
-            if(registrosResposta > 0){
-                UpdateSentTask updateSentTask = new UpdateSentTask(jObj, getApplicationContext());
-                updateSentTask.setOnResultsSentListener(this);
-                updateSentTask.execute();
-//                UpdateTask updateTask = new UpdateTask(jObj, getApplicationContext());
-//                updateTask.setOnResultsListener(this);
-//                updateTask.execute();
-            } else{
-
-                String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
-
-                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
-                ut.setOnResultListener(this);
-                ut.execute();
-
-//                if(dataUltimoAcesso != null){
-//                    setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
+//            JSONObject jObj = (JSONObject) map.get("json");
+//
+//            if(jObj != null){
+//                try {
+//                    JSONArray metadados = jObj.getJSONArray("meta");
+//                    JSONObject objMetadados = metadados.getJSONObject(0);
+//
+//                    registrosResposta = objMetadados.getInt("registros");
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
 //                }
-
-            }
+//            } else {
+//                Toast.makeText(this, "Erro ao receber dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+//            }
+//
+//            if(registrosResposta > 0){
+//                UpdateSentTask updateSentTask = new UpdateSentTask(jObj, getApplicationContext());
+//                updateSentTask.setOnResultsSentListener(this);
+//                updateSentTask.execute();
+//            } else{
+//
+//                String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
+//
+//                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
+//                ut.setOnResultListener(this);
+//                ut.execute();
+//
+//            }
 
         }
-
-
 
     }
 
@@ -245,19 +243,6 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             Intent intent = new Intent("AtualizaDadosService");
             intent.putExtra("registros", registros);
             broadcaster.sendBroadcast(intent);
-        }
-
-    }
-
-    @Override
-    public void onUpdateSentTaskResultsSucceeded(boolean result) {
-
-        if(result){
-            String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
-
-            TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
-            ut.setOnResultListener(this);
-            ut.execute();
         }
 
     }

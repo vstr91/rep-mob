@@ -12,12 +12,12 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class Crypt {
 
-    private String iv = "fbfrp26366848brp";
+    private String iv = "fbfac56366848brp";
     private IvParameterSpec ivspec;
     private SecretKeySpec keyspec;
     private Cipher cipher;
 
-    private String SecretKey = "3c447rp2eba17brp";
+    private String SecretKey = "3c447059eba17brp";
 
     public Crypt() {
         ivspec = new IvParameterSpec(iv.getBytes());
