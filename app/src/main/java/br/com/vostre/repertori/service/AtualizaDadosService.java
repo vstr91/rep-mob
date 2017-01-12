@@ -148,6 +148,11 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
                 utEnvio.setOnResultListener(this);
                 utEnvio.execute();
+            } else{
+                String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
+                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
+                ut.setOnResultListener(this);
+                ut.execute();
             }
 
         } catch (Exception e) {

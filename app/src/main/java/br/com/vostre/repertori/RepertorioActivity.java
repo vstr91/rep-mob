@@ -1,6 +1,8 @@
 package br.com.vostre.repertori;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 
 import br.com.vostre.repertori.adapter.ScreenPagerAdapter;
+import br.com.vostre.repertori.form.ModalCadastroMusica;
 import br.com.vostre.repertori.fragment.FragmentRepertorio;
+import br.com.vostre.repertori.listener.ModalCadastroListener;
+import br.com.vostre.repertori.utils.SnackbarHelper;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
-public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabSelectedListener, View.OnClickListener {
+public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabSelectedListener, View.OnClickListener, ModalCadastroListener {
 
     private ViewPager pager;
     private ScreenPagerAdapter pagerAdapter;
@@ -22,6 +27,9 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
     FragmentRepertorio repAtivo;
     FragmentRepertorio repEspera;
     FragmentRepertorio repSugestao;
+
+    FloatingActionButton fabNova;
+    int tabAtual = 0;
 
     Menu menu;
 
@@ -72,11 +80,15 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
         pagerAdapter.addView(repSugestao, 2);
         pagerAdapter.notifyDataSetChanged();
 
+        fabNova = (FloatingActionButton) findViewById(R.id.fabNova);
+        fabNova.setOnClickListener(this);
+
     }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         pager.setCurrentItem(tab.getPosition());
+        tabAtual = tab.getPosition();
     }
 
     @Override
@@ -89,4 +101,27 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
 
     }
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+
+        switch(v.getId()){
+            case R.id.fabNova:
+                SnackbarHelper.notifica(v, String.valueOf(tabAtual), Snackbar.LENGTH_SHORT);
+
+                ModalCadastroMusica modalCadastroMusica = new ModalCadastroMusica();
+                modalCadastroMusica.setListener(this);
+                modalCadastroMusica.setStatus(tabAtual);
+
+                modalCadastroMusica.show(getSupportFragmentManager(), "modalMusica");
+
+                break;
+        }
+
+    }
+
+    @Override
+    public void onModalCadastroDismissed(int resultado) {
+
+    }
 }

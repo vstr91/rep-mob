@@ -1,11 +1,13 @@
 package br.com.vostre.repertori;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,12 +32,12 @@ import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 
-public class EventoDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener, View.OnTouchListener {
+public class EventoDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     TextView textViewNome;
     TextView textViewData;
     ListView listViewMusicas;
-    MusicaList adapterMusicas;
+    static MusicaList adapterMusicas;
     ListView listViewComentarios;
     EditText editTextComentario;
     Button btnComentario;
@@ -48,9 +50,6 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     MusicaEventoDBHelper musicaEventoDBHelper;
     ComentarioEventoDBHelper comentarioEventoDBHelper;
     EventoDBHelper eventoDBHelper;
-
-    private Musica musicaSelecionada;
-    private int mPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,6 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
         listViewMusicas.setAdapter(adapterMusicas);
         listViewMusicas.setOnItemClickListener(this);
-        listViewMusicas.setOnTouchListener(this);
         listViewMusicas.setEmptyView(findViewById(R.id.textViewListaVazia));
 
         atualizaComentarios();
@@ -125,7 +123,13 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
                     comentarioEventoDBHelper.salvarOuAtualizar(getApplicationContext(), comentarioEvento);
                     editTextComentario.setText("");
                     atualizaComentarios();
-                    editTextComentario.clearFocus();
+
+                    View view = this.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Por favor digite o comentário.", Toast.LENGTH_SHORT).show();
                 }
@@ -144,48 +148,6 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         listViewComentarios.setAdapter(adapterComentarios);
         listViewComentarios.setEmptyView(findViewById(R.id.textViewListaComentarioVazia));
         listViewComentarios.invalidate();
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                break;
-            }
-            case MotionEvent.ACTION_MOVE: {
-                // 現在のポジションを取得し
-                int position = listViewMusicas.pointToPosition((int) event.getX(), (int) event.getY());
-                if (position < 0) {
-                    break;
-                }
-                // 移動が検出されたら入れ替え
-                if (position != mPosition) {
-                    mPosition = position;
-                    adapterMusicas.remove(musicaSelecionada);
-                    adapterMusicas.insert(musicaSelecionada, mPosition);
-                }
-                return true;
-            }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_OUTSIDE: {
-                stopDrag();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void startDrag(Musica musica) {
-        mPosition = -1;
-        musicaSelecionada = musica;
-        adapterMusicas.notifyDataSetChanged();
-    }
-
-    public void stopDrag() {
-        mPosition = -1;
-        musicaSelecionada = null;
-        adapterMusicas.notifyDataSetChanged();
     }
 
 }

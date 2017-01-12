@@ -41,12 +41,16 @@ public class MusicaDBAdapter {
         cv.put("slug", musica.getSlug());
         cv.put("id_artista", musica.getArtista().getId());
         cv.put("status", musica.getStatus());
+        cv.put("enviado", musica.getEnviado());
 
         if(musica.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(musica.getDataCadastro()));
         }
 
-        cv.put("data_recebimento", DataUtils.dataParaBanco(musica.getDataRecebimento()));
+        if(musica.getDataRecebimento() != null){
+            cv.put("data_recebimento", DataUtils.dataParaBanco(musica.getDataRecebimento()));
+        }
+
         cv.put("ultima_alteracao", DataUtils.dataParaBanco(musica.getUltimaAlteracao()));
 
         if(database.update("musica", cv, "_id = '"+musica.getId()+"'", null) < 1){
@@ -187,6 +191,22 @@ public class MusicaDBAdapter {
         database.close();
 
         return umMusica;
+    }
+
+    public boolean jaExiste(Musica musica){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug FROM musica WHERE nome = ? AND id_artista = ?", new String[]{musica.getNome(), musica.getArtista().getId()});
+
+        if(cursor.moveToFirst()){
+            cursor.close();
+            database.close();
+            return true;
+        } else{
+            cursor.close();
+            database.close();
+            return false;
+        }
+
     }
 
 }

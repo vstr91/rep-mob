@@ -18,7 +18,7 @@ public class MusicaDBHelper extends SQLiteOpenHelper {
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE musica (_id text primary key, nome text NOT NULL, " +
             "tom text NOT NULL, id_artista integer NOT NULL, status integer NOT NULL, data_cadastro text, " +
-            "data_recebimento text, ultima_alteracao text, slug text);";
+            "data_recebimento text, ultima_alteracao text, slug text, enviado integer NOT NULL);";
     RepDBHelper repDBHelper;
 
     public MusicaDBHelper(Context context){
@@ -62,6 +62,11 @@ public class MusicaDBHelper extends SQLiteOpenHelper {
     public Musica carregar(Context context, Musica musica){
         MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.carregar(musica);
+    }
+
+    public boolean jaExiste(Context context, Musica musica){
+        MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.jaExiste(musica);
     }
 
 }

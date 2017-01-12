@@ -29,7 +29,8 @@
             android:label="@string/title_activity_eventos" />
         <activity android:name=".MusicaDetalheActivity" />
         <activity android:name=".EventoDetalheActivity" />
-        <activity android:name=".BaseActivity"></activity>
+        <activity android:name=".BaseActivity" />
+        <activity android:name=".form.CadastraMusicaActivity"></activity>
     </application>
 
 </manifest>

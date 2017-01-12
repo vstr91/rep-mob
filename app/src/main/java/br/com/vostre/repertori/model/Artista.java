@@ -47,6 +47,11 @@ public class Artista extends EntidadeBase {
         this.slug = slug;
     }
 
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
