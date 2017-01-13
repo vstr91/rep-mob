@@ -56,16 +56,17 @@
                 android:layout_height="match_parent"
                 android:id="@+id/listViewExecucoes" />
 
-        </LinearLayout>
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nenhuma execução encontrada"
+                android:id="@+id/textViewListaVazia"
+                android:padding="5dp"
+                android:gravity="center"
+                android:visibility="gone" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nenhuma execução encontrada"
-        android:id="@+id/textViewListaVazia"
-        android:padding="5dp"
-        android:gravity="center"
-        android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

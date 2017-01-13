@@ -40,6 +40,8 @@ public class TipoEventoDBAdapter {
         cv.put("slug", tipoEvento.getSlug());
         cv.put("status", tipoEvento.getStatus());
 
+        cv.put("cor", tipoEvento.getCor());
+
         if(tipoEvento.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(tipoEvento.getDataCadastro()));
         }
@@ -65,7 +67,7 @@ public class TipoEventoDBAdapter {
     }
 
     public List<TipoEvento> listarTodos(){
-        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug, cor " +
                 "FROM tipo_evento", null);
         List<TipoEvento> tipoEventos = new ArrayList<TipoEvento>();
 
@@ -81,6 +83,7 @@ public class TipoEventoDBAdapter {
                 umTipoEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
                 umTipoEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
                 umTipoEvento.setSlug(cursor.getString(6));
+                umTipoEvento.setCor(cursor.getString(7));
 
                 tipoEventos.add(umTipoEvento);
             } while (cursor.moveToNext());
@@ -93,7 +96,7 @@ public class TipoEventoDBAdapter {
     }
 
     public TipoEvento carregar(TipoEvento tipoEvento){
-        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug, cor " +
                 "FROM tipo_evento WHERE _id = ?", new String[]{tipoEvento.getId()});
 
         TipoEvento umTipoEvento = null;
@@ -114,6 +117,7 @@ public class TipoEventoDBAdapter {
                 umTipoEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
                 umTipoEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
                 umTipoEvento.setSlug(cursor.getString(6));
+                umTipoEvento.setCor(cursor.getString(7));
 
             } while (cursor.moveToNext());
         }

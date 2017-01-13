@@ -49,6 +49,11 @@ public class MusicaDBHelper extends SQLiteOpenHelper {
         return adapter.listarTodosPorSituacao(situacao);
     }
 
+    public List<Musica> listarTodosAEnviar(Context context){
+        MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAEnviar();
+    }
+
     public long salvarOuAtualizar(Context context, Musica musica){
         MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.salvarOuAtualizar(musica);

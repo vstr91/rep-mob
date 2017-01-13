@@ -30,7 +30,9 @@ import br.com.vostre.repertori.listener.TokenTaskListener;
 import br.com.vostre.repertori.listener.UpdateSentTaskListener;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
 import br.com.vostre.repertori.model.ComentarioEvento;
+import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
 import br.com.vostre.repertori.utils.Constants;
 import br.com.vostre.repertori.utils.Crypt;
@@ -108,7 +110,9 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
         tokenCriptografado = null;
         List<ComentarioEvento> comentarios;
+        List<Musica> musicas;
         ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
+        MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
 
         try {
             tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
@@ -120,35 +124,65 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 //            String url = Constants.URLSERVIDORMSG+tokenCriptografado+"/-";
 
             comentarios = comentarioEventoDBHelper.listarTodosAEnviar(getApplicationContext());
+            musicas = musicaDBHelper.listarTodosAEnviar(getApplicationContext());
 
-            String json = "{\"comentarios\":[";
-            int cont = 1;
-            registros = comentarios.size();
+            int totalRegistros = comentarios.size() + musicas.size();
 
-            if(registros > 0){
-                for(ComentarioEvento umComentario : comentarios){
+            if(totalRegistros > 0){
+                String json = "{";
 
-                    if(cont < registros){
-                        json = json.concat(umComentario.toJson()+",");
-                    } else{
-                        json = json.concat(umComentario.toJson());
+                json = json.concat("\"comentarios\":[");
+                int cont = 1;
+                int qtdComentarios = comentarios.size();
+
+                if(qtdComentarios > 0) {
+                    for (ComentarioEvento umComentario : comentarios) {
+
+                        if (cont < qtdComentarios) {
+                            json = json.concat(umComentario.toJson() + ",");
+                        } else {
+                            json = json.concat(umComentario.toJson());
+                        }
+
+                        cont++;
+
                     }
-
-                    cont++;
-
                 }
 
-                json = json.concat("]}");
+                json = json.concat("],");
+
+                json = json.concat("\"musicas\":[");
+                cont = 1;
+                int qtdMusicas = musicas.size();
+
+                if(qtdMusicas > 0) {
+                    for (Musica umMusica : musicas) {
+
+                        if (cont < qtdMusicas) {
+                            json = json.concat(umMusica.toJson() + ",");
+                        } else {
+                            json = json.concat(umMusica.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
+                json = json.concat("]");
+
+                json = json.concat("}");
 
                 Map<String, String> map = new HashMap<>();
                 map.put("dados", json);
-                map.put("total", String.valueOf(registros));
+                map.put("total", String.valueOf(totalRegistros));
 
                 TarefaAssincrona utEnvio = new TarefaAssincrona(urlEnvio, "POST", AtualizaDadosService.this, map, true);
 
                 utEnvio.setOnResultListener(this);
                 utEnvio.execute();
-            } else{
+
+            }else{
                 String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
                 TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
                 ut.setOnResultListener(this);

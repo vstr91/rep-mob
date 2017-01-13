@@ -78,6 +78,7 @@ public class Musica extends EntidadeBase {
             umArtista.setId(object.getString("artista"));
             umArtista = artistaDBHelper.carregar(context, umArtista);
 
+            umMusica.setEnviado(0);
             umMusica.setArtista(umArtista);
             umMusica.setStatus(object.getInt("status"));
             umMusica.setDataRecebimento(Calendar.getInstance());
@@ -87,6 +88,18 @@ public class Musica extends EntidadeBase {
 
         }
 
+    }
+
+    public String toJson(){
+
+        String resultado = "";
+
+        resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"tom\": \""+this.getTom()+"\", " +
+                "\"artista\": \""+this.getArtista().getId()+"\", \"status\": "+this.getStatus()+",  " +
+                "\"data_cadastro\": \""+ DataUtils.dataParaBanco(this.getDataCadastro())+"\"}";
+
+
+        return resultado;
     }
 
 }

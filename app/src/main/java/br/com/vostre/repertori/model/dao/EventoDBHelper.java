@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import br.com.vostre.repertori.model.Evento;
@@ -52,6 +54,11 @@ public class EventoDBHelper extends SQLiteOpenHelper {
     public List<Evento> listarTodosAPartirDeHoje(Context context){
         EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodosAPartirDeHoje();
+    }
+
+    public List<Evento> listarTodosPorData(Context context, Calendar data){
+        EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorData(data);
     }
 
     public long salvarOuAtualizar(Context context, Evento evento){

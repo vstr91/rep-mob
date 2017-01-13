@@ -17,7 +17,7 @@ public class TipoEventoDBHelper extends SQLiteOpenHelper {
     private static final int DBVERSION = RepDBHelper.DBVERSION;
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE tipo_evento (_id text primary key, nome text NOT NULL, " +
-            "status integer NOT NULL, data_cadastro text, data_recebimento text, ultima_alteracao text, slug text);";
+            "status integer NOT NULL, data_cadastro text, data_recebimento text, ultima_alteracao text, slug text, cor text NOT NULL);";
     RepDBHelper repDBHelper;
 
     public TipoEventoDBHelper(Context context){

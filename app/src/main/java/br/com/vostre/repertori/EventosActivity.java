@@ -1,25 +1,39 @@
 package br.com.vostre.repertori;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
+
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import br.com.vostre.repertori.adapter.ScreenPagerAdapter;
 import br.com.vostre.repertori.fragment.FragmentEvento;
 import br.com.vostre.repertori.fragment.FragmentRepertorio;
+import br.com.vostre.repertori.model.Evento;
+import br.com.vostre.repertori.model.dao.EventoDBHelper;
 
-public class EventosActivity extends BaseActivity implements TabLayout.OnTabSelectedListener, View.OnClickListener {
+public class EventosActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewPager pager;
     private ScreenPagerAdapter pagerAdapter;
 
-    FragmentEvento eventosFuturos;
-    FragmentEvento eventosPassados;
-
-    Menu menu;
+    List<Evento> eventos;
+    EventoDBHelper eventoDBHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,49 +45,54 @@ public class EventosActivity extends BaseActivity implements TabLayout.OnTabSele
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab);
-        tabLayout.addTab(tabLayout.newTab().setText("Futuros"));
-        tabLayout.addTab(tabLayout.newTab().setText("Passados"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        eventoDBHelper = new EventoDBHelper(getApplicationContext());
 
-        tabLayout.setOnTabSelectedListener(this);
 
-        pager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new ScreenPagerAdapter(getSupportFragmentManager());
+        eventos = eventoDBHelper.listarTodos(getApplicationContext());
 
-        pager.setAdapter(pagerAdapter);
-        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        CaldroidFragment caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        caldroidFragment.setArguments(args);
 
-        Bundle argPassados = new Bundle();
-        argPassados.putInt("situacao", 0);
+        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.calendar, caldroidFragment);
+        t.commit();
 
-        eventosPassados = new FragmentEvento();
-        eventosPassados.setArguments(argPassados);
+        CaldroidListener listener = new CaldroidListener() {
+            @Override
+            public void onSelectDate(Date date, View view) {
 
-        Bundle argFuturos = new Bundle();
-        argFuturos.putInt("situacao", 1);
+                Calendar data = Calendar.getInstance();
+                data.setTime(date);
 
-        eventosFuturos = new FragmentEvento();
-        eventosFuturos.setArguments(argFuturos);
+                Toast.makeText(getApplicationContext(), date.toString(), Toast.LENGTH_SHORT).show();
+                List<Evento> eventosData = eventoDBHelper.listarTodosPorData(getApplicationContext(), data);
 
-        pagerAdapter.addView(eventosFuturos, 0);
-        pagerAdapter.addView(eventosPassados, 1);
-        pagerAdapter.notifyDataSetChanged();
+                if(eventosData.size() > 0){
+                    Toast.makeText(getApplicationContext(), "Eventos neste dia: "+eventosData.size(), Toast.LENGTH_LONG).show();
+                }
+            }
 
-    }
+            @Override
+            public void onLongClickDate(Date date, View view) {
+                Toast.makeText(getApplicationContext(), "Long: "+date.toString(), Toast.LENGTH_SHORT).show();
+            }
+        };
 
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        pager.setCurrentItem(tab.getPosition());
-    }
+        caldroidFragment.setCaldroidListener(listener);
 
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
+        for(Evento evento : eventos){
+            Drawable dr = ResourcesCompat.getDrawable(getResources(), R.drawable.fundo_evento, null);
+            int cor = Color.parseColor("#66"+evento.getTipoEvento().getCor().replace("#", ""));
+            dr.mutate().setColorFilter(cor, PorterDuff.Mode.MULTIPLY);
 
-    }
+            caldroidFragment.setBackgroundDrawableForDate(dr, evento.getData().getTime());
+        }
 
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
+        caldroidFragment.refreshView();
 
     }
 

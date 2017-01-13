@@ -42,6 +42,11 @@ public class DataUtils {
         return cal;
     }
 
+    public static String dataParaBancoSemHora(Calendar data){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(data.getTime());
+    }
+
     public static String toString(Calendar data){
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         return df.format(data.getTime());

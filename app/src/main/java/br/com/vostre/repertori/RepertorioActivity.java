@@ -107,8 +107,6 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
 
         switch(v.getId()){
             case R.id.fabNova:
-                SnackbarHelper.notifica(v, String.valueOf(tabAtual), Snackbar.LENGTH_SHORT);
-
                 ModalCadastroMusica modalCadastroMusica = new ModalCadastroMusica();
                 modalCadastroMusica.setListener(this);
                 modalCadastroMusica.setStatus(tabAtual);

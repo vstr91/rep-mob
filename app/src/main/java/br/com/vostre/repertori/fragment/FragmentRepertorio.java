@@ -16,6 +16,8 @@ import java.util.List;
 
 import br.com.vostre.repertori.MusicaDetalheActivity;
 import br.com.vostre.repertori.R;
+import br.com.vostre.repertori.form.ModalCadastroMusica;
+import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.adapter.MusicaList;
@@ -24,7 +26,7 @@ import br.com.vostre.repertori.utils.SnackbarHelper;
 /**
  * Created by Almir on 17/06/2015.
  */
-public class FragmentRepertorio extends Fragment implements TextWatcher, AdapterView.OnItemClickListener {
+public class FragmentRepertorio extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, AdapterView.OnItemLongClickListener {
 
     private ListView lista;
     MusicaList adapterMusicas;
@@ -53,24 +55,10 @@ public class FragmentRepertorio extends Fragment implements TextWatcher, Adapter
 
         lista.setAdapter(adapterMusicas);
         lista.setOnItemClickListener(this);
+        lista.setOnItemLongClickListener(this);
         lista.setEmptyView(rootView.findViewById(R.id.textViewListaVazia));
 
         return rootView;
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        adapterMusicas.getFilter().filter(s);
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
     }
 
     @Override
@@ -108,4 +96,18 @@ public class FragmentRepertorio extends Fragment implements TextWatcher, Adapter
         }
     }
 
+    @Override
+    public void onModalCadastroDismissed(int resultado) {
+        atualizaLista();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Musica musica = musicas.get(position);
+        ModalCadastroMusica modalCadastroMusica = new ModalCadastroMusica();
+        modalCadastroMusica.setListener(this);
+        modalCadastroMusica.setMusica(musica);
+
+        modalCadastroMusica.show(this.getFragmentManager(), "modalMusica");
+    }
 }

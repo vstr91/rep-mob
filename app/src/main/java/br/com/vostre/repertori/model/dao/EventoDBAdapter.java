@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -152,6 +153,53 @@ public class EventoDBAdapter {
     public List<Evento> listarTodosAPartirDeHoje(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
                 "ultima_alteracao, slug FROM evento WHERE data >= ? AND status != 2 ORDER BY data ASC", new String[]{DataUtils.dataParaBanco(Calendar.getInstance())});
+        List<Evento> eventos = new ArrayList<Evento>();
+
+        if(cursor.moveToFirst()){
+
+            TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
+
+            do{
+                Evento umEvento = new Evento();
+                umEvento.setId(cursor.getString(0));
+
+                umEvento.setNome(cursor.getString(1));
+                umEvento.setData(DataUtils.bancoParaData(cursor.getString(2)));
+
+                TipoEvento tipoEvento = new TipoEvento();
+                tipoEvento.setId(cursor.getString(3));
+                tipoEvento = tipoEventoDBHelper.carregar(context, tipoEvento);
+                umEvento.setTipoEvento(tipoEvento);
+
+                umEvento.setStatus(cursor.getInt(4));
+
+                if(cursor.getString(5) != null){
+                    umEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                umEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                umEvento.setSlug(cursor.getString(8));
+
+                eventos.add(umEvento);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return eventos;
+    }
+
+    public List<Evento> listarTodosPorData(Calendar data){
+
+        String umaData = DataUtils.dataParaBancoSemHora(data);
+        data.add(Calendar.DATE, 1);
+        String amanha = DataUtils.dataParaBancoSemHora(data);
+
+        Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug FROM evento WHERE data >= ? AND data < ? AND status != 2 ORDER BY data ASC",
+                new String[]{umaData, amanha});
         List<Evento> eventos = new ArrayList<Evento>();
 
         if(cursor.moveToFirst()){

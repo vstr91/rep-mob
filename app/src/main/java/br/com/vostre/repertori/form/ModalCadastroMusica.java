@@ -2,6 +2,7 @@ package br.com.vostre.repertori.form;
 
 import android.app.Dialog;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.utils.SnackbarHelper;
 
 public class ModalCadastroMusica extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -38,6 +40,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
     int status;
     Artista artista;
     List<Artista> artistas;
+    Musica musica;
 
     public int getStatus() {
         return status;
@@ -45,6 +48,14 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public Musica getMusica() {
+        return musica;
+    }
+
+    public void setMusica(Musica musica) {
+        this.musica = musica;
     }
 
     @Override
@@ -72,6 +83,12 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
 
         btnSalvar.setOnClickListener(this);
         btnFechar.setOnClickListener(this);
+
+        if(getMusica() != null){
+            editTextNome.setText(getMusica().getNome());
+            editTextTom.setText(getMusica().getTom());
+            spinnerArtista.setSelection(artistas.indexOf(getMusica().getArtista()));
+        }
 
         return view;
 
@@ -108,30 +125,58 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                 } else{
 
                     MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getContext());
+                    Musica aMusica;
 
-                    Musica musica = new Musica();
-                    musica.setNome(nome);
-                    musica.setTom(tom);
-                    musica.setArtista(artista);
-                    musica.setDataCadastro(Calendar.getInstance());
-                    musica.setUltimaAlteracao(Calendar.getInstance());
+                    if(getMusica() != null){
+                        aMusica = getMusica();
+                        musica.setNome(nome);
+                        musica.setTom(tom);
+                        musica.setArtista(artista);
+                        musica.setUltimaAlteracao(Calendar.getInstance());
+                        musica.setEnviado(-1);
 
-                    switch(getStatus()){
-                        case 0:
-                            musica.setStatus(0);
-                            break;
-                        case 1:
-                            musica.setStatus(1);
-                            break;
-                        case 2:
-                            musica.setStatus(3);
-                            break;
+                        switch(getStatus()){
+                            case 0:
+                                musica.setStatus(0);
+                                break;
+                            case 1:
+                                musica.setStatus(1);
+                                break;
+                            case 2:
+                                musica.setStatus(3);
+                                break;
+                        }
+                        
+                    } else{
+                        Musica musica = new Musica();
+                        musica.setNome(nome);
+                        musica.setTom(tom);
+                        musica.setArtista(artista);
+                        musica.setDataCadastro(Calendar.getInstance());
+                        musica.setUltimaAlteracao(Calendar.getInstance());
+                        musica.setEnviado(-1);
+
+                        switch(getStatus()){
+                            case 0:
+                                musica.setStatus(0);
+                                break;
+                            case 1:
+                                musica.setStatus(1);
+                                break;
+                            case 2:
+                                musica.setStatus(3);
+                                break;
+                        }
                     }
+
+
 
                     if(musica.getId() != null && musicaDBHelper.jaExiste(getContext(), musica)){
                         Toast.makeText(getContext(), "O registro informado já existe!", Toast.LENGTH_SHORT).show();
                     } else{
                         musicaDBHelper.salvarOuAtualizar(getContext(), musica);
+                        SnackbarHelper.notifica(getView(), "Cadastrado com Sucesso!", Snackbar.LENGTH_LONG);
+                        dismiss();
                     }
 
                 }
