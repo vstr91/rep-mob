@@ -75,4 +75,14 @@ public class Artista extends EntidadeBase {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if(!(o instanceof Artista)){
+            return false;
+        }
+
+        Artista artista = (Artista) o;
+        return artista.getId().equals(this.getId());
+    }
 }

@@ -95,15 +95,15 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
 
         StatusMusica emEspera = new StatusMusica();
         emEspera.setId(1);
-        emEspera.setTexto("Em Espera");
+        emEspera.setTexto("Fila");
 
         StatusMusica inativo = new StatusMusica();
         inativo.setId(2);
-        inativo.setTexto("Inativo");
+        inativo.setTexto("Descartada");
 
         StatusMusica sugestao = new StatusMusica();
         sugestao.setId(3);
-        sugestao.setTexto("Sugestão");
+        sugestao.setTexto("Removida");
 
         statusList.add(ativo);
         statusList.add(emEspera);
@@ -125,7 +125,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
             editTextNome.setText(getMusica().getNome());
             editTextTom.setText(getMusica().getTom());
             Artista artista = getMusica().getArtista();
-            int index = adapterArtista.getPosition(artista);
+            int index = artistas.indexOf(artista);
             spinnerArtista.setSelection(index);
 
             switch(musica.getStatus()){

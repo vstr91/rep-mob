@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import br.com.vostre.repertori.adapter.ScreenPagerAdapter;
 import br.com.vostre.repertori.form.ModalCadastroMusica;
@@ -27,6 +28,7 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
     FragmentRepertorio repAtivo;
     FragmentRepertorio repEspera;
     FragmentRepertorio repSugestao;
+    FragmentRepertorio repInativo;
 
     FloatingActionButton fabNova;
     int tabAtual = 0;
@@ -44,9 +46,10 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab);
-        tabLayout.addTab(tabLayout.newTab().setText("Oficial"));
-        tabLayout.addTab(tabLayout.newTab().setText("Em Espera"));
-        tabLayout.addTab(tabLayout.newTab().setText("Sugestões"));
+        tabLayout.addTab(tabLayout.newTab().setText("Ativo"));
+        tabLayout.addTab(tabLayout.newTab().setText("Fila"));
+        tabLayout.addTab(tabLayout.newTab().setText("Sugest."));
+        tabLayout.addTab(tabLayout.newTab().setText("Remov."));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         tabLayout.setOnTabSelectedListener(this);
@@ -75,9 +78,16 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
         repSugestao = new FragmentRepertorio();
         repSugestao.setArguments(argSugestao);
 
+        Bundle argInativo = new Bundle();
+        argInativo.putInt("situacao", 2);
+
+        repInativo = new FragmentRepertorio();
+        repInativo.setArguments(argInativo);
+
         pagerAdapter.addView(repAtivo, 0);
         pagerAdapter.addView(repEspera, 1);
         pagerAdapter.addView(repSugestao, 2);
+        pagerAdapter.addView(repInativo, 3);
         pagerAdapter.notifyDataSetChanged();
 
         fabNova = (FloatingActionButton) findViewById(R.id.fabNova);
@@ -97,8 +107,11 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
             case 1:
                 repEspera.atualizaLista(1);
                 break;
-            case 3:
+            case 2:
                 repSugestao.atualizaLista(3);
+                break;
+            case 3:
+                repSugestao.atualizaLista(2);
                 break;
         }
 
@@ -111,7 +124,6 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-
     }
 
     @Override
@@ -140,8 +152,11 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
             case 1:
                 repEspera.atualizaLista(1);
                 break;
-            case 3:
+            case 2:
                 repSugestao.atualizaLista(3);
+                break;
+            case 3:
+                repSugestao.atualizaLista(2);
                 break;
         }
     }
