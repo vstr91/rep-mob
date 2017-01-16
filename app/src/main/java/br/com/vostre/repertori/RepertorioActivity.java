@@ -89,6 +89,19 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
     public void onTabSelected(TabLayout.Tab tab) {
         pager.setCurrentItem(tab.getPosition());
         tabAtual = tab.getPosition();
+
+        switch(tabAtual){
+            case 0:
+                repAtivo.atualizaLista(0);
+                break;
+            case 1:
+                repEspera.atualizaLista(1);
+                break;
+            case 3:
+                repSugestao.atualizaLista(3);
+                break;
+        }
+
     }
 
     @Override
@@ -120,6 +133,16 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
 
     @Override
     public void onModalCadastroDismissed(int resultado) {
-
+        switch(tabAtual){
+            case 0:
+                repAtivo.atualizaLista(0);
+                break;
+            case 1:
+                repEspera.atualizaLista(1);
+                break;
+            case 3:
+                repSugestao.atualizaLista(3);
+                break;
+        }
     }
 }

@@ -2,4 +2,9 @@
     <string name="app_name">Repertori</string>
     <string name="title_activity_repertorio">Repertório</string>
     <string name="title_activity_eventos">Eventos</string>
+    <array name="valores_status">
+        <item>Ativo</item>
+        <item>Em Espera</item>
+        <item>Sugestão</item>
+    </array>
 </resources>

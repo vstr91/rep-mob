@@ -16,6 +16,7 @@ import java.util.List;
 
 import br.com.vostre.repertori.MusicaDetalheActivity;
 import br.com.vostre.repertori.R;
+import br.com.vostre.repertori.RepertorioActivity;
 import br.com.vostre.repertori.form.ModalCadastroMusica;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Musica;
@@ -73,8 +74,7 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onResume() {
         super.onResume();
-        atualizaLista();
-
+        atualizaLista(situacao);
     }
 
     private List<Musica> carregaMusicas(int situacao){
@@ -85,20 +85,20 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
 
     }
 
-    public void atualizaLista(){
-        musicas = carregaMusicas(situacao);
+    public void atualizaLista(int status){
+        musicas = carregaMusicas(status);
         adapterMusicas =
                 new MusicaList(getActivity(), android.R.layout.simple_spinner_dropdown_item, musicas);
-        adapterMusicas.notifyDataSetChanged();
 
         if(lista != null){
             lista.setAdapter(adapterMusicas);
+            adapterMusicas.notifyDataSetChanged();
         }
     }
 
     @Override
     public void onModalCadastroDismissed(int resultado) {
-        atualizaLista();
+        atualizaLista(situacao);
     }
 
     @Override
@@ -109,5 +109,8 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
         modalCadastroMusica.setMusica(musica);
 
         modalCadastroMusica.show(this.getFragmentManager(), "modalMusica");
+
+        return true;
+
     }
 }
