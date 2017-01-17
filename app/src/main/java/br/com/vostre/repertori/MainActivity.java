@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btnRepertorio;
     Button btnEventos;
+    Button btnArtistas;
     Menu menu;
 
     @Override
@@ -37,9 +38,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnRepertorio = (Button) findViewById(R.id.btnRepertorio);
         btnEventos = (Button) findViewById(R.id.btnEventos);
+        btnArtistas = (Button) findViewById(R.id.btnArtistas);
 
         btnRepertorio.setOnClickListener(this);
         btnEventos.setOnClickListener(this);
+        btnArtistas.setOnClickListener(this);
 
     }
 
@@ -114,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnEventos:
                 intent = new Intent(getBaseContext(), EventosActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btnArtistas:
+                intent = new Intent(getBaseContext(), ArtistasActivity.class);
                 startActivity(intent);
                 break;
         }

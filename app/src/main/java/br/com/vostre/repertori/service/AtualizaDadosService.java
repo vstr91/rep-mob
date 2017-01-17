@@ -198,6 +198,11 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     @Override
     public void onTarefaAssincronaResultSucceeded(Map<String, Object> map) {
 
+        if(map == null || map.size() == 0){
+            Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if(map.get("metodo").equals("GET")){
             JSONObject jObj = (JSONObject) map.get("json");
             dataUltimoAcesso = (String) map.get("dataUltimoAcesso");
@@ -216,7 +221,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     e.printStackTrace();
                 }
             } else {
-                Toast.makeText(this, "Erro ao receber dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
             }
 
             if(registros > 0){

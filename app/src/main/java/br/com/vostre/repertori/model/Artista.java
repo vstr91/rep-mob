@@ -66,6 +66,7 @@ public class Artista extends EntidadeBase {
             umArtista.setNome(object.getString("nome"));
             umArtista.setSlug(object.getString("slug"));
             umArtista.setStatus(object.getInt("status"));
+            umArtista.setEnviado(0);
             umArtista.setDataRecebimento(Calendar.getInstance());
             umArtista.setUltimaAlteracao(DataUtils.apiParaData(object.getString("ultima_alteracao")));
 
@@ -73,6 +74,17 @@ public class Artista extends EntidadeBase {
 
         }
 
+    }
+
+    public String toJson(){
+
+        String resultado = "";
+
+        resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"status\": "+this.getStatus()+",  " +
+                "\"data_cadastro\": \""+ DataUtils.dataParaBanco(this.getDataCadastro())+"\"}";
+
+
+        return resultado;
     }
 
     @Override

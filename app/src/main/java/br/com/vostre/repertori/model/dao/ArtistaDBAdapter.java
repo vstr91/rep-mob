@@ -38,12 +38,16 @@ public class ArtistaDBAdapter {
         cv.put("nome", artista.getNome());
         cv.put("slug", artista.getSlug());
         cv.put("status", artista.getStatus());
+        cv.put("enviado", artista.getEnviado());
 
         if(artista.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(artista.getDataCadastro()));
         }
 
-        cv.put("data_recebimento", DataUtils.dataParaBanco(artista.getDataRecebimento()));
+        if(artista.getDataRecebimento() != null){
+            cv.put("data_recebimento", DataUtils.dataParaBanco(artista.getDataRecebimento()));
+        }
+
         cv.put("ultima_alteracao", DataUtils.dataParaBanco(artista.getUltimaAlteracao()));
 
         if(database.update("artista", cv, "_id = '"+artista.getId()+"'", null) < 1){
@@ -80,7 +84,10 @@ public class ArtistaDBAdapter {
                     umArtista.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
                 }
 
-                umArtista.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
+                if(cursor.getString(4) != null){
+                    umArtista.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
+                }
+
                 umArtista.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
                 umArtista.setSlug(cursor.getString(6));
 
@@ -112,7 +119,10 @@ public class ArtistaDBAdapter {
                     umArtista.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
                 }
 
-                umArtista.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
+                if(cursor.getString(4) != null){
+                    umArtista.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
+                }
+
                 umArtista.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
                 umArtista.setSlug(cursor.getString(6));
 
@@ -123,6 +133,22 @@ public class ArtistaDBAdapter {
         database.close();
 
         return umArtista;
+    }
+
+    public boolean jaExiste(Artista artista){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
+                "FROM artista WHERE _id = ?", new String[]{artista.getId()});
+
+        if(cursor.moveToFirst()){
+            cursor.close();
+            database.close();
+            return true;
+        } else{
+            cursor.close();
+            database.close();
+            return false;
+        }
+
     }
 
 }

@@ -18,7 +18,7 @@ public class ArtistaDBHelper extends SQLiteOpenHelper {
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE artista (_id text primary key, " +
             "nome text NOT NULL, " +
-            "status integer NOT NULL, slug text, data_cadastro text, data_recebimento text, ultima_alteracao text);";
+            "status integer NOT NULL, slug text, data_cadastro text, data_recebimento text, ultima_alteracao text, enviado integer NOT NULL);";
     RepDBHelper repDBHelper;
 
     public ArtistaDBHelper(Context context){
@@ -57,6 +57,11 @@ public class ArtistaDBHelper extends SQLiteOpenHelper {
     public Artista carregar(Context context, Artista artista){
         ArtistaDBAdapter adapter = new ArtistaDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.carregar(artista);
+    }
+
+    public boolean jaExiste(Context context, Artista artista){
+        ArtistaDBAdapter adapter = new ArtistaDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.jaExiste(artista);
     }
 
 }

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
     Spinner spinnerStatus;
     Button btnSalvar;
     Button btnFechar;
+
+    TextView textViewLabelStatus;
 
     ModalCadastroListener listener;
 
@@ -83,6 +86,8 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
         btnSalvar = (Button) view.findViewById(R.id.btnSalvar);
         btnFechar = (Button) view.findViewById(R.id.btnFechar);
 
+        textViewLabelStatus = (TextView) view.findViewById(R.id.textViewLabelStatus);
+
         artistaDBHelper = new ArtistaDBHelper(getContext());
         artistas = artistaDBHelper.listarTodos(getContext());
         ArtistaList adapterArtista = new ArtistaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas);
@@ -97,18 +102,18 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
         emEspera.setId(1);
         emEspera.setTexto("Fila");
 
-        StatusMusica inativo = new StatusMusica();
-        inativo.setId(2);
-        inativo.setTexto("Descartada");
-
         StatusMusica sugestao = new StatusMusica();
         sugestao.setId(3);
-        sugestao.setTexto("Removida");
+        sugestao.setTexto("Sugestão");
+
+        StatusMusica inativo = new StatusMusica();
+        inativo.setId(2);
+        inativo.setTexto("Removida");
 
         statusList.add(ativo);
         statusList.add(emEspera);
-        statusList.add(inativo);
         statusList.add(sugestao);
+        statusList.add(inativo);
 
         SpinnerAdapter statusAdapter = new ArrayAdapter<StatusMusica>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, statusList);
@@ -142,6 +147,10 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                     spinnerStatus.setSelection(statusList.indexOf(sugestao));
                     break;
             }
+
+        } else{
+            spinnerStatus.setVisibility(View.GONE);
+            textViewLabelStatus.setVisibility(View.GONE);
 
         }
 

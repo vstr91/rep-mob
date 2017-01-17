@@ -28,5 +28,12 @@
             android:id="@+id/btnEventos"
             android:layout_weight="1" />
 
+        <Button
+            android:text="Artistas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnArtistas"
+            android:layout_weight="1" />
+
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
