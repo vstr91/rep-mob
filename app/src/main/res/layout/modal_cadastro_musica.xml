@@ -32,12 +32,26 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <TextView
+        android:text="Selecione o Artista"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinnerArtista"
         android:layout_weight="1"
         android:spinnerMode="dialog" />
+
+    <TextView
+        android:text="Selecione o Status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <Spinner
         android:layout_width="match_parent"
