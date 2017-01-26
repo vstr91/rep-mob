@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Evento;
 
 /**
@@ -20,7 +21,7 @@ public class EventoDBHelper extends SQLiteOpenHelper {
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE evento (_id text primary key, nome text NOT NULL, " +
             "data text NOT NULL, id_tipo_evento integer NOT NULL, status integer NOT NULL, data_cadastro text, " +
-            "data_recebimento text, ultima_alteracao text, slug text);";
+            "data_recebimento text, ultima_alteracao text, slug text, enviado integer NOT NULL);";
     RepDBHelper repDBHelper;
 
     public EventoDBHelper(Context context){
@@ -44,6 +45,11 @@ public class EventoDBHelper extends SQLiteOpenHelper {
     public List<Evento> listarTodos(Context context){
         EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodos();
+    }
+
+    public List<Evento> listarTodosAEnviar(Context context){
+        EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAEnviar();
     }
 
     public List<Evento> listarTodosAteHoje(Context context){
@@ -74,6 +80,11 @@ public class EventoDBHelper extends SQLiteOpenHelper {
     public Evento carregar(Context context, Evento evento){
         EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.carregar(evento);
+    }
+
+    public boolean jaExiste(Context context, Evento evento){
+        EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.jaExiste(evento);
     }
 
 }

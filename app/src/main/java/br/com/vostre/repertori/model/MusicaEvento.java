@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.List;
 
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
@@ -79,6 +80,8 @@ public class MusicaEvento extends EntidadeBase {
             umaMusica = musicaDBHelper.carregar(context, umaMusica);
 
             umMusicaEvento.setMusica(umaMusica);
+
+            List<Evento> eventos = eventoDBHelper.listarTodos(context);
 
             Evento umEvento = new Evento();
             umEvento.setId(object.getString("evento"));

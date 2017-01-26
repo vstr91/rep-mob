@@ -70,4 +70,20 @@ public class TipoEvento extends EntidadeBase {
 
     }
 
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if(!(o instanceof TipoEvento)){
+            return false;
+        }
+
+        TipoEvento tipoEvento = (TipoEvento) o;
+        return tipoEvento.getId().equals(this.getId());
+    }
+
 }

@@ -27,10 +27,13 @@
         <activity
             android:name=".EventosActivity"
             android:label="@string/title_activity_eventos" />
-        <activity android:name=".MusicaDetalheActivity" />
-        <activity android:name=".EventoDetalheActivity" />
+        <activity android:name=".MusicaDetalheActivity"
+            android:label="@string/title_activity_musica_detalhe" />
+        <activity android:name=".EventoDetalheActivity"
+            android:label="@string/title_activity_evento_detalhe" />
         <activity android:name=".BaseActivity" />
-        <activity android:name=".ArtistasActivity"></activity>
+        <activity android:name=".ArtistasActivity"
+            android:label="@string/title_activity_artistas"></activity>
     </application>
 
 </manifest>

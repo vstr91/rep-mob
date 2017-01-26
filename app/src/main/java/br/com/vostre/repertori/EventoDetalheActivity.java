@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,6 +23,8 @@ import java.util.List;
 import br.com.vostre.repertori.adapter.ComentarioList;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.form.ModalCadastroEvento;
+import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
@@ -31,8 +35,9 @@ import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.SnackbarHelper;
+import br.com.vostre.repertori.utils.ToolbarUtils;
 
-public class EventoDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class EventoDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener, ModalCadastroListener {
 
     TextView textViewNome;
     TextView textViewData;
@@ -79,7 +84,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         evento = eventoDBHelper.carregar(getApplicationContext(), evento);
 
         textViewNome.setText(evento.getNome());
-        textViewData.setText(DataUtils.toString(evento.getData()));
+        textViewData.setText(DataUtils.toString(evento.getData(), true));
 
         musicas = musicaEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
 
@@ -94,6 +99,47 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
         atualizaComentarios();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.evento_detalhe, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        Intent intent;
+
+        switch (id){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.icon_edit:
+
+                ModalCadastroEvento modalCadastroEvento = new ModalCadastroEvento();
+                modalCadastroEvento.setListener(this);
+                modalCadastroEvento.setEvento(evento);
+                modalCadastroEvento.setData(evento.getData());
+
+                modalCadastroEvento.show(getSupportFragmentManager(), "modalEvento");
+
+                break;
+            /*case R.id.icon_sobre:
+                intent = new Intent(this, Sobre.class);
+                startActivity(intent);
+                break;*/
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -150,4 +196,8 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         listViewComentarios.invalidate();
     }
 
+    @Override
+    public void onModalCadastroDismissed(int resultado) {
+
+    }
 }

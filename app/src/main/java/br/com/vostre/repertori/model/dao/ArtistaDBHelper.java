@@ -44,6 +44,11 @@ public class ArtistaDBHelper extends SQLiteOpenHelper {
         return adapter.listarTodos();
     }
 
+    public List<Artista> listarTodosAEnviar(Context context){
+        ArtistaDBAdapter adapter = new ArtistaDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAEnviar();
+    }
+
     public long salvarOuAtualizar(Context context, Artista artista){
         ArtistaDBAdapter adapter = new ArtistaDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.salvarOuAtualizar(artista);

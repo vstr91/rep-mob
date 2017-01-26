@@ -28,7 +28,7 @@ import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 /**
  * Created by Almir on 17/06/2015.
  */
-public class FragmentEvento extends Fragment implements TextWatcher, AdapterView.OnItemClickListener {
+public class FragmentEvento extends Fragment implements AdapterView.OnItemClickListener {
 
     private ListView lista;
     EventoList adapterEventos;
@@ -60,21 +60,6 @@ public class FragmentEvento extends Fragment implements TextWatcher, AdapterView
         lista.setEmptyView(rootView.findViewById(R.id.textViewListaVazia));
 
         return rootView;
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        adapterEventos.getFilter().filter(s);
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
     }
 
     @Override

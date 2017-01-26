@@ -101,6 +101,40 @@ public class ArtistaDBAdapter {
         return artistas;
     }
 
+    public List<Artista> listarTodosAEnviar(){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
+                "FROM artista WHERE enviado = -1", null);
+        List<Artista> artistas = new ArrayList<Artista>();
+
+        if(cursor.moveToFirst()){
+            do{
+                Artista umArtista = new Artista();
+                umArtista.setId(cursor.getString(0));
+
+                umArtista.setNome(cursor.getString(1));
+                umArtista.setStatus(cursor.getInt(2));
+
+                if(cursor.getString(3) != null){
+                    umArtista.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                }
+
+                if(cursor.getString(4) != null){
+                    umArtista.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
+                }
+
+                umArtista.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
+                umArtista.setSlug(cursor.getString(6));
+
+                artistas.add(umArtista);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return artistas;
+    }
+
     public Artista carregar(Artista artista){
         Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
                 "FROM artista WHERE _id = ?", new String[]{artista.getId()});

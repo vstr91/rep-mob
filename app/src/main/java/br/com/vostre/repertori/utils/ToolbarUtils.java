@@ -16,55 +16,38 @@ import br.com.vostre.repertori.R;
  */
 public class ToolbarUtils {
 
-    static TextView textViewBadgeMsg;
-    static ImageButton imageButtonMsg;
     static View.OnClickListener mListener;
 
     public static void preparaMenu(Menu menu, Activity activity, View.OnClickListener listener){
 
-        activity.getMenuInflater().inflate(R.menu.main, menu);
-
-//        MenuItem itemMsg = menu.findItem(R.id.icon_msg);
-//        MenuItemCompat.getActionView(itemMsg).setOnClickListener(listener);
+//        activity.getMenuInflater().inflate(R.menu.main, menu);
+//
+//        MenuItem itemEdit = menu.findItem(R.id.icon_edit);
+//        MenuItemCompat.getActionView(itemEdit).setOnClickListener(listener);
 //
 //        mListener = listener;
-//
-//        int qtdMensagensNaoLidas = MessageUtils.getQuantidadeMensagensNaoLidas(activity);
-//        textViewBadgeMsg = (TextView) MenuItemCompat.getActionView(itemMsg).findViewById(R.id.textViewBadgeMsg);
-//        imageButtonMsg = (ImageButton) MenuItemCompat.getActionView(itemMsg).findViewById(R.id.imageButtonMsg);
-//        imageButtonMsg.setOnClickListener(mListener);
-//
-//        atualizaBadge(qtdMensagensNaoLidas);
 
     }
 
-    public static void preparaMenuMensagem(Menu menu, Activity activity, View.OnClickListener listener){
+    public static void preparaMenuEvento(Menu menu, Activity activity, View.OnClickListener listener){
 
-//        activity.getMenuInflater().inflate(R.menu.main, menu);
-//
-//        MenuItem itemMsg = menu.findItem(R.id.icon_msg);
-//        MenuItemCompat.getActionView(itemMsg).setOnClickListener(listener);
-//
-//        mListener = listener;
-//
-//        int qtdMensagensNaoLidas = MessageUtils.getQuantidadeMensagensNaoLidas(activity);
-//        textViewBadgeMsg = (TextView) MenuItemCompat.getActionView(itemMsg).findViewById(R.id.textViewBadgeMsg);
-//        imageButtonMsg = (ImageButton) MenuItemCompat.getActionView(itemMsg).findViewById(R.id.imageButtonMsg);
-//        imageButtonMsg.setOnClickListener(mListener);
-//
-//        atualizaBadge(qtdMensagensNaoLidas);
+        activity.getMenuInflater().inflate(R.menu.evento_detalhe, menu);
+
+        MenuItem itemEdit = menu.findItem(R.id.icon_edit);
+        View a = MenuItemCompat.getActionView(itemEdit);
+        a.setOnClickListener(listener);
+
+        mListener = listener;
 
     }
 
     public static void onMenuItemClick(View v, Activity activity){
-        switch(v.getId()){
-//            case R.id.textViewBadgeMsg:
-//            case R.id.imageButtonMsg:
-//            case R.id.icon_msg:
+//        switch(v.getId()){
+//            case R.id.icon_edit:
 //                Intent intent = new Intent(activity, Mensagens.class);
 //                activity.startActivity(intent);
 //                break;
-        }
+//        }
     }
 
 }

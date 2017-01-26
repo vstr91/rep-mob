@@ -54,7 +54,7 @@ public class ServerUtils extends AsyncTask<String, Integer, Boolean> {
     @Override
     protected Boolean doInBackground(String... strings) {
 
-        boolean exists = false;
+        boolean exists = true;
 
         try {
             SocketAddress sockaddr = new InetSocketAddress(strings[0], Integer.parseInt(strings[1]));

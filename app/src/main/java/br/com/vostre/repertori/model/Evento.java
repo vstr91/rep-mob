@@ -81,11 +81,24 @@ public class Evento extends EntidadeBase {
             umEvento.setStatus(object.getInt("status"));
             umEvento.setDataRecebimento(Calendar.getInstance());
             umEvento.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
+            umEvento.setEnviado(0);
 
             eventoDBHelper.salvarOuAtualizar(context, umEvento);
 
         }
 
+    }
+
+    public String toJson(){
+
+        String resultado = "";
+
+        resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"data\": \""+DataUtils.dataParaBanco(this.getData())+"\", " +
+                "\"tipo_evento\": \""+this.getTipoEvento().getId()+"\", \"status\": "+this.getStatus()+",  " +
+                "\"data_cadastro\": \""+ DataUtils.dataParaBanco(this.getDataCadastro())+"\"}";
+
+
+        return resultado;
     }
     
 }

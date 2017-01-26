@@ -16,7 +16,7 @@ import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.utils.DataUtils;
 
 /**
- * Created by Cefet on 27/08/2015.
+ * Created by Almir on 27/08/2015.
  */
 public class EventoList extends ArrayAdapter<Evento> {
 
@@ -36,11 +36,13 @@ public class EventoList extends ArrayAdapter<Evento> {
         View rowView = inflater.inflate(R.layout.listview_eventos, null, true);
         TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
         TextView textViewData = (TextView) rowView.findViewById(R.id.textViewData);
+        TextView textViewTipoEvento = (TextView) rowView.findViewById(R.id.textViewTipoEvento);
 
         Evento evento = eventos.get(position);
 
         textViewNome.setText(evento.getNome());
-        textViewData.setText(DataUtils.toString(evento.getData()));
+        textViewData.setText(DataUtils.toString(evento.getData(), true));
+        textViewTipoEvento.setText(evento.getTipoEvento().getNome());
 
         return rowView;
     }

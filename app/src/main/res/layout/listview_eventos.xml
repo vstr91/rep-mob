@@ -21,15 +21,31 @@
             android:gravity="center_vertical"
             android:layout_weight="1" />
 
-        <TextView
-            android:text="TextView"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewData"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:gravity="center_vertical" />
+            android:layout_weight="1">
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/textViewData"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/textViewTipoEvento"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:gravity="center_vertical" />
+        </LinearLayout>
 
     </LinearLayout>
 

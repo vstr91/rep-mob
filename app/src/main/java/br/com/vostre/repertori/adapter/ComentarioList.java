@@ -39,7 +39,7 @@ public class ComentarioList extends ArrayAdapter<ComentarioEvento> {
         ComentarioEvento comentario = comentarios.get(position);
 
         textViewTexto.setText(comentario.getTexto());
-        textViewData.setText(DataUtils.toString(comentario.getUltimaAlteracao()));
+        textViewData.setText(DataUtils.toString(comentario.getUltimaAlteracao(), true));
 
         return rowView;
     }

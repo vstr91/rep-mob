@@ -79,7 +79,10 @@ public class TipoEventoDBAdapter {
                 umTipoEvento.setNome(cursor.getString(1));
                 umTipoEvento.setStatus(cursor.getInt(2));
 
-                umTipoEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                if(cursor.getString(3) != null){
+                    umTipoEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                }
+
                 umTipoEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
                 umTipoEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
                 umTipoEvento.setSlug(cursor.getString(6));
@@ -112,7 +115,6 @@ public class TipoEventoDBAdapter {
                 if(cursor.getString(3) != null){
                     umTipoEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
                 }
-
 
                 umTipoEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
                 umTipoEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));

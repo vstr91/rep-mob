@@ -1,5 +1,6 @@
 package br.com.vostre.repertori;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -22,18 +23,27 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.vostre.repertori.adapter.ScreenPagerAdapter;
+import br.com.vostre.repertori.form.ModalCadastroEvento;
+import br.com.vostre.repertori.form.ModalEventos;
+import br.com.vostre.repertori.form.ModalHora;
 import br.com.vostre.repertori.fragment.FragmentEvento;
 import br.com.vostre.repertori.fragment.FragmentRepertorio;
+import br.com.vostre.repertori.listener.ModalCadastroListener;
+import br.com.vostre.repertori.listener.ModalEventoListener;
+import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 
-public class EventosActivity extends BaseActivity implements View.OnClickListener {
+public class EventosActivity extends BaseActivity implements View.OnClickListener, ModalCadastroListener, ModalHoraListener, ModalEventoListener {
 
     private ViewPager pager;
     private ScreenPagerAdapter pagerAdapter;
 
     List<Evento> eventos;
     EventoDBHelper eventoDBHelper;
+
+    Calendar dataEscolhida;
+    CaldroidFragment caldroidFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +57,7 @@ public class EventosActivity extends BaseActivity implements View.OnClickListene
 
         eventoDBHelper = new EventoDBHelper(getApplicationContext());
 
-
-        eventos = eventoDBHelper.listarTodos(getApplicationContext());
-
-        CaldroidFragment caldroidFragment = new CaldroidFragment();
+        caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
         Calendar cal = Calendar.getInstance();
         args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
@@ -65,24 +72,79 @@ public class EventosActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onSelectDate(Date date, View view) {
 
-                Calendar data = Calendar.getInstance();
-                data.setTime(date);
+                dataEscolhida = Calendar.getInstance();
+                dataEscolhida.setTime(date);
 
-                Toast.makeText(getApplicationContext(), date.toString(), Toast.LENGTH_SHORT).show();
-                List<Evento> eventosData = eventoDBHelper.listarTodosPorData(getApplicationContext(), data);
+                List<Evento> eventosData = eventoDBHelper.listarTodosPorData(getApplicationContext(), dataEscolhida);
 
                 if(eventosData.size() > 0){
-                    Toast.makeText(getApplicationContext(), "Eventos neste dia: "+eventosData.size(), Toast.LENGTH_LONG).show();
+                    abrirModalEventos(eventosData);
+                } else{
+                    abrirModalHora();
                 }
             }
 
             @Override
             public void onLongClickDate(Date date, View view) {
-                Toast.makeText(getApplicationContext(), "Long: "+date.toString(), Toast.LENGTH_SHORT).show();
+
             }
         };
 
         caldroidFragment.setCaldroidListener(listener);
+
+        atualizaCalendario();
+
+        caldroidFragment.refreshView();
+
+    }
+
+    @Override
+    public void onModalCadastroDismissed(int resultado) {
+
+        if(resultado > -1){
+            atualizaCalendario();
+        }
+
+    }
+
+    private void abrirModalCadastro(Evento evento, Calendar data){
+        ModalCadastroEvento modalCadastroEvento = new ModalCadastroEvento();
+        modalCadastroEvento.setListener(this);
+
+        if(evento != null){
+            modalCadastroEvento.setEvento(evento);
+        }
+
+        if(data != null){
+            modalCadastroEvento.setData(data);
+        }
+
+        modalCadastroEvento.show(getSupportFragmentManager(), "modalEvento");
+    }
+
+    private void abrirModalHora(){
+        ModalHora modalHora = new ModalHora();
+        modalHora.setListener(this);
+
+        modalHora.show(getSupportFragmentManager(), "modalHora");
+    }
+
+    @Override
+    public void onModalHoraDismissed(String hora) {
+
+        if(hora != null){
+            String[] dadosHora = hora.split(":");
+
+            dataEscolhida.set(Calendar.HOUR_OF_DAY, Integer.parseInt(dadosHora[0]));
+            dataEscolhida.set(Calendar.MINUTE, Integer.parseInt(dadosHora[1]));
+            abrirModalCadastro(null, dataEscolhida);
+        }
+
+    }
+
+    private void atualizaCalendario(){
+
+        eventos = eventoDBHelper.listarTodos(getApplicationContext());
 
         for(Evento evento : eventos){
             Drawable dr = ResourcesCompat.getDrawable(getResources(), R.drawable.fundo_evento, null);
@@ -93,7 +155,23 @@ public class EventosActivity extends BaseActivity implements View.OnClickListene
         }
 
         caldroidFragment.refreshView();
-
     }
 
+    private void abrirModalEventos(List<Evento> eventos){
+        ModalEventos modalEventos = new ModalEventos();
+        modalEventos.setEventos(eventos);
+        modalEventos.setListener(this);
+        modalEventos.setData(dataEscolhida);
+
+        modalEventos.show(getSupportFragmentManager(), "modalEventos");
+    }
+
+    @Override
+    public void onModalEventoDismissed(int resultado) {
+
+        if(resultado > 0){
+            abrirModalHora();
+        }
+
+    }
 }

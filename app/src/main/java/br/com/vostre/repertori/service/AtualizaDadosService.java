@@ -29,9 +29,13 @@ import br.com.vostre.repertori.listener.TarefaAssincronaListener;
 import br.com.vostre.repertori.listener.TokenTaskListener;
 import br.com.vostre.repertori.listener.UpdateSentTaskListener;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
+import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.ComentarioEvento;
+import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
+import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
+import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
 import br.com.vostre.repertori.utils.Constants;
@@ -111,8 +115,12 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         tokenCriptografado = null;
         List<ComentarioEvento> comentarios;
         List<Musica> musicas;
+        List<Artista> artistas;
+        List<Evento> eventos;
         ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
+        ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(getApplicationContext());
+        EventoDBHelper eventoDBHelper = new EventoDBHelper(getApplicationContext());
 
         try {
             tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
@@ -125,8 +133,11 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
             comentarios = comentarioEventoDBHelper.listarTodosAEnviar(getApplicationContext());
             musicas = musicaDBHelper.listarTodosAEnviar(getApplicationContext());
+            artistas = artistaDBHelper.listarTodosAEnviar(getApplicationContext());
+            eventos = eventoDBHelper.listarTodosAEnviar(getApplicationContext());
 
-            int totalRegistros = comentarios.size() + musicas.size();
+            // COMENTARIOS
+            int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size();
 
             if(totalRegistros > 0){
                 String json = "{";
@@ -149,6 +160,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     }
                 }
 
+                // MUSICAS
+
                 json = json.concat("],");
 
                 json = json.concat("\"musicas\":[");
@@ -162,6 +175,50 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                             json = json.concat(umMusica.toJson() + ",");
                         } else {
                             json = json.concat(umMusica.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
+                // ARTISTAS
+
+                json = json.concat("],");
+
+                json = json.concat("\"artistas\":[");
+                cont = 1;
+                int qtdArtistas = artistas.size();
+
+                if(qtdArtistas > 0) {
+                    for (Artista umArtista : artistas) {
+
+                        if (cont < qtdArtistas) {
+                            json = json.concat(umArtista.toJson() + ",");
+                        } else {
+                            json = json.concat(umArtista.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
+                // EVENTOS
+
+                json = json.concat("],");
+
+                json = json.concat("\"eventos\":[");
+                cont = 1;
+                int qtdEventos = eventos.size();
+
+                if(qtdEventos > 0) {
+                    for (Evento umEvento : eventos) {
+
+                        if (cont < qtdMusicas) {
+                            json = json.concat(umEvento.toJson() + ",");
+                        } else {
+                            json = json.concat(umEvento.toJson());
                         }
 
                         cont++;

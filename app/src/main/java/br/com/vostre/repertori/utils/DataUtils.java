@@ -47,8 +47,16 @@ public class DataUtils {
         return df.format(data.getTime());
     }
 
-    public static String toString(Calendar data){
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    public static String toString(Calendar data, boolean horas){
+
+        DateFormat df;
+
+        if(horas){
+            df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        } else{
+            df = new SimpleDateFormat("dd/MM/yyyy");
+        }
+
         return df.format(data.getTime());
     }
 

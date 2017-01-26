@@ -43,12 +43,16 @@ public class EventoDBAdapter {
         cv.put("data", DataUtils.dataParaBanco(evento.getData()));
         cv.put("id_tipo_evento", evento.getTipoEvento().getId());
         cv.put("status", evento.getStatus());
+        cv.put("enviado", evento.getEnviado());
 
         if(evento.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(evento.getDataCadastro()));
         }
 
-        cv.put("data_recebimento", DataUtils.dataParaBanco(evento.getDataRecebimento()));
+        if(evento.getDataRecebimento() != null){
+            cv.put("data_recebimento", DataUtils.dataParaBanco(evento.getDataRecebimento()));
+        }
+
         cv.put("ultima_alteracao", DataUtils.dataParaBanco(evento.getUltimaAlteracao()));
 
         if(database.update("evento", cv, "_id = '"+evento.getId()+"'", null) < 1){
@@ -95,7 +99,56 @@ public class EventoDBAdapter {
                     umEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
                 }
 
-                umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                if(cursor.getString(6) != null){
+                    umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+
+                umEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                umEvento.setSlug(cursor.getString(8));
+
+                eventos.add(umEvento);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return eventos;
+    }
+
+    public List<Evento> listarTodosAEnviar(){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug FROM evento WHERE enviado = -1", null);
+        List<Evento> eventos = new ArrayList<Evento>();
+
+        if(cursor.moveToFirst()){
+
+            TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
+
+            do{
+                Evento umEvento = new Evento();
+                umEvento.setId(cursor.getString(0));
+
+                umEvento.setNome(cursor.getString(1));
+                umEvento.setData(DataUtils.bancoParaData(cursor.getString(2)));
+
+                TipoEvento tipoEvento = new TipoEvento();
+                tipoEvento.setId(cursor.getString(3));
+                tipoEvento = tipoEventoDBHelper.carregar(context, tipoEvento);
+                umEvento.setTipoEvento(tipoEvento);
+
+                umEvento.setStatus(cursor.getInt(4));
+
+                if(cursor.getString(5) != null){
+                    umEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+
                 umEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
                 umEvento.setSlug(cursor.getString(8));
 
@@ -194,12 +247,14 @@ public class EventoDBAdapter {
     public List<Evento> listarTodosPorData(Calendar data){
 
         String umaData = DataUtils.dataParaBancoSemHora(data);
-        data.add(Calendar.DATE, 1);
-        String amanha = DataUtils.dataParaBancoSemHora(data);
+        Calendar amanha  = Calendar.getInstance();
+        amanha.setTime(data.getTime());
+        amanha.add(Calendar.DATE, 1);
+        String stringAmanha = DataUtils.dataParaBancoSemHora(amanha);
 
         Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
                 "ultima_alteracao, slug FROM evento WHERE data >= ? AND data < ? AND status != 2 ORDER BY data ASC",
-                new String[]{umaData, amanha});
+                new String[]{umaData, stringAmanha});
         List<Evento> eventos = new ArrayList<Evento>();
 
         if(cursor.moveToFirst()){
@@ -224,7 +279,10 @@ public class EventoDBAdapter {
                     umEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
                 }
 
-                umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                if(cursor.getString(6) != null){
+                    umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
                 umEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
                 umEvento.setSlug(cursor.getString(8));
 
@@ -266,7 +324,10 @@ public class EventoDBAdapter {
                     umEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
                 }
 
-                umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                if(cursor.getString(6) != null){
+                    umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
                 umEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
                 umEvento.setSlug(cursor.getString(8));
 
@@ -277,6 +338,22 @@ public class EventoDBAdapter {
         database.close();
 
         return umEvento;
+    }
+
+    public boolean jaExiste(Evento evento){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug FROM evento WHERE nome = ? AND data = ?", new String[]{evento.getId(), DataUtils.dataParaBanco(evento.getData())});
+
+        if(cursor.moveToFirst()){
+            cursor.close();
+            database.close();
+            return true;
+        } else{
+            cursor.close();
+            database.close();
+            return false;
+        }
+
     }
 
 }
