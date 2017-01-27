@@ -250,12 +250,15 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
 
     @Override
     public void onModalHoraDismissed(String hora) {
-        String[] stringHora = hora.split(":");
 
-        data.set(Calendar.HOUR_OF_DAY, Integer.parseInt(stringHora[0]));
-        data.set(Calendar.MINUTE, Integer.parseInt(stringHora[1]));
+        if(hora != null){
+            String[] stringHora = hora.split(":");
 
-        textViewData.setText(DataUtils.toString(data, true));
+            data.set(Calendar.HOUR_OF_DAY, Integer.parseInt(stringHora[0]));
+            data.set(Calendar.MINUTE, Integer.parseInt(stringHora[1]));
+
+            textViewData.setText(DataUtils.toString(data, true));
+        }
 
     }
 }

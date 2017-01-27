@@ -33,10 +33,12 @@ import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
+import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
 import br.com.vostre.repertori.utils.Constants;
 import br.com.vostre.repertori.utils.Crypt;
@@ -117,10 +119,12 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         List<Musica> musicas;
         List<Artista> artistas;
         List<Evento> eventos;
+        List<MusicaEvento> musicasEventos;
         ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
         ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(getApplicationContext());
         EventoDBHelper eventoDBHelper = new EventoDBHelper(getApplicationContext());
+        MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
 
         try {
             tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
@@ -135,9 +139,10 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             musicas = musicaDBHelper.listarTodosAEnviar(getApplicationContext());
             artistas = artistaDBHelper.listarTodosAEnviar(getApplicationContext());
             eventos = eventoDBHelper.listarTodosAEnviar(getApplicationContext());
+            musicasEventos = musicaEventoDBHelper.listarTodosAEnviar(getApplicationContext());
 
             // COMENTARIOS
-            int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size();
+            int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size() + musicasEventos.size();
 
             if(totalRegistros > 0){
                 String json = "{";
@@ -219,6 +224,30 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                             json = json.concat(umEvento.toJson() + ",");
                         } else {
                             json = json.concat(umEvento.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
+                // MUSICA EVENTO
+
+                // EVENTOS
+
+                json = json.concat("],");
+
+                json = json.concat("\"musicas_eventos\":[");
+                cont = 1;
+                int qtdMusicasEventos = musicasEventos.size();
+
+                if(qtdMusicasEventos > 0) {
+                    for (MusicaEvento umaMusicaEvento : musicasEventos) {
+
+                        if (cont < qtdMusicasEventos) {
+                            json = json.concat(umaMusicaEvento.toJson() + ",");
+                        } else {
+                            json = json.concat(umaMusicaEvento.toJson());
                         }
 
                         cont++;

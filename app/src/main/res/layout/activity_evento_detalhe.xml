@@ -48,7 +48,7 @@
                 android:paddingTop="10dp"
                 android:layout_weight=".5" />
 
-            <ListView
+            <br.com.vostre.repertori.utils.DynamicListView
                 android:layout_width="match_parent"
                 android:id="@+id/listViewMusicas"
                 android:layout_height="0dp"

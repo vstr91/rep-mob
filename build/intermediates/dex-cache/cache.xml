@@ -12,6 +12,24 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Users\Cefet\.gradle\caches\modules-2\files-2.1\com.darwinsys\hirondelle-date4j\1.5.1\7b52de513f87ae4d9ff5d17518def0a1e9bc3df0\hirondelle-date4j-1.5.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="7b52de513f87ae4d9ff5d17518def0a1e9bc3df0">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\hirondelle-date4j-1.5.1_3dec351cf61441876b8ae428ef4439983bbe19ae.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.0.1_510515c2da2fbb99e1e469c7c81bdab64faa9984.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.roomorama\caldroid\3.0.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
@@ -36,24 +54,6 @@
         revision="23.0.2"
         sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
         <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-23.0.1_83f17b48cde8a41cbbf857079b3de4184389739c.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Cefet\.gradle\caches\modules-2\files-2.1\com.darwinsys\hirondelle-date4j\1.5.1\7b52de513f87ae4d9ff5d17518def0a1e9bc3df0\hirondelle-date4j-1.5.1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="7b52de513f87ae4d9ff5d17518def0a1e9bc3df0">
-        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\hirondelle-date4j-1.5.1_3dec351cf61441876b8ae428ef4439983bbe19ae.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.0.1_510515c2da2fbb99e1e469c7c81bdab64faa9984.jar" />
     </item>
     <item
         is-multidex="false"

@@ -102,4 +102,19 @@ public class Musica extends EntidadeBase {
         return resultado;
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if(!(o instanceof Musica)){
+            return false;
+        }
+
+        Musica musica = (Musica) o;
+        return musica.getId().equals(this.getId());
+    }
+
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
 }

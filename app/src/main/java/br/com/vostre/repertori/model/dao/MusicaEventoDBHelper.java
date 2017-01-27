@@ -20,7 +20,7 @@ public class MusicaEventoDBHelper extends SQLiteOpenHelper {
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE musica_evento (_id text primary key, observacao text, " +
             "ordem integer NOT NULL, id_musica integer NOT NULL, id_evento integer NOT NULL, status integer NOT NULL, " +
-            "data_cadastro text, data_recebimento text, ultima_alteracao text);";
+            "data_cadastro text, data_recebimento text, ultima_alteracao text, enviado integer NOT NULL);";
     RepDBHelper repDBHelper;
 
     public MusicaEventoDBHelper(Context context){
@@ -46,6 +46,11 @@ public class MusicaEventoDBHelper extends SQLiteOpenHelper {
         return adapter.listarTodos();
     }
 
+    public List<MusicaEvento> listarTodosAEnviar(Context context){
+        MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAEnviar();
+    }
+
     public List<Evento> listarTodosPorMusica(Context context, Musica musica){
         MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodosPorMusica(musica);
@@ -54,6 +59,11 @@ public class MusicaEventoDBHelper extends SQLiteOpenHelper {
     public List<Musica> listarTodosPorEvento(Context context, Evento evento){
         MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodosPorEvento(evento);
+    }
+
+    public List<Musica> listarTodosAusentesEvento(Context context, Evento evento){
+        MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAusentesEvento(evento);
     }
 
     public long salvarOuAtualizar(Context context, MusicaEvento musicaEvento){
@@ -69,6 +79,11 @@ public class MusicaEventoDBHelper extends SQLiteOpenHelper {
     public MusicaEvento carregar(Context context, MusicaEvento musicaEvento){
         MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.carregar(musicaEvento);
+    }
+
+    public MusicaEvento carregarPorMusicaEEvento(Context context, MusicaEvento musicaEvento){
+        MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.carregarPorMusicaEEvento(musicaEvento);
     }
 
 }

@@ -43,12 +43,16 @@ public class MusicaEventoDBAdapter {
         cv.put("id_musica", musicaEvento.getMusica().getId());
         cv.put("id_evento", musicaEvento.getEvento().getId());
         cv.put("status", musicaEvento.getStatus());
+        cv.put("enviado", musicaEvento.getEnviado());
 
         if(musicaEvento.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(musicaEvento.getDataCadastro()));
         }
 
-        cv.put("data_recebimento", DataUtils.dataParaBanco(musicaEvento.getDataRecebimento()));
+        if(musicaEvento.getDataRecebimento() != null){
+            cv.put("data_recebimento", DataUtils.dataParaBanco(musicaEvento.getDataRecebimento()));
+        }
+
         cv.put("ultima_alteracao", DataUtils.dataParaBanco(musicaEvento.getUltimaAlteracao()));
 
         if(database.update("musica_evento", cv, "_id = '"+musicaEvento.getId()+"'", null) < 1){
@@ -101,7 +105,59 @@ public class MusicaEventoDBAdapter {
                     umMusicaEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(6)));
                 }
 
-                umMusicaEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(7)));
+                if(cursor.getString(7) != null){
+                    umMusicaEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(7)));
+                }
+
+                umMusicaEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(8)));
+
+                musicaEventos.add(umMusicaEvento);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicaEventos;
+    }
+
+    public List<MusicaEvento> listarTodosAEnviar(){
+        Cursor cursor = database.rawQuery("SELECT _id, observacao, ordem, id_musica, id_evento, status, data_cadastro, " +
+                "data_recebimento, ultima_alteracao FROM musica_evento WHERE enviado = -1", null);
+        List<MusicaEvento> musicaEventos = new ArrayList<MusicaEvento>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+            EventoDBHelper eventoDBHelper = new EventoDBHelper(context);
+
+            do{
+                MusicaEvento umMusicaEvento = new MusicaEvento();
+                umMusicaEvento.setId(cursor.getString(0));
+
+                umMusicaEvento.setObservacao(cursor.getString(1));
+                umMusicaEvento.setOrdem(cursor.getInt(2));
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(3));
+                musica = musicaDBHelper.carregar(context, musica);
+                umMusicaEvento.setMusica(musica);
+
+                Evento evento = new Evento();
+                evento.setId(cursor.getString(4));
+                evento = eventoDBHelper.carregar(context, evento);
+                umMusicaEvento.setEvento(evento);
+
+                umMusicaEvento.setStatus(cursor.getInt(5));
+
+                if(cursor.getString(6) != null){
+                    umMusicaEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                if(cursor.getString(7) != null){
+                    umMusicaEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(7)));
+                }
+
                 umMusicaEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(8)));
 
                 musicaEventos.add(umMusicaEvento);
@@ -162,6 +218,30 @@ public class MusicaEventoDBAdapter {
         return musicas;
     }
 
+    public List<Musica> listarTodosAusentesEvento(Evento umEvento){
+        Cursor cursor = database.rawQuery("SELECT id_musica, ordem FROM musica_evento WHERE id_evento = ? AND status != 2 ORDER BY ordem ASC", new String[]{umEvento.getId()});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+
+            do{
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(0));
+                musica = musicaDBHelper.carregar(context, musica);
+
+                musicas.add(musica);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
     public MusicaEvento carregar(MusicaEvento musicaEvento){
         Cursor cursor = database.rawQuery("SELECT _id, observacao, ordem, id_musica, id_evento, status, data_cadastro, " +
                 "data_recebimento, ultima_alteracao FROM musica_evento WHERE _id = ?",
@@ -197,7 +277,60 @@ public class MusicaEventoDBAdapter {
                     umMusicaEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(6)));
                 }
 
-                umMusicaEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(7)));
+                if(cursor.getString(7) != null){
+                    umMusicaEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(7)));
+                }
+
+                umMusicaEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(8)));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return umMusicaEvento;
+    }
+
+    public MusicaEvento carregarPorMusicaEEvento(MusicaEvento musicaEvento){
+        Cursor cursor = database.rawQuery("SELECT _id, observacao, ordem, id_musica, id_evento, status, data_cadastro, " +
+                        "data_recebimento, ultima_alteracao FROM musica_evento WHERE id_musica = ? AND id_evento = ?",
+                new String[]{musicaEvento.getMusica().getId(), musicaEvento.getEvento().getId()});
+
+        MusicaEvento umMusicaEvento = null;
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+            EventoDBHelper eventoDBHelper = new EventoDBHelper(context);
+
+            do{
+                umMusicaEvento = new MusicaEvento();
+                umMusicaEvento.setId(cursor.getString(0));
+
+                umMusicaEvento.setObservacao(cursor.getString(1));
+                umMusicaEvento.setOrdem(cursor.getInt(2));
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(3));
+                musica = musicaDBHelper.carregar(context, musica);
+                umMusicaEvento.setMusica(musica);
+
+                Evento evento = new Evento();
+                evento.setId(cursor.getString(4));
+                evento = eventoDBHelper.carregar(context, evento);
+                umMusicaEvento.setEvento(evento);
+
+                umMusicaEvento.setStatus(cursor.getInt(5));
+
+                if(cursor.getString(6) != null){
+                    umMusicaEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                if(cursor.getString(7) != null){
+                    umMusicaEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(7)));
+                }
+
                 umMusicaEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(8)));
 
             } while (cursor.moveToNext());

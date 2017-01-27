@@ -81,8 +81,6 @@ public class MusicaEvento extends EntidadeBase {
 
             umMusicaEvento.setMusica(umaMusica);
 
-            List<Evento> eventos = eventoDBHelper.listarTodos(context);
-
             Evento umEvento = new Evento();
             umEvento.setId(object.getString("evento"));
             umEvento = eventoDBHelper.carregar(context, umEvento);
@@ -92,11 +90,23 @@ public class MusicaEvento extends EntidadeBase {
             umMusicaEvento.setStatus(object.getInt("status"));
             umMusicaEvento.setDataRecebimento(Calendar.getInstance());
             umMusicaEvento.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
+            umMusicaEvento.setEnviado(0);
 
             musicaEventoDBHelper.salvarOuAtualizar(context, umMusicaEvento);
 
         }
 
+    }
+
+    public String toJson(){
+
+        String resultado = "";
+
+        resultado = "{\"id\": \""+this.getId()+"\", \"ordem\": "+this.getOrdem()+", " +
+                "\"musica\": \""+this.getMusica().getId()+"\", \"evento\": \""+this.getEvento().getId()+"\", \"status\": "+this.getStatus()+"}";
+
+
+        return resultado;
     }
 
 }

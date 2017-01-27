@@ -23,6 +23,7 @@ import java.util.List;
 import br.com.vostre.repertori.adapter.ComentarioList;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.adapter.StableArrayAdapter;
 import br.com.vostre.repertori.form.ModalCadastroEvento;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.ComentarioEvento;
@@ -34,6 +35,7 @@ import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
+import br.com.vostre.repertori.utils.DynamicListView;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
@@ -41,8 +43,8 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
     TextView textViewNome;
     TextView textViewData;
-    ListView listViewMusicas;
-    static MusicaList adapterMusicas;
+    DynamicListView listViewMusicas;
+    static StableArrayAdapter adapterMusicas;
     ListView listViewComentarios;
     EditText editTextComentario;
     Button btnComentario;
@@ -72,7 +74,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         textViewData = (TextView) findViewById(R.id.textViewData);
-        listViewMusicas = (ListView) findViewById(R.id.listViewMusicas);
+        listViewMusicas = (DynamicListView) findViewById(R.id.listViewMusicas);
         listViewComentarios = (ListView) findViewById(R.id.listViewComentarios);
         editTextComentario = (EditText) findViewById(R.id.editTextComentario);
         btnComentario = (Button) findViewById(R.id.btnComentario);
@@ -89,13 +91,16 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         musicas = musicaEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
 
         adapterMusicas =
-                new MusicaList(this, android.R.layout.simple_spinner_dropdown_item, musicas);
+                new StableArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, musicas);
 
         adapterMusicas.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
 
         listViewMusicas.setAdapter(adapterMusicas);
         listViewMusicas.setOnItemClickListener(this);
         listViewMusicas.setEmptyView(findViewById(R.id.textViewListaVazia));
+        listViewMusicas.setLista(musicas);
+        listViewMusicas.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listViewMusicas.setEvento(evento);
 
         atualizaComentarios();
 
