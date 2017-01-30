@@ -5,7 +5,8 @@ package br.com.vostre.repertori.utils;
  */
 public class Constants {
 
-    public static final String IP = "192.168.42.113";
+//    public static final String IP = "192.168.42.113";
+    public static final String IP = "10.0.0.101";
 //    public static final String SERVIDOR = "http://192.168.42.178/ktl/web/app_dev.php/";
 //    public static final String SERVIDOR_IMAGEM = "http://192.168.42.178/ktl/web/";
     public static final String SERVIDOR = "http://"+IP+"/rep2/web/app_dev.php";

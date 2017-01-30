@@ -24,7 +24,10 @@ import br.com.vostre.repertori.adapter.ComentarioList;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
 import br.com.vostre.repertori.adapter.StableArrayAdapter;
+import br.com.vostre.repertori.form.ModalAdicionaMusica;
 import br.com.vostre.repertori.form.ModalCadastroEvento;
+import br.com.vostre.repertori.listener.ButtonClickListener;
+import br.com.vostre.repertori.listener.ModalAdicionaListener;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.Evento;
@@ -39,7 +42,8 @@ import br.com.vostre.repertori.utils.DynamicListView;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
-public class EventoDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener, ModalCadastroListener {
+public class EventoDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener,
+        ModalCadastroListener, ModalAdicionaListener, ButtonClickListener {
 
     TextView textViewNome;
     TextView textViewData;
@@ -48,6 +52,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     ListView listViewComentarios;
     EditText editTextComentario;
     Button btnComentario;
+    Button btnAdicionaMusica;
     ComentarioList adapterComentarios;
     Evento evento;
 
@@ -78,29 +83,17 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         listViewComentarios = (ListView) findViewById(R.id.listViewComentarios);
         editTextComentario = (EditText) findViewById(R.id.editTextComentario);
         btnComentario = (Button) findViewById(R.id.btnComentario);
+        btnAdicionaMusica = (Button) findViewById(R.id.btnAdicionaMusica);
 
         btnComentario.setOnClickListener(this);
+        btnAdicionaMusica.setOnClickListener(this);
 
         evento = new Evento();
         evento.setId(getIntent().getStringExtra("evento"));
-        evento = eventoDBHelper.carregar(getApplicationContext(), evento);
 
-        textViewNome.setText(evento.getNome());
-        textViewData.setText(DataUtils.toString(evento.getData(), true));
+        carregaInformacaoEvento();
 
-        musicas = musicaEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
-
-        adapterMusicas =
-                new StableArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, musicas);
-
-        adapterMusicas.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
-
-        listViewMusicas.setAdapter(adapterMusicas);
-        listViewMusicas.setOnItemClickListener(this);
-        listViewMusicas.setEmptyView(findViewById(R.id.textViewListaVazia));
-        listViewMusicas.setLista(musicas);
-        listViewMusicas.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listViewMusicas.setEvento(evento);
+        carregaListaMusicas();
 
         atualizaComentarios();
 
@@ -186,6 +179,13 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
                 }
 
                 break;
+            case R.id.btnAdicionaMusica:
+                ModalAdicionaMusica modalAdicionaMusica = new ModalAdicionaMusica();
+                modalAdicionaMusica.setListener(this);
+                modalAdicionaMusica.setEvento(evento);
+
+                modalAdicionaMusica.show(getSupportFragmentManager(), "modalAdicionaMusica");
+                break;
         }
     }
 
@@ -203,6 +203,57 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
     @Override
     public void onModalCadastroDismissed(int resultado) {
+        carregaInformacaoEvento();
+    }
 
+    @Override
+    public void onModalAdicionaDismissed(int resultado) {
+        carregaListaMusicas();
+    }
+
+    private void carregaListaMusicas(){
+        musicas = musicaEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
+
+        adapterMusicas =
+                new StableArrayAdapter(this, R.id.listViewMusicas, musicas);
+        adapterMusicas.setListener(this);
+
+        adapterMusicas.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+        listViewMusicas.setAdapter(adapterMusicas);
+
+        if (listViewMusicas.getOnItemClickListener() == null){
+            listViewMusicas.setOnItemClickListener(this);
+        }
+
+        listViewMusicas.setEmptyView(findViewById(R.id.textViewListaVazia));
+        listViewMusicas.setLista(musicas);
+        listViewMusicas.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listViewMusicas.setEvento(evento);
+
+    }
+
+    private void carregaInformacaoEvento() {
+        evento = eventoDBHelper.carregar(getApplicationContext(), evento);
+
+        textViewNome.setText(evento.getNome());
+        textViewData.setText(DataUtils.toString(evento.getData(), true));
+    }
+
+    @Override
+    public void onButtonClicked(Musica musica) {
+        MusicaEvento musicaEvento = new MusicaEvento();
+        musicaEvento.setMusica(musica);
+        musicaEvento.setEvento(evento);
+        musicaEvento = musicaEventoDBHelper.carregarPorMusicaEEvento(getApplicationContext(), musicaEvento);
+
+        musicaEvento.setStatus(2);
+        musicaEvento.setEnviado(-1);
+
+        musicaEventoDBHelper.salvarOuAtualizar(getApplicationContext(), musicaEvento);
+
+        carregaListaMusicas();
+
+       Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
     }
 }

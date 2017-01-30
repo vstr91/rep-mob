@@ -16,12 +16,21 @@
 
 package br.com.vostre.repertori.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
 
+import br.com.vostre.repertori.R;
+import br.com.vostre.repertori.listener.ButtonClickListener;
+import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Musica;
 
 public class StableArrayAdapter extends ArrayAdapter<Musica> {
@@ -29,12 +38,49 @@ public class StableArrayAdapter extends ArrayAdapter<Musica> {
     final int INVALID_ID = -1;
 
     HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+    List<Musica> musicas;
+    private Activity context;
+    ImageButton btnExcluir;
+    ButtonClickListener listener;
 
-    public StableArrayAdapter(Context context, int textViewResourceId, List<Musica> objects) {
+    public StableArrayAdapter(Activity context, int textViewResourceId, List<Musica> objects) {
         super(context, textViewResourceId, objects);
+        musicas = objects;
+        this.context = context;
+
         for (int i = 0; i < objects.size(); ++i) {
             mIdMap.put(objects.get(i).getId(), i);
         }
+
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final Musica musica = musicas.get(position);
+
+        LayoutInflater inflater = context.getLayoutInflater();
+        View rowView = inflater.inflate(R.layout.listview_musicas_evento, null, true);
+
+        TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
+        TextView textViewArtista = (TextView) rowView.findViewById(R.id.textViewArtista);
+        TextView textViewTom = (TextView) rowView.findViewById(R.id.textViewTom);
+        btnExcluir = (ImageButton) rowView.findViewById(R.id.btnExcluir);
+
+        textViewNome.setText(musica.getNome());
+        textViewArtista.setText(musica.getArtista().getNome());
+        textViewTom.setText(musica.getTom());
+
+        btnExcluir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                listener.onButtonClicked(musica);
+            }
+        });
+
+        btnExcluir.setFocusable(false);
+
+        return rowView;
     }
 
     @Override
@@ -49,5 +95,13 @@ public class StableArrayAdapter extends ArrayAdapter<Musica> {
     @Override
     public boolean hasStableIds() {
         return true;
+    }
+
+    public ButtonClickListener getListener() {
+        return listener;
+    }
+
+    public void setListener(ButtonClickListener listener) {
+        this.listener = listener;
     }
 }

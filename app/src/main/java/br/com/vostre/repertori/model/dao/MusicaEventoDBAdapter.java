@@ -195,7 +195,8 @@ public class MusicaEventoDBAdapter {
     }
 
     public List<Musica> listarTodosPorEvento(Evento umEvento){
-        Cursor cursor = database.rawQuery("SELECT id_musica, ordem FROM musica_evento WHERE id_evento = ? AND status != 2 ORDER BY ordem ASC", new String[]{umEvento.getId()});
+        Cursor cursor = database.rawQuery("SELECT id_musica, ordem FROM musica_evento WHERE id_evento = ? AND status != 2 " +
+                "ORDER BY ordem ASC", new String[]{umEvento.getId()});
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){
@@ -208,6 +209,8 @@ public class MusicaEventoDBAdapter {
                 musica.setId(cursor.getString(0));
                 musica = musicaDBHelper.carregar(context, musica);
 
+                musica.setNome(musica.getNome()+" - "+cursor.getInt(1));
+
                 musicas.add(musica);
             } while (cursor.moveToNext());
         }
@@ -219,7 +222,10 @@ public class MusicaEventoDBAdapter {
     }
 
     public List<Musica> listarTodosAusentesEvento(Evento umEvento){
-        Cursor cursor = database.rawQuery("SELECT id_musica, ordem FROM musica_evento WHERE id_evento = ? AND status != 2 ORDER BY ordem ASC", new String[]{umEvento.getId()});
+        Cursor cursor = database.rawQuery("SELECT _id, nome " +
+                "FROM musica WHERE _id NOT IN (SELECT id_musica " +
+                "FROM musica_evento WHERE id_evento = ? AND status != 2) AND status != 2 ORDER BY nome ASC",
+                new String[]{umEvento.getId()});
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){

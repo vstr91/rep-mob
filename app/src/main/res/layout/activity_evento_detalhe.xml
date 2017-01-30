@@ -51,6 +51,7 @@
             <br.com.vostre.repertori.utils.DynamicListView
                 android:layout_width="match_parent"
                 android:id="@+id/listViewMusicas"
+                android:focusable="true"
                 android:layout_height="0dp"
                 android:layout_weight="1.5" />
 
@@ -62,6 +63,12 @@
                 android:padding="5dp"
                 android:gravity="center"
                 android:visibility="gone" />
+
+            <Button
+                android:text="Adiciona Música"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnAdicionaMusica" />
 
             <TextView
                 android:text="Comentários"
