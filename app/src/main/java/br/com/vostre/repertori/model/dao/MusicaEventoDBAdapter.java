@@ -210,7 +210,7 @@ public class MusicaEventoDBAdapter {
                 musica.setId(cursor.getString(0));
                 musica = musicaDBHelper.carregar(context, musica);
 
-                musica.setNome(musica.getNome()+" - "+cursor.getInt(1));
+                musica.setNome(musica.getNome());
 
                 musicas.add(musica);
             } while (cursor.moveToNext());

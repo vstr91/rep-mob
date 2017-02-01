@@ -236,7 +236,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     private void carregaInformacaoEvento() {
         evento = eventoDBHelper.carregar(getApplicationContext(), evento);
 
-        textViewNome.setText(evento.getNome()+" - "+evento.getId());
+        textViewNome.setText(evento.getNome());
         textViewData.setText(DataUtils.toString(evento.getData(), true));
     }
 
