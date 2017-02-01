@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,13 +32,17 @@
         <activity
             android:name=".EventosActivity"
             android:label="@string/title_activity_eventos" />
-        <activity android:name=".MusicaDetalheActivity"
+        <activity
+            android:name=".MusicaDetalheActivity"
             android:label="@string/title_activity_musica_detalhe" />
-        <activity android:name=".EventoDetalheActivity"
+        <activity
+            android:name=".EventoDetalheActivity"
             android:label="@string/title_activity_evento_detalhe" />
         <activity android:name=".BaseActivity" />
-        <activity android:name=".ArtistasActivity"
-            android:label="@string/title_activity_artistas"></activity>
+        <activity
+            android:name=".ArtistasActivity"
+            android:label="@string/title_activity_artistas" />
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>

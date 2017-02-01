@@ -61,6 +61,11 @@ public class MusicaEventoDBHelper extends SQLiteOpenHelper {
         return adapter.listarTodosPorEvento(evento);
     }
 
+    public List<MusicaEvento> corrigirOrdemPorEvento(Context context, Evento evento){
+        MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.corrigirOrdemPorEvento(evento);
+    }
+
     public List<Musica> listarTodosAusentesEvento(Context context, Evento evento){
         MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodosAusentesEvento(evento);

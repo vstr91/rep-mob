@@ -36,6 +36,7 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
     Button btnFechar;
     ListView listViewMusicas;
     List<Musica> musicas;
+    MusicaEventoDBHelper musicaEventoDBHelper;
 
     Evento evento;
 
@@ -100,9 +101,7 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
 
                 int tamanhoLista = listViewMusicas.getChildCount();
 
-                Toast.makeText(getContext(), "Tamanho: "+tamanhoLista, Toast.LENGTH_SHORT).show();
-
-                MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
+                musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
 
                 for(int i = 0; i < tamanhoLista; i++){
                     View view = listViewMusicas.getChildAt(i);
@@ -118,13 +117,18 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
 
                         if(musicaEvento == null){
                             musicaEvento = new MusicaEvento();
+                            musicaEvento.setMusica(musicas.get(i));
+                            musicaEvento.setEvento(evento);
                         }
 
                         musicaEvento.setStatus(0);
                         musicaEvento.setUltimaAlteracao(Calendar.getInstance());
                         musicaEvento.setDataCadastro(Calendar.getInstance());
                         musicaEvento.setEnviado(-1);
-                        musicaEvento.setOrdem(tamanhoLista+i+2);
+
+                        int ordem = corrigeOrdemMusicas();
+
+                        musicaEvento.setOrdem(ordem);
 
                         musicaEventoDBHelper.salvarOuAtualizar(getContext(), musicaEvento);
 
@@ -150,4 +154,25 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
 //        checkBox.setChecked(!checkBox.isChecked());
 
     }
+
+    private int corrigeOrdemMusicas(){
+
+        List<MusicaEvento> musicas = musicaEventoDBHelper.corrigirOrdemPorEvento(getContext(), evento);
+
+        int qtdMusicas = musicas.size();
+
+        for(int i = 0; i < qtdMusicas; i++){
+            MusicaEvento musicaEvento = musicas.get(i);
+            musicaEvento.setOrdem(i+1);
+            musicaEvento.setEnviado(-1);
+            musicaEvento.setUltimaAlteracao(Calendar.getInstance());
+
+            musicaEventoDBHelper.salvarOuAtualizar(getContext(), musicaEvento);
+
+        }
+
+        return qtdMusicas+1;
+
+    }
+
 }

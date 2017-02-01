@@ -236,7 +236,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     private void carregaInformacaoEvento() {
         evento = eventoDBHelper.carregar(getApplicationContext(), evento);
 
-        textViewNome.setText(evento.getNome());
+        textViewNome.setText(evento.getNome()+" - "+evento.getId());
         textViewData.setText(DataUtils.toString(evento.getData(), true));
     }
 
@@ -251,6 +251,8 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         musicaEvento.setEnviado(-1);
 
         musicaEventoDBHelper.salvarOuAtualizar(getApplicationContext(), musicaEvento);
+
+        musicaEventoDBHelper.corrigirOrdemPorEvento(getApplicationContext(), evento);
 
         carregaListaMusicas();
 

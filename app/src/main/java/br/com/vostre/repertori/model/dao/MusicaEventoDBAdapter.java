@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -213,6 +214,32 @@ public class MusicaEventoDBAdapter {
 
                 musicas.add(musica);
             } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
+    public List<MusicaEvento> corrigirOrdemPorEvento(Evento umEvento){
+        Cursor cursor = database.rawQuery("SELECT _id, id_musica, ordem FROM musica_evento WHERE id_evento = ? AND status != 2 " +
+                "ORDER BY ordem ASC", new String[]{umEvento.getId()});
+        List<MusicaEvento> musicas = new ArrayList<MusicaEvento>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(context);
+
+            do{
+
+                MusicaEvento musicaEvento = new MusicaEvento();
+                musicaEvento.setId(cursor.getString(0));
+                musicaEvento = musicaEventoDBHelper.carregar(context, musicaEvento);
+
+                musicas.add(musicaEvento);
+            } while (cursor.moveToNext());
+
         }
 
         cursor.close();
