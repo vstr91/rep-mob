@@ -14,6 +14,12 @@
 
         <include layout="@layout/toolbar"></include>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewUsuario"
+            android:textAlignment="center" />
+
         <Button
             android:text="Repertório"
             android:layout_width="match_parent"

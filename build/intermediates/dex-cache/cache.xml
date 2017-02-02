@@ -12,21 +12,39 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Cefet\.gradle\caches\modules-2\files-2.1\com.darwinsys\hirondelle-date4j\1.5.1\7b52de513f87ae4d9ff5d17518def0a1e9bc3df0\hirondelle-date4j-1.5.1.jar"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\9.0.0\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.2"
-        sha1="7b52de513f87ae4d9ff5d17518def0a1e9bc3df0">
-        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\hirondelle-date4j-1.5.1_3dec351cf61441876b8ae428ef4439983bbe19ae.jar" />
+        sha1="7da84426d876216ed4cdddd85e739be5ecabdd04">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-auth-9.0.0_0f6dc1fe96bb7631db9d6b79f2f668381ef28240.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth-base\9.0.0\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.2"
-        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.0.1_510515c2da2fbb99e1e469c7c81bdab64faa9984.jar" />
+        sha1="7a23185c9b1c100e7d1a32275017e4712e31c796">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-auth-base-9.0.0_50e1a20e037d7ba77f8d97e22139f7017313c41f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics-impl\9.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="0dc8ab07eeceda5e99b305c8069765056b6e5c9d">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.firebase-firebase-analytics-impl-9.0.0_041febd6ed2d3e6117da3e0afd34388fe73d049c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\9.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1941832901fc4e7a93300b53762e9f65d7650b99">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-tasks-9.0.0_a7b2f6f99dc31ec8cc12b45b1dec0fe7a2fd2591.jar" />
     </item>
     <item
         is-multidex="false"
@@ -54,6 +72,69 @@
         revision="23.0.2"
         sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
         <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1_61de6b12f7dcbad9395fe9d2834ebe589da81e4a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.firebase\firebase-common\9.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="42df48c7305b08b14fa0e84561091b0c24d70d26">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.firebase-firebase-common-9.0.0_09209da5e75283c3ad4cb64298f59786c3b029a6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.firebase\firebase-iid\9.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="ea4b54dcbfe5ac05efb0a314105f07258118d3a7">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.firebase-firebase-iid-9.0.0_0ca271c8e8df3fcc3bb741c7a721cef1b61a84dc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\.gradle\caches\modules-2\files-2.1\com.darwinsys\hirondelle-date4j\1.5.1\7b52de513f87ae4d9ff5d17518def0a1e9bc3df0\hirondelle-date4j-1.5.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="7b52de513f87ae4d9ff5d17518def0a1e9bc3df0">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\hirondelle-date4j-1.5.1_3dec351cf61441876b8ae428ef4439983bbe19ae.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\9.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="6f65c144283b31b4b9a70e6e7aa4c4a1c897d4b8">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-9.0.0_0a05144ab0214eb378221cf87a78613f9e1b7614.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.0.1_510515c2da2fbb99e1e469c7c81bdab64faa9984.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\9.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="cc178928721f3222b3b06bdfbd9497378ccb9792">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-9.0.0_671f02d9cbe2b098baabf39f6570cc98c742f838.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics\9.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="4ef8ab5fee042023018249474bc93bd4b2b9c17e">
+        <dex dex="C:\Users\Cefet\AndroidStudioProjects\rep-mob\app\build\intermediates\pre-dexed\debug\com.google.firebase-firebase-analytics-9.0.0_1d9d8a3887e4c08f62746ee6e25a521c628894db.jar" />
     </item>
     <item
         is-multidex="false"

@@ -11,7 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import br.com.vostre.repertori.service.AtualizaDadosService;
 import br.com.vostre.repertori.utils.ServiceUtils;
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnEventos;
     Button btnArtistas;
     Menu menu;
+    TextView textViewUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +46,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnRepertorio = (Button) findViewById(R.id.btnRepertorio);
         btnEventos = (Button) findViewById(R.id.btnEventos);
         btnArtistas = (Button) findViewById(R.id.btnArtistas);
+        textViewUsuario = (TextView) findViewById(R.id.textViewUsuario);
 
         btnRepertorio.setOnClickListener(this);
         btnEventos.setOnClickListener(this);
         btnArtistas.setOnClickListener(this);
+
+        GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
+        textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
 
     }
 
@@ -126,4 +137,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+    @Override
+    public void onBackPressed() {
+        signOut();
+        super.onBackPressed();
+    }
+
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(App.getGoogleApiHelper().getGoogleApiClient()).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+
+                    }
+                });
+    }
+
 }
