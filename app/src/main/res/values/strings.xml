@@ -6,6 +6,7 @@
     <string name="title_activity_evento_detalhe">Detalhes do Evento</string>
     <string name="title_activity_artistas">Artistas</string>
     <string name="action_edit">Editar</string>
+    <string name="action_sair">Sair</string>
     <array name="valores_status">
         <item>Ativo</item>
         <item>Em Espera</item>

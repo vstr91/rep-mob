@@ -61,18 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
 
-        /*if(iniciaModoCamera){
-            getMenuInflater().inflate(R.menu.realidade_aumentada, menu);
-        } else{
-            getMenuInflater().inflate(R.menu.main, menu);
-        }*/
-
-        this.menu = menu;
-
-        ToolbarUtils.preparaMenu(menu, this, this);
-
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -85,18 +76,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent;
 
         switch (id){
-            /*case R.id.icon_config:
-                intent = new Intent(this, Parametros.class);
-                startActivity(intent);
-                break;*/
-//            case R.id.icon_msg:
-//                intent = new Intent(this, Mensagens.class);
-//                startActivity(intent);
-//                break;
             case android.R.id.home:
-                return true;
+                onBackPressed();
+                break;
+            case R.id.icon_sair:
+                onBackPressed();
+                break;
         }
-
 
         return super.onOptionsItemSelected(item);
     }

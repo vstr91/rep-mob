@@ -15,6 +15,7 @@ public class Constants {
     public static final String SERVIDOR_TESTE = "vostre.com.br";
     public static final int PORTA_SERVIDOR = 80;
     public static final String URLTOKEN = SERVIDOR+"/api/token";
+    public static final String URLTOKENGOOGLE = SERVIDOR+"/api/valida-token";
 
     public static final int TEMPO_ATUALIZACAO = 5;
 
