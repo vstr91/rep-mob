@@ -11,7 +11,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9ff385e-88f5-49d5-9989-253b9c02ac99" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/DialogUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/RelatoriosActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_relatorios.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" />
@@ -19,14 +20,21 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/taskArtifacts.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/LoginActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/LoginActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/Constants.java" afterPath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/Constants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MusicaDetalheActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MusicaDetalheActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_musica_detalhe.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_musica_detalhe.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="Repertori.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -62,45 +70,59 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="34" selection-start-line="20" selection-start-column="34" selection-end-line="20" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="761">
-              <caret line="140" column="5" selection-start-line="140" selection-start-column="5" selection-end-line="140" selection-end-column="5" />
+            <state relative-caret-position="217">
+              <caret line="117" column="33" selection-start-line="117" selection-start-column="33" selection-end-line="117" selection-end-column="33" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/main.xml">
+      <file leaf-file-name="MusicaDetalheActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MusicaDetalheActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="57" selection-start-line="4" selection-start-column="57" selection-end-line="4" selection-end-column="57" />
-              <folding>
-                <element signature="e#243#264#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="238">
+              <caret line="100" column="91" selection-start-line="100" selection-start-column="91" selection-end-line="100" selection-end-column="91" />
+              <folding />
             </state>
-          </provider>
-          <provider editor-type-id="android-designer2">
-            <state />
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LoginActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="activity_musica_detalhe.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_musica_detalhe.xml">
+          <provider selected="true" editor-type-id="android-designer2">
+            <state />
+          </provider>
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MusicaDBAdapter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3400">
+              <caret line="214" column="15" selection-start-line="214" selection-start-column="15" selection-end-line="214" selection-end-column="15" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#2444#2452#0" expanded="false" />
+                <element signature="e#3936#3944#0" expanded="false" />
+                <element signature="e#5548#5556#0" expanded="false" />
+                <element signature="e#7098#7106#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LoginActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/LoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="83">
+            <state relative-caret-position="880">
               <caret line="117" column="75" selection-start-line="117" selection-start-column="75" selection-end-line="117" selection-end-column="75" />
               <folding />
             </state>
@@ -110,12 +132,12 @@
       <file leaf-file-name="DialogUtils.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/DialogUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
+            <state relative-caret-position="187">
               <caret line="15" column="77" selection-start-line="15" selection-start-column="77" selection-end-line="15" selection-end-column="77" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#574#769#0" expanded="true" />
-                <element signature="e#768#769#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#574#769#0" expanded="false" />
+                <element signature="e#768#769#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -124,9 +146,14 @@
       <file leaf-file-name="TarefaAssincrona.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/TarefaAssincrona.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
+            <state relative-caret-position="969">
               <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#971#987#0" expanded="false" />
+                <element signature="e#1494#1495#0" expanded="false" />
+                <element signature="e#1534#1535#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -134,10 +161,12 @@
       <file leaf-file-name="GoogleApiHelper.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/GoogleApiHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
+            <state relative-caret-position="374">
               <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#983#984#0" expanded="false" />
+                <element signature="e#1027#1028#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -146,23 +175,16 @@
       <file leaf-file-name="AtualizaDadosService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/service/AtualizaDadosService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="50">
+            <state relative-caret-position="4097">
               <caret line="292" column="12" selection-start-line="292" selection-start-column="12" selection-end-line="310" selection-end-column="13" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#2457#2458#0" expanded="false" />
+                <element signature="e#2484#2485#0" expanded="false" />
+                <element signature="e#2621#2993#0" expanded="false" />
+                <element signature="e#2992#2993#0" expanded="false" />
+              </folding>
             </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="activity_main.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer2">
-            <state />
           </provider>
         </entry>
       </file>
@@ -1651,7 +1673,7 @@
       <map>
         <entry key="C:\Users\Almir\AndroidStudioProjects\Repertori" value="4448535256447" />
         <entry key="C:\Users\Almir\AndroidStudioProjects\rep-mob" value="4452860962976" />
-        <entry key="C:\Users\Cefet\AndroidStudioProjects\rep-mob" value="4455567185343" />
+        <entry key="C:\Users\Cefet\AndroidStudioProjects\rep-mob" value="4456762318428" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -1983,12 +2005,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/TipoEventoDBAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/listener/ModalHoraListener.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/modal_hora.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/listener/ModalEventoListener.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/modal_eventos.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/EventosActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/DataUtils.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/form/ModalEventos.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/adapter/ComentarioList.java" />
@@ -2020,20 +2036,26 @@
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/form/ModalAdicionaMusica.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/EventoDetalheActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaEventoDBAdapter.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/App.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/GoogleApiHelper.java" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/Constants.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/service/AtualizaDadosService.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/DialogUtils.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/LoginActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/main.xml" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_relatorios.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBHelper.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/RelatoriosActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MusicaDetalheActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_musica_detalhe.xml" />
       </list>
     </option>
   </component>
@@ -2068,6 +2090,92 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane" />
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rep-mob" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rep-mob" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rep-mob" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rep-mob" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rep-mob" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="repertori" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rep-mob" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -2188,140 +2296,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rep-mob" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Gradle Scripts" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidBuildScriptsGroupNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rep-mob" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rep-mob" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="menu" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rep-mob" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rep-mob" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="repertori" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rep-mob" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="repertori" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="utils" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rep-mob" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="repertori" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rep-mob" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -2329,7 +2303,7 @@
     <property name="settings.editor.selected.configurable" value="gradle.experimental" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="device.picker.selection" value="0021612079" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/taps" />
     <property name="android.sdk.path" value="C:/android" />
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
@@ -2753,7 +2727,21 @@
       <option name="project" value="LOCAL" />
       <updated>1486065013947</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Login implementado">
+      <created>1486150452661</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1486150452661</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Login implementado">
+      <created>1486150523630</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1486150523630</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -2817,7 +2805,8 @@
     <MESSAGE value="Envio de repertório evento ajustado" />
     <MESSAGE value="Debug Música evento removido" />
     <MESSAGE value="Implementando login" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementando login" />
+    <MESSAGE value="Login implementado" />
+    <option name="LAST_COMMIT_MESSAGE" value="Login implementado" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2948,53 +2937,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/Artista.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="89" column="4" selection-start-line="89" selection-start-column="4" selection-end-line="98" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/form/ModalHora.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="87" column="69" selection-start-line="87" selection-start-column="16" selection-end-line="87" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/form/ModalCadastroEvento.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3502">
-          <caret line="260" column="9" selection-start-line="260" selection-start-column="9" selection-end-line="260" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/form/ModalCadastroMusica.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="133" column="47" selection-start-line="131" selection-start-column="12" selection-end-line="133" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/Musica.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="92" column="4" selection-start-line="92" selection-start-column="4" selection-end-line="102" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/modal_cadastro_evento.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="918">
-          <caret line="54" column="4" selection-start-line="54" selection-start-column="4" selection-end-line="54" selection-end-column="4" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/Evento.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -3047,23 +2989,23 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/modal_adiciona_musica.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/listview_adiciona_musicas.xml">
       <provider selected="true" editor-type-id="android-designer2">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/listview_adiciona_musicas.xml">
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/adapter/MusicaAdicionaList.java">
@@ -3081,26 +3023,19 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/listview_musicas.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/adapter/ArtistaList.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="31" column="4" selection-start-line="31" selection-start-column="4" selection-end-line="42" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/adapter/MusicaList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="35" />
         </state>
       </provider>
     </entry>
@@ -3113,13 +3048,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/listview_musicas_evento.xml" />
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/listview_musicas_evento.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="503">
           <caret line="63" column="8" selection-start-line="63" selection-start-column="8" selection-end-line="69" selection-end-column="58" />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/adapter/StableArrayAdapter.java">
@@ -3130,13 +3065,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_evento_detalhe.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="901">
           <caret line="53" column="40" selection-start-line="53" selection-start-column="40" selection-end-line="53" selection-end-column="40" />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="jar://C:/android/sdk/extras/android/m2repository/com/android/support/support-v4/23.0.1/support-v4-23.0.1-sources.jar!/android/support/v4/app/Fragment.java" />
@@ -3152,7 +3087,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
           <caret line="63" column="28" selection-start-line="63" selection-start-column="28" selection-end-line="63" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3181,23 +3115,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/EventosActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1252">
-          <caret line="165" column="71" selection-start-line="160" selection-start-column="8" selection-end-line="165" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
@@ -3208,35 +3133,20 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-620">
           <caret line="2" column="36" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="36" />
           <folding />
         </state>
       </provider>
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#451#452#0" expanded="false" />
-            <element signature="e#483#484#0" expanded="false" />
-            <element signature="e#542#543#0" expanded="false" />
-            <element signature="e#585#586#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3248,95 +3158,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="34" selection-start-line="20" selection-start-column="34" selection-end-line="20" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="17" column="75" selection-start-line="17" selection-start-column="75" selection-end-line="17" selection-end-column="75" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/GoogleApiHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/service/AtualizaDadosService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="292" column="12" selection-start-line="292" selection-start-column="12" selection-end-line="310" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/DialogUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="15" column="77" selection-start-line="15" selection-start-column="77" selection-end-line="15" selection-end-column="77" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#574#769#0" expanded="true" />
-            <element signature="e#768#769#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/TarefaAssincrona.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/evento_detalhe.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="8" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/LoginActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="83">
-          <caret line="117" column="75" selection-start-line="117" selection-start-column="75" selection-end-line="117" selection-end-column="75" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MusicaDetalheActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding />
+        <state relative-caret-position="85">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="8" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -3350,31 +3185,196 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="35" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
+        <state relative-caret-position="119">
+          <caret line="7" column="18" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/main.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="36" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="42" selection-start-line="18" selection-start-column="42" selection-end-line="18" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="302">
+          <caret line="44" column="54" selection-start-line="44" selection-start-column="54" selection-end-line="44" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="47" column="42" selection-start-line="47" selection-start-column="42" selection-end-line="47" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_relatorios.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="37" selection-start-line="9" selection-start-column="37" selection-end-line="9" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/RelatoriosActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="748">
+          <caret line="53" column="36" selection-start-line="53" selection-start-column="36" selection-end-line="53" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/model/dao/MusicaDBAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3400">
+          <caret line="214" column="15" selection-start-line="214" selection-start-column="15" selection-end-line="214" selection-end-column="15" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2444#2452#0" expanded="false" />
+            <element signature="e#3936#3944#0" expanded="false" />
+            <element signature="e#5548#5556#0" expanded="false" />
+            <element signature="e#7098#7106#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/DialogUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="15" column="77" selection-start-line="15" selection-start-column="77" selection-end-line="15" selection-end-column="77" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#574#769#0" expanded="false" />
+            <element signature="e#768#769#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/TarefaAssincrona.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="969">
+          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#971#987#0" expanded="false" />
+            <element signature="e#1494#1495#0" expanded="false" />
+            <element signature="e#1534#1535#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/utils/GoogleApiHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#983#984#0" expanded="false" />
+            <element signature="e#1027#1028#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/service/AtualizaDadosService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4097">
+          <caret line="292" column="12" selection-start-line="292" selection-start-column="12" selection-end-line="310" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2457#2458#0" expanded="false" />
+            <element signature="e#2484#2485#0" expanded="false" />
+            <element signature="e#2621#2993#0" expanded="false" />
+            <element signature="e#2992#2993#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/adapter/MusicaList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-119">
+          <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/EventosActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2261">
+          <caret line="165" column="71" selection-start-line="160" selection-start-column="8" selection-end-line="165" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/ArtistasActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="761">
-          <caret line="140" column="5" selection-start-line="140" selection-start-column="5" selection-end-line="140" selection-end-column="5" />
+        <state relative-caret-position="217">
+          <caret line="117" column="33" selection-start-line="117" selection-start-column="33" selection-end-line="117" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/main.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/MusicaDetalheActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="57" selection-start-line="4" selection-start-column="57" selection-end-line="4" selection-end-column="57" />
-          <folding>
-            <element signature="e#243#264#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="238">
+          <caret line="100" column="91" selection-start-line="100" selection-start-column="91" selection-end-line="100" selection-end-column="91" />
+          <folding />
         </state>
       </provider>
-      <provider editor-type-id="android-designer2">
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_musica_detalhe.xml">
+      <provider selected="true" editor-type-id="android-designer2">
         <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/br/com/vostre/repertori/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="880">
+          <caret line="117" column="75" selection-start-line="117" selection-start-column="75" selection-end-line="117" selection-end-column="75" />
+          <folding />
+        </state>
       </provider>
     </entry>
   </component>

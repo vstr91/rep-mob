@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,6 +29,9 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     TextView textViewTom;
     ListView listViewExecucoes;
     EventoList adapterEventos;
+    Button btnBuscaVideo;
+
+    Musica musica;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,11 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         textViewArtista = (TextView) findViewById(R.id.textViewArtista);
         textViewTom = (TextView) findViewById(R.id.textViewTom);
         listViewExecucoes = (ListView) findViewById(R.id.listViewExecucoes);
+        btnBuscaVideo = (Button) findViewById(R.id.btnBuscaVideo);
 
-        Musica musica = new Musica();
+        btnBuscaVideo.setOnClickListener(this);
+
+        musica = new Musica();
         musica.setId(getIntent().getStringExtra("musica"));
         musica = musicaDBHelper.carregar(getApplicationContext(), musica);
 
@@ -79,6 +86,24 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         Intent intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
         intent.putExtra("evento", evento.getId());
         startActivity(intent);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+
+        switch(v.getId()){
+            case R.id.btnBuscaVideo:
+
+                Intent intent = new Intent(Intent.ACTION_SEARCH);
+                intent.setPackage("com.google.android.youtube");
+                intent.putExtra("query", musica.getNome()+" "+musica.getArtista().getNome());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+                break;
+        }
 
     }
 }

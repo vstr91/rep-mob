@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnRepertorio;
     Button btnEventos;
     Button btnArtistas;
+    Button btnRelatorios;
     Menu menu;
     TextView textViewUsuario;
 
@@ -46,11 +47,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnRepertorio = (Button) findViewById(R.id.btnRepertorio);
         btnEventos = (Button) findViewById(R.id.btnEventos);
         btnArtistas = (Button) findViewById(R.id.btnArtistas);
+        btnRelatorios = (Button) findViewById(R.id.btnRelatorios);
         textViewUsuario = (TextView) findViewById(R.id.textViewUsuario);
 
         btnRepertorio.setOnClickListener(this);
         btnEventos.setOnClickListener(this);
         btnArtistas.setOnClickListener(this);
+        btnRelatorios.setOnClickListener(this);
 
         GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
         textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
@@ -118,6 +121,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnArtistas:
                 intent = new Intent(getBaseContext(), ArtistasActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btnRelatorios:
+                intent = new Intent(getBaseContext(), RelatoriosActivity.class);
                 startActivity(intent);
                 break;
         }

@@ -5,8 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.HashMap;
 import java.util.List;
 
+import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Musica;
 
 /**
@@ -47,6 +49,11 @@ public class MusicaDBHelper extends SQLiteOpenHelper {
     public List<Musica> listarTodosPorSituacao(Context context, int situacao){
         MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodosPorSituacao(situacao);
+    }
+
+    public HashMap<Integer, Artista> contarTodosPorArtista(Context context){
+        MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.contarTodosPorArtista();
     }
 
     public List<Musica> listarTodosAEnviar(Context context){

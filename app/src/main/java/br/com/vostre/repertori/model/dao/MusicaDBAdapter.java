@@ -2,10 +2,13 @@ package br.com.vostre.repertori.model.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -197,6 +200,32 @@ public class MusicaDBAdapter {
         database.close();
 
         return musicas;
+    }
+
+    public HashMap<Integer, Artista> contarTodosPorArtista(){
+        Cursor cursor = database.rawQuery("SELECT COUNT(_id), id_artista FROM musica WHERE status != 2 " +
+                "GROUP BY id_artista ORDER BY COUNT(_id)", null);
+        List<Musica> musicas = new ArrayList<Musica>();
+        HashMap<Integer, Artista> vetor = new HashMap<>();
+
+        if(cursor.moveToFirst()){
+
+            ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+
+            do{
+                Artista artista = new Artista();
+                artista.setId(cursor.getString(1));
+                artista = artistaDBHelper.carregar(context, artista);
+
+                vetor.put(cursor.getInt(0), artista);
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return vetor;
     }
 
     public Musica carregar(Musica musica){
