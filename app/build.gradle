@@ -3,7 +3,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "br.com.vostre.repertori"
         minSdkVersion 14
@@ -13,13 +13,13 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs{
-        key{
-            keyAlias 'rep'
-            keyPassword 'almirjunior91'
-            storeFile file('C:/android/keys.jks')
-            storePassword 'almirjunior91'
-        }
+    signingConfigs {
+//        key{
+//            keyAlias 'rep'
+//            keyPassword 'almirjunior91'
+//            storeFile file('C:/android/keys.jks')
+//            storePassword 'almirjunior91'
+//        }
     }
 
     buildTypes {
@@ -27,8 +27,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
-            signingConfig signingConfigs.key
+        debug {
+            //signingConfig signingConfigs.key
         }
     }
 }
@@ -43,5 +43,6 @@ dependencies {
     compile 'com.roomorama:caldroid:3.0.1'
     compile 'com.google.android.gms:play-services-auth:9.0.0'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }

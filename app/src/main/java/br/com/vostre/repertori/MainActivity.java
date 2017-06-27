@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnArtistas.setOnClickListener(this);
         btnRelatorios.setOnClickListener(this);
 
-        GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
-        textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
+//        GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
+//        textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
 
     }
 
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        signOut();
+        //signOut();
         super.onBackPressed();
     }
 

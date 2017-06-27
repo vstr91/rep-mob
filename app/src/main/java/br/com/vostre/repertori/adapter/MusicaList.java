@@ -46,7 +46,7 @@ public class MusicaList extends ArrayAdapter<Musica> {
 
         textViewNome.setText(musica.getNome());
         textViewArtista.setText(musica.getArtista().getNome());
-        textViewTom.setText(musica.getTom());
+        textViewTom.setText(musica.getTom().equals("null") ? "-" : musica.getTom());
 
         return rowView;
     }
