@@ -1,9 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
-    <item android:id="@+id/icon_sair"
-        android:icon="@drawable/ic_exit_to_app_white_24dp"
-        android:title="@string/action_sair"
-        app:showAsAction="always" />
+    <!--<item android:id="@+id/icon_sair"-->
+        <!--android:icon="@drawable/ic_exit_to_app_white_24dp"-->
+        <!--android:title="@string/action_sair"-->
+        <!--app:showAsAction="always" />-->
 
 </menu>

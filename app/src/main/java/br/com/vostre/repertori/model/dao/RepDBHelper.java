@@ -28,6 +28,10 @@ public class RepDBHelper extends SQLiteOpenHelper {
         db.execSQL(ComentarioEventoDBHelper.DBCREATE);
         db.execSQL(ParametroDBHelper.DBCREATE);
 
+        db.execSQL(MusicaProjetoDBHelper.DBCREATE);
+        db.execSQL(ProjetoDBHelper.DBCREATE);
+        db.execSQL(EstiloDBHelper.DBCREATE);
+
         db.execSQL(ParametroDBHelper.DBPOPULATE);
     }
 

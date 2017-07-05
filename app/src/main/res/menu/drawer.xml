@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<group android:checkableBehavior="single">-->
+        <!--<item-->
+            <!--android:id="@+id/nav_consulta"-->
+            <!--android:checked="true"-->
+            <!--android:title="Consulta de Dados"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_cadastro"-->
+            <!--android:title="Cadastro de Dados"/>-->
+    <!--</group>-->
+    <item
+        android:id="@+id/projetos"
+        android:title="Projetos" />
+    <item
+        android:id="@+id/eventos"
+        android:title="Eventos" />
+    <item
+        android:id="@+id/musicas"
+        android:title="Banco de Músicas" />
+    <item
+        android:id="@+id/estilos"
+        android:title="Estilos Musicais" />
+    <item
+        android:id="@+id/artistas"
+        android:title="Artistas" />
+
+</menu>

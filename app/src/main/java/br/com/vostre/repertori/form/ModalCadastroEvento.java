@@ -25,17 +25,20 @@ import java.util.List;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ArtistaList;
 import br.com.vostre.repertori.adapter.EventoList;
+import br.com.vostre.repertori.adapter.ProjetoList;
 import br.com.vostre.repertori.adapter.TipoEventoList;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
+import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.StatusMusica;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.SnackbarHelper;
@@ -45,6 +48,7 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
     EditText editTextNome;
     TextView textViewData;
     Spinner spinnerTipoEvento;
+    Spinner spinnerProjeto;
     Spinner spinnerStatus;
     Button btnSalvar;
     Button btnFechar;
@@ -57,7 +61,9 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
     int status;
     Evento evento;
     TipoEvento tipoEvento;
+    Projeto projeto;
     List<TipoEvento> tiposEvento;
+    List<Projeto> projetos;
     List<StatusMusica> statusList;
 
     Calendar data;
@@ -86,10 +92,19 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
         this.data = data;
     }
 
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         TipoEventoDBHelper tipoEventoDBHelper;
+        ProjetoDBHelper projetoDBHelper;
 
         View view = inflater.inflate(R.layout.modal_cadastro_evento, container, false);
 
@@ -98,6 +113,7 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
         editTextNome = (EditText) view.findViewById(R.id.editTextNome);
         textViewData = (TextView) view.findViewById(R.id.textViewData);
         spinnerTipoEvento = (Spinner) view.findViewById(R.id.spinnerTipoEvento);
+        spinnerProjeto = (Spinner) view.findViewById(R.id.spinnerProjeto);
         spinnerStatus = (Spinner) view.findViewById(R.id.spinnerStatus);
         btnSalvar = (Button) view.findViewById(R.id.btnSalvar);
         btnFechar = (Button) view.findViewById(R.id.btnFechar);
@@ -106,6 +122,10 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
         tipoEventoDBHelper = new TipoEventoDBHelper(getContext());
         tiposEvento = tipoEventoDBHelper.listarTodos(getContext());
         TipoEventoList adapterTipoEvento = new TipoEventoList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, tiposEvento);
+
+        projetoDBHelper = new ProjetoDBHelper(getContext());
+        projetos = projetoDBHelper.listarTodosAtivos(getContext());
+        ProjetoList adapterProjeto = new ProjetoList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, projetos);
 
         statusList = new ArrayList<>();
 
@@ -125,6 +145,9 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
 
         spinnerTipoEvento.setAdapter(adapterTipoEvento);
         spinnerTipoEvento.setOnItemSelectedListener(this);
+
+        spinnerProjeto.setAdapter(adapterProjeto);
+        spinnerProjeto.setOnItemSelectedListener(this);
 
         spinnerStatus.setAdapter(statusAdapter);
 
@@ -194,6 +217,7 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
                         evento.setNome(nome);
                         evento.setData(data);
                         evento.setTipoEvento(tipoEvento);
+                        evento.setProjeto(projeto);
                         evento.setUltimaAlteracao(Calendar.getInstance());
                         evento.setEnviado(-1);
 
@@ -204,6 +228,7 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
                         evento.setNome(nome);
                         evento.setData(data);
                         evento.setTipoEvento(tipoEvento);
+                        evento.setProjeto(projeto);
                         evento.setDataCadastro(Calendar.getInstance());
                         evento.setUltimaAlteracao(Calendar.getInstance());
                         evento.setEnviado(-1);
@@ -240,7 +265,14 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        tipoEvento = tiposEvento.get(position);
+
+        if(parent.getSelectedItem() instanceof TipoEvento){
+            tipoEvento = tiposEvento.get(position);
+        } else{
+            projeto = projetos.get(position);
+        }
+
+
     }
 
     @Override

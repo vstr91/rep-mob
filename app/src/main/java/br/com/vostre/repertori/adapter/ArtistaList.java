@@ -15,7 +15,7 @@ import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.utils.DataUtils;
 
 /**
- * Created by Cefet on 27/08/2015.
+ * Created by Almir on 27/08/2015.
  */
 public class ArtistaList extends ArrayAdapter<Artista> {
 

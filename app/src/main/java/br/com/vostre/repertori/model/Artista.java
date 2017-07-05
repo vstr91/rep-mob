@@ -80,8 +80,7 @@ public class Artista extends EntidadeBase {
 
         String resultado = "";
 
-        resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"status\": "+this.getStatus()+",  " +
-                "\"data_cadastro\": \""+ DataUtils.dataParaBanco(this.getDataCadastro())+"\"}";
+        resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"status\": "+this.getStatus()+"}";
 
 
         return resultado;

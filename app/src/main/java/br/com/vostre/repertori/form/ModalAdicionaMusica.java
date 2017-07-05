@@ -99,16 +99,14 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
         switch(v.getId()){
             case R.id.btnSalvar:
 
-                int tamanhoLista = listViewMusicas.getChildCount();
+                int tamanhoLista = musicas.size();
 
                 musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
 
                 for(int i = 0; i < tamanhoLista; i++){
-                    View view = listViewMusicas.getChildAt(i);
+                    Musica musica = musicas.get(i);
 
-                    CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBoxAdicionar);
-
-                    if(checkBox.isChecked()){
+                    if(musica.isChecked()){
                         MusicaEvento musicaEvento = new MusicaEvento();
                         musicaEvento.setMusica(musicas.get(i));
                         musicaEvento.setEvento(evento);

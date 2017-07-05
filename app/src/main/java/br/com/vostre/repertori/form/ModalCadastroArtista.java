@@ -64,8 +64,6 @@ public class ModalCadastroArtista extends android.support.v4.app.DialogFragment 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        ArtistaDBHelper artistaDBHelper;
-
         View view = inflater.inflate(R.layout.modal_cadastro_artista, container, false);
 
         view.setMinimumWidth(700);
@@ -162,7 +160,7 @@ public class ModalCadastroArtista extends android.support.v4.app.DialogFragment 
                         artista.setStatus(status.getId());
                     }
 
-                    if((artista.getId() != null && getStatus() > 0) && artistaDBHelper.jaExiste(getContext(), artista)){
+                    if(artistaDBHelper.jaExiste(getContext(), artista)){
                         Toast.makeText(getContext(), "O registro informado já existe!", Toast.LENGTH_SHORT).show();
                     } else{
                         artistaDBHelper.salvarOuAtualizar(getContext(), artista);

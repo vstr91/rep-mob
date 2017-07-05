@@ -31,15 +31,23 @@ import br.com.vostre.repertori.listener.UpdateSentTaskListener;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.ComentarioEvento;
+import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.MusicaProjeto;
+import br.com.vostre.repertori.model.Projeto;
+import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
+import br.com.vostre.repertori.model.dao.EstiloDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
+import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
+import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 import br.com.vostre.repertori.utils.Constants;
 import br.com.vostre.repertori.utils.Crypt;
 import br.com.vostre.repertori.utils.ServerUtils;
@@ -120,11 +128,22 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         List<Artista> artistas;
         List<Evento> eventos;
         List<MusicaEvento> musicasEventos;
+
+        List<Projeto> projetos;
+        List<Estilo> estilos;
+        List<MusicaProjeto> musicasProjetos;
+        List<TipoEvento> tiposEventos;
+
         ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
         ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(getApplicationContext());
         EventoDBHelper eventoDBHelper = new EventoDBHelper(getApplicationContext());
         MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
+        TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(getApplicationContext());
+
+        ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(getApplicationContext());
+        EstiloDBHelper estiloDBHelper = new EstiloDBHelper(getApplicationContext());
+        MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(getApplicationContext());
 
         try {
             tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
@@ -141,8 +160,14 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             eventos = eventoDBHelper.listarTodosAEnviar(getApplicationContext());
             musicasEventos = musicaEventoDBHelper.listarTodosAEnviar(getApplicationContext());
 
+            projetos = projetoDBHelper.listarTodosAEnviar(getApplicationContext());
+            estilos = estiloDBHelper.listarTodosAEnviar(getApplicationContext());
+            musicasProjetos = musicaProjetoDBHelper.listarTodosAEnviar(getApplicationContext());
+            tiposEventos = tipoEventoDBHelper.listarTodosAEnviar(getApplicationContext());
+
             // COMENTARIOS
-            int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size() + musicasEventos.size();
+            int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size()
+                    + musicasEventos.size() + projetos.size() + estilos.size() + musicasProjetos.size() + tiposEventos.size();
 
             if(totalRegistros > 0){
                 String json = "{";
@@ -165,21 +190,65 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     }
                 }
 
-                // MUSICAS
+                // TIPOS EVENTOS
 
                 json = json.concat("],");
 
-                json = json.concat("\"musicas\":[");
+                json = json.concat("\"tipos_eventos\":[");
                 cont = 1;
-                int qtdMusicas = musicas.size();
+                int qtdTiposEventos = tiposEventos.size();
 
-                if(qtdMusicas > 0) {
-                    for (Musica umMusica : musicas) {
+                if(qtdTiposEventos > 0) {
+                    for (TipoEvento umTipoEvento : tiposEventos) {
 
-                        if (cont < qtdMusicas) {
-                            json = json.concat(umMusica.toJson() + ",");
+                        if (cont < qtdTiposEventos) {
+                            json = json.concat(umTipoEvento.toJson() + ",");
                         } else {
-                            json = json.concat(umMusica.toJson());
+                            json = json.concat(umTipoEvento.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
+                // ESTILOS
+
+                json = json.concat("],");
+
+                json = json.concat("\"estilos\":[");
+                cont = 1;
+                int qtdEstilos = estilos.size();
+
+                if(qtdEstilos > 0) {
+                    for (Estilo umEstilo : estilos) {
+
+                        if (cont < qtdEstilos) {
+                            json = json.concat(umEstilo.toJson() + ",");
+                        } else {
+                            json = json.concat(umEstilo.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
+                // PROJETOS
+
+                json = json.concat("],");
+
+                json = json.concat("\"projetos\":[");
+                cont = 1;
+                int qtdProjetos = projetos.size();
+
+                if(qtdProjetos > 0) {
+                    for (Projeto umProjeto : projetos) {
+
+                        if (cont < qtdProjetos) {
+                            json = json.concat(umProjeto.toJson() + ",");
+                        } else {
+                            json = json.concat(umProjeto.toJson());
                         }
 
                         cont++;
@@ -209,6 +278,28 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     }
                 }
 
+                // MUSICAS
+
+                json = json.concat("],");
+
+                json = json.concat("\"musicas\":[");
+                cont = 1;
+                int qtdMusicas = musicas.size();
+
+                if(qtdMusicas > 0) {
+                    for (Musica umMusica : musicas) {
+
+                        if (cont < qtdMusicas) {
+                            json = json.concat(umMusica.toJson() + ",");
+                        } else {
+                            json = json.concat(umMusica.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
                 // EVENTOS
 
                 json = json.concat("],");
@@ -220,7 +311,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 if(qtdEventos > 0) {
                     for (Evento umEvento : eventos) {
 
-                        if (cont < qtdMusicas) {
+                        if (cont < qtdEventos) {
                             json = json.concat(umEvento.toJson() + ",");
                         } else {
                             json = json.concat(umEvento.toJson());
@@ -232,8 +323,6 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 }
 
                 // MUSICA EVENTO
-
-                // EVENTOS
 
                 json = json.concat("],");
 
@@ -248,6 +337,28 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                             json = json.concat(umaMusicaEvento.toJson() + ",");
                         } else {
                             json = json.concat(umaMusicaEvento.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
+                // MUSICA PROJETO
+
+                json = json.concat("],");
+
+                json = json.concat("\"musicas_projetos\":[");
+                cont = 1;
+                int qtdMusicasProjetos = musicasProjetos.size();
+
+                if(qtdMusicasProjetos > 0) {
+                    for (MusicaProjeto umaMusicaProjeto : musicasProjetos) {
+
+                        if (cont < qtdMusicasProjetos) {
+                            json = json.concat(umaMusicaProjeto.toJson() + ",");
+                        } else {
+                            json = json.concat(umaMusicaProjeto.toJson());
                         }
 
                         cont++;

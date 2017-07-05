@@ -131,16 +131,18 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
 
             // return JSONObject (this is a class variable and null is returned if something went bad)
 
+        } catch (Exception e){
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (ProtocolException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         return map;
 

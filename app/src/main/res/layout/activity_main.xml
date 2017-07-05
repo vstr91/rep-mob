@@ -1,52 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    tools:context="br.com.vostre.repertori.MainActivity"
+    tools:ignore="MergeRootFrame"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="br.com.vostre.repertori.MainActivity">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <include layout="@layout/toolbar"></include>
 
-        <TextView
+        <FrameLayout
+            android:id="@+id/conteudo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewUsuario"
-            android:textAlignment="center" />
-
-        <Button
-            android:text="Repertório"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnRepertorio"
-            android:layout_weight="1" />
-
-        <Button
-            android:text="Eventos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnEventos"
-            android:layout_weight="1" />
-
-        <Button
-            android:text="Artistas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnArtistas"
-            android:layout_weight="1" />
-
-        <Button
-            android:text="Relatórios"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnRelatorios"
-            android:layout_weight="1" />
+            android:layout_height="match_parent">
+        </FrameLayout>
 
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:id="@+id/nav"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/drawer"/>
+
+</android.support.v4.widget.DrawerLayout>

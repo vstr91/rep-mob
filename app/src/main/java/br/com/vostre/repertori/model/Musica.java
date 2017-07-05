@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
+import br.com.vostre.repertori.model.dao.EstiloDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
@@ -25,6 +26,9 @@ public class Musica extends EntidadeBase {
     private String tom;
     private String slug;
     private Artista artista;
+    private Estilo estilo;
+
+    private boolean checked;
 
     public String getNome() {
         return nome;
@@ -58,10 +62,27 @@ public class Musica extends EntidadeBase {
         this.slug = slug;
     }
 
+    public Estilo getEstilo() {
+        return estilo;
+    }
+
+    public void setEstilo(Estilo estilo) {
+        this.estilo = estilo;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
         ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+        EstiloDBHelper estiloDBHelper = new EstiloDBHelper(context);
 
         for(int i = 0; i < qtdDados; i++){
 
@@ -78,8 +99,16 @@ public class Musica extends EntidadeBase {
             umArtista.setId(object.getString("artista"));
             umArtista = artistaDBHelper.carregar(context, umArtista);
 
+            if(object.getString("estilo") != "null"){
+                Estilo umEstilo = new Estilo();
+                umEstilo.setId(object.getString("estilo"));
+                umEstilo = estiloDBHelper.carregar(context, umEstilo);
+                umMusica.setEstilo(umEstilo);
+            }
+
             umMusica.setEnviado(0);
             umMusica.setArtista(umArtista);
+
             umMusica.setStatus(object.getInt("status"));
             umMusica.setDataRecebimento(Calendar.getInstance());
             umMusica.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
@@ -94,9 +123,10 @@ public class Musica extends EntidadeBase {
 
         String resultado = "";
 
+        String estilo = this.getEstilo() == null ? "null" : this.getEstilo().getId();
+
         resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"tom\": \""+this.getTom()+"\", " +
-                "\"artista\": \""+this.getArtista().getId()+"\", \"status\": "+this.getStatus()+",  " +
-                "\"data_cadastro\": \""+ DataUtils.dataParaBanco(this.getDataCadastro())+"\"}";
+                "\"artista\": \""+this.getArtista().getId()+"\",  \"status\": "+this.getStatus()+", \"estilo\": \""+estilo+"\"}";
 
 
         return resultado;

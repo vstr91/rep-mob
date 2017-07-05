@@ -15,11 +15,35 @@
         <!--android:hint="Digite para filtrar..."-->
         <!--android:textColorHint="#888888" />-->
 
+    <TextView
+        android:id="@+id/textViewAtivas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Músicas Ativas"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Medium" />
+
     <ListView
-        android:layout_width="fill_parent"
+        android:id="@+id/listViewMusicasAtivas"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listViewMusicas"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/textViewEspera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Músicas em Espera"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Medium" />
+
+    <ListView
+        android:id="@+id/listViewMusicasEmEspera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1" />
 
     <TextView
         android:layout_width="match_parent"

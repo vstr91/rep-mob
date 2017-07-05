@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
+import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
@@ -23,6 +24,7 @@ public class Evento extends EntidadeBase {
     private Calendar data;
     private TipoEvento tipoEvento;
     private String slug;
+    private Projeto projeto;
 
     public String getNome() {
         return nome;
@@ -56,10 +58,19 @@ public class Evento extends EntidadeBase {
         this.slug = slug;
     }
 
+    public Projeto getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         EventoDBHelper eventoDBHelper = new EventoDBHelper(context);
         TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
+        ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(context);
 
         for(int i = 0; i < qtdDados; i++){
 
@@ -78,6 +89,12 @@ public class Evento extends EntidadeBase {
 
             umEvento.setTipoEvento(umTipoEvento);
 
+            Projeto umProjeto = new Projeto();
+            umProjeto.setId(object.getString("projeto"));
+            umProjeto = projetoDBHelper.carregar(context, umProjeto);
+
+            umEvento.setProjeto(umProjeto);
+
             umEvento.setStatus(object.getInt("status"));
             umEvento.setDataRecebimento(Calendar.getInstance());
             umEvento.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
@@ -94,8 +111,7 @@ public class Evento extends EntidadeBase {
         String resultado = "";
 
         resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"data\": \""+DataUtils.dataParaBanco(this.getData())+"\", " +
-                "\"tipo_evento\": \""+this.getTipoEvento().getId()+"\", \"status\": "+this.getStatus()+",  " +
-                "\"data_cadastro\": \""+ DataUtils.dataParaBanco(this.getDataCadastro())+"\"}";
+                "\"tipo_evento\": \""+this.getTipoEvento().getId()+"\", \"status\": "+this.getStatus()+", \"projeto\": \""+this.getProjeto().getId() + "\"}";
 
 
         return resultado;

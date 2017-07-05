@@ -61,6 +61,7 @@ public class TipoEvento extends EntidadeBase {
             umTipoEvento.setCor(object.getString("cor"));
             umTipoEvento.setSlug(object.getString("slug"));
             umTipoEvento.setStatus(object.getInt("status"));
+            umTipoEvento.setEnviado(0);
             umTipoEvento.setDataRecebimento(Calendar.getInstance());
             umTipoEvento.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
 
@@ -73,6 +74,16 @@ public class TipoEvento extends EntidadeBase {
     @Override
     public String toString() {
         return this.getNome();
+    }
+
+    public String toJson(){
+
+        String resultado = "";
+
+        resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"status\": "+this.getStatus()+"\"}";
+
+
+        return resultado;
     }
 
     @Override

@@ -14,9 +14,13 @@ import java.text.ParseException;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.ComentarioEvento;
+import br.com.vostre.repertori.model.Estilo;
+import br.com.vostre.repertori.model.EstiloMusica;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.MusicaProjeto;
+import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.RepDBHelper;
@@ -92,6 +96,11 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             JSONArray musicasEventos = jObj.getJSONArray("musicas_eventos");
             JSONArray comentariosEventos = jObj.getJSONArray("comentarios_eventos");
 
+            JSONArray estilos = jObj.getJSONArray("estilos");
+            //JSONArray estilosMusicas = jObj.getJSONArray("estilos_musicas");
+            JSONArray projetos = jObj.getJSONArray("projetos");
+            JSONArray musicasProjetos = jObj.getJSONArray("musicas_projetos");
+
             // Objetos que contem os metodos de atualizacao
             Artista artista = new Artista();
             TipoEvento tipoEvento = new TipoEvento();
@@ -99,6 +108,11 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             Musica musica = new Musica();
             MusicaEvento musicaEvento = new MusicaEvento();
             ComentarioEvento comentarioEvento = new ComentarioEvento();
+
+            Estilo estilo = new Estilo();
+            Projeto projeto = new Projeto();
+            EstiloMusica estiloMusica = new EstiloMusica();
+            MusicaProjeto musicaProjeto = new MusicaProjeto();
 
             RepDBHelper repDBHelper = new RepDBHelper(ctx);
 
@@ -127,9 +141,25 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
                 //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdTiposEvento+ " tipo(s) de evento atualizado(s)."+System.getProperty("line.separator")
-                        +System.getProperty("line.separator"),"Atualizando Eventos");
+                        +System.getProperty("line.separator"),"Atualizando Projetos");
             } else{
                 publishProgress("Tipos de Evento já atualizados."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Projetos");
+            }
+
+            int qtdProjetos = projetos.length();
+
+            if(qtdProjetos > 0){
+                //mostraProgressBar(progressDialog, qtdTiposEvento, "Atualizando Tipos de Evento...");
+
+                projeto.atualizarDados(projetos, qtdProjetos, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdTiposEvento+ " projeto(s) atualizado(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Eventos");
+            } else{
+                publishProgress("Projetos já atualizados."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Eventos");
             }
 
@@ -143,9 +173,25 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
                 //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdEventos+ " evento(s) atualizado(s)."+System.getProperty("line.separator")
-                        +System.getProperty("line.separator"),"Atualizando Músicas");
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
             } else{
                 publishProgress("Eventos já atualizados."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            }
+
+            int qtdEstilos = estilos.length();
+
+            if(qtdEstilos > 0){
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+
+                estilo.atualizarDados(estilos, qtdEstilos, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdEventos+ " estilo(s) atualizado(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Músicas");
+            } else{
+                publishProgress("Estilos já atualizados."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Músicas");
             }
 
@@ -191,9 +237,25 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
                 //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdComentariosEventos+" Comentário(s) Evento(s) atualizada(s)."+System.getProperty("line.separator")
-                        +System.getProperty("line.separator"),"");
+                        +System.getProperty("line.separator"),"Atualizando Músicas Projetos");
             } else{
                 publishProgress("Comentários Eventos já atualizadas."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"");
+            }
+
+            int qtdMusicasProjetos = musicasProjetos.length();
+
+            if(qtdMusicasProjetos > 0){
+                //mostraProgressBar(progressDialog, qtdComentariosEventos, "Atualizando Comentários Eventos...");
+
+                musicaProjeto.atualizarDados(musicasProjetos, qtdMusicasProjetos, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdComentariosEventos+" Música(s) Projeto(s) atualizada(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"");
+            } else{
+                publishProgress("Músicas Projetos já atualizadas."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"");
             }
 

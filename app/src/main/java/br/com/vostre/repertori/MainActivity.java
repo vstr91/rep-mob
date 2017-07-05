@@ -3,14 +3,24 @@ package br.com.vostre.repertori;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,18 +29,24 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import br.com.vostre.repertori.fragment.ArtistasFragment;
+import br.com.vostre.repertori.fragment.EstilosFragment;
+import br.com.vostre.repertori.fragment.EventosFragment;
+import br.com.vostre.repertori.fragment.MusicasFragment;
+import br.com.vostre.repertori.fragment.ProjetosFragment;
 import br.com.vostre.repertori.service.AtualizaDadosService;
 import br.com.vostre.repertori.utils.ServiceUtils;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    Button btnRepertorio;
-    Button btnEventos;
-    Button btnArtistas;
-    Button btnRelatorios;
-    Menu menu;
-    TextView textViewUsuario;
+    private DrawerLayout drawer;
+    private NavigationView navView;
+    private ActionBarDrawerToggle drawerToggle;
+    private FrameLayout conteudo;
+    Class fragmentClass = null;
+    Fragment fragment = null;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +56,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        drawer = (DrawerLayout) findViewById(R.id.container);
+        navView = (NavigationView) findViewById(R.id.nav);
+        conteudo = (FrameLayout) findViewById(R.id.conteudo);
+
+        navView.setNavigationItemSelectedListener(this);
+
+        fragmentClass = EventosFragment.class;
+        fragmentManager = getSupportFragmentManager();
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        fragmentManager.beginTransaction().replace(R.id.conteudo, fragment).commit();
+        setTitle("Eventos");
+
+        // --------------------------------------------------------
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, 0, 0){
+
+            public void onDrawerClosed(View view){
+                super.onDrawerClosed(view);
+                drawerToggle.syncState();
+
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if(fragment != null){
+                    fragmentManager.beginTransaction().replace(R.id.conteudo, fragment).commit();
+                }
+
+            }
+
+            public void onDrawerOpened(View view){
+                super.onDrawerOpened(view);
+                drawerToggle.syncState();
+            }
+
+        };
+
+        // --------------------------------------------------------
+
+        drawer.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         iniciaServicoAtualizacao();
-
-        btnRepertorio = (Button) findViewById(R.id.btnRepertorio);
-        btnEventos = (Button) findViewById(R.id.btnEventos);
-        btnArtistas = (Button) findViewById(R.id.btnArtistas);
-        btnRelatorios = (Button) findViewById(R.id.btnRelatorios);
-        textViewUsuario = (TextView) findViewById(R.id.textViewUsuario);
-
-        btnRepertorio.setOnClickListener(this);
-        btnEventos.setOnClickListener(this);
-        btnArtistas.setOnClickListener(this);
-        btnRelatorios.setOnClickListener(this);
 
 //        GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
 //        textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
@@ -82,9 +135,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case android.R.id.home:
                 onBackPressed();
                 break;
-            case R.id.icon_sair:
-                onBackPressed();
-                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -111,22 +161,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent;
 
         switch (v.getId()){
-            case R.id.btnRepertorio:
-                intent = new Intent(getBaseContext(), RepertorioActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.btnEventos:
-                intent = new Intent(getBaseContext(), EventosActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.btnArtistas:
-                intent = new Intent(getBaseContext(), ArtistasActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.btnRelatorios:
-                intent = new Intent(getBaseContext(), RelatoriosActivity.class);
-                startActivity(intent);
-                break;
+//            case R.id.btnRepertorio:
+//                intent = new Intent(getBaseContext(), RepertorioActivity.class);
+//                startActivity(intent);
+//                break;
+//            case R.id.btnEventos:
+//                intent = new Intent(getBaseContext(), EventosActivity.class);
+//                startActivity(intent);
+//                break;
+//            case R.id.btnArtistas:
+//                intent = new Intent(getBaseContext(), ArtistasActivity.class);
+//                startActivity(intent);
+//                break;
+//            case R.id.btnRelatorios:
+//                intent = new Intent(getBaseContext(), RelatoriosActivity.class);
+//                startActivity(intent);
+//                break;
         }
 
     }
@@ -145,6 +195,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                 });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+        switch (menuItem.getItemId()){
+            case R.id.projetos:
+                fragmentClass = ProjetosFragment.class;
+                break;
+            case R.id.eventos:
+                fragmentClass = EventosFragment.class;
+                break;
+            case R.id.musicas:
+                fragmentClass = MusicasFragment.class;
+                break;
+            case R.id.estilos:
+                fragmentClass = EstilosFragment.class;
+                break;
+            case R.id.artistas:
+                fragmentClass = ArtistasFragment.class;
+                break;
+        }
+
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        drawer.closeDrawers();
+
+        return true;
     }
 
 }

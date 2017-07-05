@@ -102,16 +102,16 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
 
         switch(tabAtual){
             case 0:
-                repAtivo.atualizaLista(0);
+                repAtivo.atualizaLista();
                 break;
             case 1:
-                repEspera.atualizaLista(1);
+                repEspera.atualizaLista();
                 break;
             case 2:
-                repSugestao.atualizaLista(3);
+                repSugestao.atualizaLista();
                 break;
             case 3:
-                repSugestao.atualizaLista(2);
+                repSugestao.atualizaLista();
                 break;
         }
 
@@ -147,16 +147,16 @@ public class RepertorioActivity extends BaseActivity implements TabLayout.OnTabS
     public void onModalCadastroDismissed(int resultado) {
         switch(tabAtual){
             case 0:
-                repAtivo.atualizaLista(0);
+                repAtivo.atualizaLista();
                 break;
             case 1:
-                repEspera.atualizaLista(1);
+                repEspera.atualizaLista();
                 break;
             case 2:
-                repSugestao.atualizaLista(3);
+                repSugestao.atualizaLista();
                 break;
             case 3:
-                repSugestao.atualizaLista(2);
+                repSugestao.atualizaLista();
                 break;
         }
     }

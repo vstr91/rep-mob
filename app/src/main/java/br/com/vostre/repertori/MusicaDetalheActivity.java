@@ -62,7 +62,10 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
         textViewNome.setText(musica.getNome());
         textViewArtista.setText(musica.getArtista().getNome());
-        textViewTom.setText("Tom: "+musica.getTom());
+
+        String tom = musica.getTom().equals("null") ? "-" : musica.getTom();
+
+        textViewTom.setText("Tom: "+tom);
 
         eventos = musicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica);
 

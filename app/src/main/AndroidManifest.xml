@@ -43,9 +43,10 @@
         <activity
             android:name=".ArtistasActivity"
             android:label="@string/title_activity_artistas" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".RelatoriosActivity" />
-        <activity android:name=".CronometroActivity"></activity>
+        <activity android:name=".CronometroActivity" />
+        <activity android:name=".MusicaProjetoActivity"></activity>
     </application>
 
 </manifest>

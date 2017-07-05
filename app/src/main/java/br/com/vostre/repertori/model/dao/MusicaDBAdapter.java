@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.utils.DataUtils;
 
@@ -37,6 +38,10 @@ public class MusicaDBAdapter {
             cv.put("_id", musica.getId());
         } else{
             cv.put("_id", UUID.randomUUID().toString());
+        }
+
+        if(musica.getEstilo() != null){
+            cv.put("id_estilo", musica.getEstilo().getId());
         }
 
         cv.put("nome", musica.getNome());
@@ -75,12 +80,13 @@ public class MusicaDBAdapter {
 
     public List<Musica> listarTodos(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug FROM musica", null);
+                "ultima_alteracao, slug, id_estilo FROM musica ORDER BY nome COLLATE LOCALIZED", null);
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){
 
             ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+            EstiloDBHelper estiloDBHelper = new EstiloDBHelper(context);
 
             do{
                 Musica umMusica = new Musica();
@@ -100,9 +106,22 @@ public class MusicaDBAdapter {
                     umMusica.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
                 }
 
-                umMusica.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
-                umMusica.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                if(cursor.getString(6) != null){
+                    umMusica.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                if(cursor.getString(7) != null){
+                    umMusica.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                }
+
                 umMusica.setSlug(cursor.getString(8));
+
+                if(cursor.getString(9) != null){
+                    Estilo estilo = new Estilo();
+                    estilo.setId(cursor.getString(9));
+                    estilo = estiloDBHelper.carregar(context, estilo);
+                    umMusica.setEstilo(estilo);
+                }
 
                 musicas.add(umMusica);
             } while (cursor.moveToNext());
@@ -116,12 +135,13 @@ public class MusicaDBAdapter {
 
     public List<Musica> listarTodosAEnviar(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug FROM musica WHERE enviado = -1", null);
+                "ultima_alteracao, slug, id_estilo FROM musica WHERE enviado = -1", null);
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){
 
             ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+            EstiloDBHelper estiloDBHelper = new EstiloDBHelper(context);
 
             do{
                 Musica umMusica = new Musica();
@@ -147,6 +167,13 @@ public class MusicaDBAdapter {
 
                 umMusica.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
                 umMusica.setSlug(cursor.getString(8));
+
+                if(cursor.getString(9) != null){
+                    Estilo estilo = new Estilo();
+                    estilo.setId(cursor.getString(9));
+                    estilo = estiloDBHelper.carregar(context, estilo);
+                    umMusica.setEstilo(estilo);
+                }
 
                 musicas.add(umMusica);
             } while (cursor.moveToNext());
@@ -230,13 +257,14 @@ public class MusicaDBAdapter {
 
     public Musica carregar(Musica musica){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug FROM musica WHERE _id = ?", new String[]{musica.getId()});
+                "ultima_alteracao, slug, id_estilo FROM musica WHERE _id = ?", new String[]{musica.getId()});
 
         Musica umMusica = null;
 
         if(cursor.moveToFirst()){
 
             ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+            EstiloDBHelper estiloDBHelper = new EstiloDBHelper(context);
 
             do{
                 umMusica = new Musica();
@@ -263,6 +291,13 @@ public class MusicaDBAdapter {
                 umMusica.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
                 umMusica.setSlug(cursor.getString(8));
 
+                if(cursor.getString(9) != null){
+                    Estilo estilo = new Estilo();
+                    estilo.setId(cursor.getString(9));
+                    estilo = estiloDBHelper.carregar(context, estilo);
+                    umMusica.setEstilo(estilo);
+                }
+
             } while (cursor.moveToNext());
         }
 
@@ -274,7 +309,8 @@ public class MusicaDBAdapter {
 
     public boolean jaExiste(Musica musica){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug FROM musica WHERE nome = ? AND id_artista = ?", new String[]{musica.getNome(), musica.getArtista().getId()});
+                "ultima_alteracao, slug FROM musica WHERE nome = ? AND id_artista = ? AND _id != ?", new String[]{musica.getNome(), musica.getArtista().getId(),
+                musica.getId() == null ? "-1" : musica.getId()});
 
         if(cursor.moveToFirst()){
             cursor.close();

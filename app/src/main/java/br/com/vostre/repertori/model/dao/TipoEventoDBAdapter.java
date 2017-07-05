@@ -41,6 +41,7 @@ public class TipoEventoDBAdapter {
         cv.put("status", tipoEvento.getStatus());
 
         cv.put("cor", tipoEvento.getCor());
+        cv.put("enviado", tipoEvento.getEnviado());
 
         if(tipoEvento.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(tipoEvento.getDataCadastro()));
@@ -68,7 +69,39 @@ public class TipoEventoDBAdapter {
 
     public List<TipoEvento> listarTodos(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug, cor " +
-                "FROM tipo_evento", null);
+                "FROM tipo_evento ORDER BY nome COLLATE NOCASE", null);
+        List<TipoEvento> tipoEventos = new ArrayList<TipoEvento>();
+
+        if(cursor.moveToFirst()){
+            do{
+                TipoEvento umTipoEvento = new TipoEvento();
+                umTipoEvento.setId(cursor.getString(0));
+
+                umTipoEvento.setNome(cursor.getString(1));
+                umTipoEvento.setStatus(cursor.getInt(2));
+
+                if(cursor.getString(3) != null){
+                    umTipoEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                }
+
+                umTipoEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
+                umTipoEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
+                umTipoEvento.setSlug(cursor.getString(6));
+                umTipoEvento.setCor(cursor.getString(7));
+
+                tipoEventos.add(umTipoEvento);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return tipoEventos;
+    }
+
+    public List<TipoEvento> listarTodosAEnviar(){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug, cor " +
+                "FROM tipo_evento WHERE enviado = -1 ORDER BY nome COLLATE NOCASE", null);
         List<TipoEvento> tipoEventos = new ArrayList<TipoEvento>();
 
         if(cursor.moveToFirst()){

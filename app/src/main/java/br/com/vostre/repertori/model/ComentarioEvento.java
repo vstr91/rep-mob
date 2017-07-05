@@ -96,8 +96,7 @@ public class ComentarioEvento extends EntidadeBase {
 
         String resultado = "";
 
-        resultado = "{\"id\": \""+this.getId()+"\", \"texto\": \""+this.getTexto()+"\", \"evento\": \""+this.getEvento().getId()+"\",  " +
-                "\"data_cadastro\": \""+ DataUtils.dataParaBanco(this.getDataCadastro())+"\"}";
+        resultado = "{\"id\": \""+this.getId()+"\", \"texto\": \""+this.getTexto()+"\", \"evento\": \""+this.getEvento().getId()+"\"}";
 
 
         return resultado;

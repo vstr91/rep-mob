@@ -69,7 +69,7 @@ public class ArtistaDBAdapter {
 
     public List<Artista> listarTodos(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
-                "FROM artista", null);
+                "FROM artista ORDER BY nome COLLATE NOCASE", null);
         List<Artista> artistas = new ArrayList<Artista>();
 
         if(cursor.moveToFirst()){
@@ -171,7 +171,7 @@ public class ArtistaDBAdapter {
 
     public boolean jaExiste(Artista artista){
         Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao, slug " +
-                "FROM artista WHERE _id = ?", new String[]{artista.getId()});
+                "FROM artista WHERE nome = ? AND _id != ?", new String[]{artista.getNome(), artista.getId() == null ? "-1" : artista.getId()});
 
         if(cursor.moveToFirst()){
             cursor.close();

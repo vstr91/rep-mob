@@ -26,22 +26,27 @@ import java.util.Map;
 
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ArtistaList;
+import br.com.vostre.repertori.adapter.EstiloList;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.StatusMusica;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
+import br.com.vostre.repertori.model.dao.EstiloDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 
-public class ModalCadastroMusica extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class ModalCadastroMusica extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, ModalCadastroListener {
 
     EditText editTextNome;
     EditText editTextTom;
     Spinner spinnerArtista;
     Spinner spinnerStatus;
+    Spinner spinnerEstilo;
     Button btnSalvar;
     Button btnFechar;
+    Button btnCadastrarNovoArtista;
 
     TextView textViewLabelStatus;
 
@@ -50,8 +55,15 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
     int status;
     Artista artista;
     List<Artista> artistas;
+    List<Estilo> estilos;
     Musica musica;
+    Estilo estilo;
     List<StatusMusica> statusList;
+
+    MusicaDBHelper musicaDBHelper;
+    ArtistaDBHelper artistaDBHelper;
+    EstiloDBHelper estiloDBHelper;
+    ArtistaList adapterArtista;
 
     public int getStatus() {
         return status;
@@ -72,8 +84,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        MusicaDBHelper musicaDBHelper;
-        ArtistaDBHelper artistaDBHelper;
+
 
         View view = inflater.inflate(R.layout.modal_cadastro_musica, container, false);
 
@@ -83,14 +94,20 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
         editTextTom = (EditText) view.findViewById(R.id.editTextTom);
         spinnerArtista = (Spinner) view.findViewById(R.id.spinnerArtista);
         spinnerStatus = (Spinner) view.findViewById(R.id.spinnerStatus);
+        spinnerEstilo = (Spinner) view.findViewById(R.id.spinnerEstilo);
         btnSalvar = (Button) view.findViewById(R.id.btnSalvar);
         btnFechar = (Button) view.findViewById(R.id.btnFechar);
+        btnCadastrarNovoArtista = (Button) view.findViewById(R.id.btnCadastrarNovoArtista);
 
         textViewLabelStatus = (TextView) view.findViewById(R.id.textViewLabelStatus);
 
         artistaDBHelper = new ArtistaDBHelper(getContext());
         artistas = artistaDBHelper.listarTodos(getContext());
-        ArtistaList adapterArtista = new ArtistaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas);
+        adapterArtista = new ArtistaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas);
+
+        estiloDBHelper = new EstiloDBHelper(getContext());
+        estilos = estiloDBHelper.listarTodos(getContext());
+        EstiloList adapterEstilo = new EstiloList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, estilos);
 
         statusList = new ArrayList<>();
 
@@ -121,14 +138,18 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
         spinnerArtista.setAdapter(adapterArtista);
         spinnerArtista.setOnItemSelectedListener(this);
 
+        spinnerEstilo.setAdapter(adapterEstilo);
+        spinnerEstilo.setOnItemSelectedListener(this);
+
         spinnerStatus.setAdapter(statusAdapter);
 
         btnSalvar.setOnClickListener(this);
         btnFechar.setOnClickListener(this);
+        btnCadastrarNovoArtista.setOnClickListener(this);
 
         if(getMusica() != null){
             editTextNome.setText(getMusica().getNome());
-            editTextTom.setText(getMusica().getTom());
+            editTextTom.setText(getMusica().getTom().equals("null") ? "" : getMusica().getTom());
             Artista artista = getMusica().getArtista();
             int index = artistas.indexOf(artista);
             spinnerArtista.setSelection(index);
@@ -185,7 +206,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                 String tom = editTextTom.getText().toString();
                 StatusMusica status = (StatusMusica) spinnerStatus.getSelectedItem();
 
-                if(nome.isEmpty() || tom.isEmpty() || artista == null || (musica != null && status == null)){
+                if(nome.isEmpty() || artista == null || (musica != null && status == null)){
                     Toast.makeText(getContext(), "Por favor informe todos os dados", Toast.LENGTH_SHORT).show();
                 } else{
 
@@ -195,6 +216,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                         musica.setNome(nome);
                         musica.setTom(tom);
                         musica.setArtista(artista);
+                        musica.setEstilo(estilo);
                         musica.setUltimaAlteracao(Calendar.getInstance());
                         musica.setEnviado(-1);
 
@@ -205,6 +227,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                         musica.setNome(nome);
                         musica.setTom(tom);
                         musica.setArtista(artista);
+                        musica.setEstilo(estilo);
                         musica.setDataCadastro(Calendar.getInstance());
                         musica.setUltimaAlteracao(Calendar.getInstance());
                         musica.setEnviado(-1);
@@ -222,9 +245,9 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                         }
                     }
 
-                    if((musica.getId() != null && getStatus() > 0) && musicaDBHelper.jaExiste(getContext(), musica)){
+                    if(musicaDBHelper.jaExiste(getContext(), musica)){
                         Toast.makeText(getContext(), "O registro informado já existe!", Toast.LENGTH_SHORT).show();
-                    } else{
+                    }else{
                         musicaDBHelper.salvarOuAtualizar(getContext(), musica);
                         SnackbarHelper.notifica(getView(), "Cadastrado com Sucesso!", Snackbar.LENGTH_LONG);
                         listener.onModalCadastroDismissed(0);
@@ -238,17 +261,41 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                 listener.onModalCadastroDismissed(0);
                 dismiss();
                 break;
+            case R.id.btnCadastrarNovoArtista:
+                ModalCadastroArtista modalCadastroArtista = new ModalCadastroArtista();
+                modalCadastroArtista.setListener(this);
+
+                modalCadastroArtista.show(getFragmentManager(), "modalArtista");
+                break;
         }
 
     }
 
+    public void atualizaArtistas(){
+        artistas = artistaDBHelper.listarTodos(getContext());
+        adapterArtista = new ArtistaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas);
+        spinnerArtista.setAdapter(adapterArtista);
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        artista = artistas.get(position);
+
+        if(parent.getSelectedItem() instanceof Artista){
+            artista = artistas.get(position);
+        } else{
+            estilo = estilos.get(position);
+        }
+
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onModalCadastroDismissed(int resultado) {
+        atualizaArtistas();
     }
 }

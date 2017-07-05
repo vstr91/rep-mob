@@ -11,6 +11,7 @@
         <item>Ativo</item>
         <item>Em Espera</item>
         <item>Sugestão</item>
+        <item>Removida</item>
     </array>
     <string name="title_activity_login">Login</string>
 
@@ -27,4 +28,7 @@
         completions."
     </string>
     <string name="server_client_id">763791909416-aim4u63mdttsktinjqroogqdndlibf7l.apps.googleusercontent.com</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

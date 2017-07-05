@@ -16,7 +16,7 @@ import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.model.Musica;
 
 /**
- * Created by Cefet on 27/08/2015.
+ * Created by Almir on 27/08/2015.
  */
 public class MusicaList extends ArrayAdapter<Musica> {
 
@@ -43,10 +43,12 @@ public class MusicaList extends ArrayAdapter<Musica> {
         TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
         TextView textViewArtista = (TextView) rowView.findViewById(R.id.textViewArtista);
         TextView textViewTom = (TextView) rowView.findViewById(R.id.textViewTom);
+        TextView textViewEstilo = (TextView) rowView.findViewById(R.id.textViewEstilo);
 
         textViewNome.setText(musica.getNome());
         textViewArtista.setText(musica.getArtista().getNome());
-        textViewTom.setText(musica.getTom().equals("null") ? "-" : musica.getTom());
+        textViewTom.setText(musica.getTom().equals("null") || musica.getTom().isEmpty() ? "-" : musica.getTom());
+        textViewEstilo.setText(musica.getEstilo().getNome());
 
         return rowView;
     }

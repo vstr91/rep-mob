@@ -47,6 +47,20 @@
         android:spinnerMode="dialog" />
 
     <TextView
+        android:text="Selecione o Estilo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewLabelEstilo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerEstilo"
+        android:layout_weight="1"
+        android:spinnerMode="dialog" />
+
+    <TextView
         android:text="Selecione o Status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,5 +94,11 @@
             android:id="@+id/btnFechar"
             android:layout_weight="1" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnCadastrarNovoArtista"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cadastrar Novo Artista" />
 
 </LinearLayout>
