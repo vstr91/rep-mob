@@ -1,6 +1,8 @@
 package br.com.vostre.repertori;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -26,6 +28,7 @@ import br.com.vostre.repertori.adapter.MusicaList;
 import br.com.vostre.repertori.adapter.StableArrayAdapter;
 import br.com.vostre.repertori.form.ModalAdicionaMusica;
 import br.com.vostre.repertori.form.ModalCadastroEvento;
+import br.com.vostre.repertori.form.ModalCronometro;
 import br.com.vostre.repertori.listener.ButtonClickListener;
 import br.com.vostre.repertori.listener.ModalAdicionaListener;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
@@ -33,17 +36,20 @@ import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
+import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
+import br.com.vostre.repertori.utils.DialogUtils;
 import br.com.vostre.repertori.utils.DynamicListView;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
 public class EventoDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener,
-        ModalCadastroListener, ModalAdicionaListener, ButtonClickListener {
+        ModalCadastroListener, ModalAdicionaListener, ButtonClickListener, DialogInterface.OnClickListener {
 
     TextView textViewNome;
     TextView textViewData;
@@ -62,6 +68,8 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     MusicaEventoDBHelper musicaEventoDBHelper;
     ComentarioEventoDBHelper comentarioEventoDBHelper;
     EventoDBHelper eventoDBHelper;
+
+    MusicaEvento musicaEvento;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,21 +249,49 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     }
 
     @Override
-    public void onButtonClicked(Musica musica) {
-        MusicaEvento musicaEvento = new MusicaEvento();
+    public void onButtonClicked(View v, Musica musica) {
+
+        musicaEvento = new MusicaEvento();
         musicaEvento.setMusica(musica);
         musicaEvento.setEvento(evento);
         musicaEvento = musicaEventoDBHelper.carregarPorMusicaEEvento(getApplicationContext(), musicaEvento);
 
-        musicaEvento.setStatus(2);
-        musicaEvento.setEnviado(-1);
+        switch(v.getId()){
+            case R.id.btnExcluir:
 
-        musicaEventoDBHelper.salvarOuAtualizar(getApplicationContext(), musicaEvento);
+                Dialog dialog = DialogUtils.criarAlertaConfirmacao(this, "Confirmar Exclusão", "Deseja realmente excluir o registro ("+musicaEvento.getMusica().getNome()+")?", this);
+                dialog.show();
 
-        musicaEventoDBHelper.corrigirOrdemPorEvento(getApplicationContext(), evento);
+                break;
+            case R.id.btnTempo:
+                ModalCronometro modalCronometro = new ModalCronometro();
+                //modalCronometro.setListener(this);
+                modalCronometro.setMusicaEvento(musicaEvento);
 
-        carregaListaMusicas();
+                modalCronometro.show(getSupportFragmentManager(), "modalCronometro");
+                break;
+        }
 
-       Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+
+        switch(i){
+            case -1:
+                musicaEvento.setStatus(2);
+                musicaEvento.setEnviado(-1);
+
+                musicaEventoDBHelper.salvarOuAtualizar(getApplicationContext(), musicaEvento);
+
+                musicaEventoDBHelper.corrigirOrdemPorEvento(getApplicationContext(), evento);
+
+                carregaListaMusicas();
+
+                Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
     }
 }

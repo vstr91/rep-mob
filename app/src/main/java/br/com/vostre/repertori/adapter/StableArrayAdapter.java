@@ -41,6 +41,7 @@ public class StableArrayAdapter extends ArrayAdapter<Musica> {
     List<Musica> musicas;
     private Activity context;
     ImageButton btnExcluir;
+    ImageButton btnTempo;
     ButtonClickListener listener;
 
     public StableArrayAdapter(Activity context, int textViewResourceId, List<Musica> objects) {
@@ -65,20 +66,33 @@ public class StableArrayAdapter extends ArrayAdapter<Musica> {
         TextView textViewArtista = (TextView) rowView.findViewById(R.id.textViewArtista);
         TextView textViewTom = (TextView) rowView.findViewById(R.id.textViewTom);
         btnExcluir = (ImageButton) rowView.findViewById(R.id.btnExcluir);
+        btnTempo = (ImageButton) rowView.findViewById(R.id.btnTempo);
+
+        String tom = musica.getTom().equals("null") || musica.getTom().isEmpty() ? "-" : musica.getTom();
 
         textViewNome.setText(musica.getNome());
         textViewArtista.setText(musica.getArtista().getNome());
-        textViewTom.setText(musica.getTom());
+        textViewTom.setText(tom);
 
         btnExcluir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                listener.onButtonClicked(musica);
+                listener.onButtonClicked(v, musica);
             }
         });
 
         btnExcluir.setFocusable(false);
+
+        btnTempo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                listener.onButtonClicked(v, musica);
+            }
+        });
+
+        btnTempo.setFocusable(false);
 
         return rowView;
     }

@@ -8,12 +8,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.List;
 
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.EstiloDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
 /**
@@ -130,6 +132,28 @@ public class Musica extends EntidadeBase {
 
 
         return resultado;
+    }
+
+    public Calendar calcularMedia(Context context){
+        TempoMusicaEventoDBHelper tmeDBHelper = new TempoMusicaEventoDBHelper(context);
+        List<TempoMusicaEvento> tmes = tmeDBHelper.listarTodosPorMusica(context, this);
+
+        if(tmes.size() > 0){
+            long millis = 0;
+
+            for(TempoMusicaEvento tme : tmes){
+                millis += tme.getTempo().getTimeInMillis();
+            }
+
+            long result = millis / tmes.size();
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(result);
+
+            return c;
+        } else{
+            return null;
+        }
+
     }
 
     @Override

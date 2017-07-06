@@ -7,67 +7,84 @@
     android:padding="5dp">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:weightSum="4">
+        android:orientation="horizontal"
+        android:weightSum="5">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
                 android:id="@+id/textViewNome"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_vertical"
-                android:layout_weight="1" />
-
-            <TextView
-                android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewArtista"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textViewArtista"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:gravity="center_vertical" />
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="TextView" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3">
+            android:layout_weight="2"
+            android:orientation="vertical">
 
             <TextView
-                android:text="Tom"
+                android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView3"
-                android:gravity="center" />
+                android:gravity="center"
+                android:text="Tom" />
 
             <TextView
-                android:text="TextView"
+                android:id="@+id/textViewTom"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/textViewTom"
-                android:gravity="center" />
+                android:gravity="center"
+                android:text="TextView" />
+
         </LinearLayout>
 
-        <ImageButton
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/btnExcluir"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:src="@drawable/ic_clear_black_24dp" />
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnTempo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:src="@drawable/ic_timer_black_24dp"
+                android:text="Tempo" />
+
+            <ImageButton
+                android:id="@+id/btnExcluir"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:src="@drawable/ic_clear_black_24dp" />
+        </LinearLayout>
 
     </LinearLayout>
 

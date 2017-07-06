@@ -21,6 +21,7 @@ import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.MusicaProjeto;
 import br.com.vostre.repertori.model.Projeto;
+import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.RepDBHelper;
@@ -100,6 +101,7 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             //JSONArray estilosMusicas = jObj.getJSONArray("estilos_musicas");
             JSONArray projetos = jObj.getJSONArray("projetos");
             JSONArray musicasProjetos = jObj.getJSONArray("musicas_projetos");
+            JSONArray temposMusicasEventos = jObj.getJSONArray("tempos_musicas_eventos");
 
             // Objetos que contem os metodos de atualizacao
             Artista artista = new Artista();
@@ -113,6 +115,7 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             Projeto projeto = new Projeto();
             EstiloMusica estiloMusica = new EstiloMusica();
             MusicaProjeto musicaProjeto = new MusicaProjeto();
+            TempoMusicaEvento tempoMusicaEvento = new TempoMusicaEvento();
 
             RepDBHelper repDBHelper = new RepDBHelper(ctx);
 
@@ -221,9 +224,25 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
                 //escondeProgressBar(progressDialog);
 
                 publishProgress(qtdMusicasEventos+" música(s) evento(s) atualizada(s)."+System.getProperty("line.separator")
-                        +System.getProperty("line.separator"),"Atualizando Comentários Eventos");
+                        +System.getProperty("line.separator"),"Atualizando Tempos Músicas Eventos");
             } else{
                 publishProgress("Músicas Eventos já atualizadas."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Tempos Músicas Eventos");
+            }
+
+            int qtdTemposMusicasEventos = temposMusicasEventos.length();
+
+            if(qtdTemposMusicasEventos > 0){
+                //mostraProgressBar(progressDialog, qtdMusicasEventos, "Atualizando Músicas Eventos...");
+
+                tempoMusicaEvento.atualizarDados(temposMusicasEventos, qtdTemposMusicasEventos, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdMusicasEventos+" tempo(s) música(s) evento(s) atualizada(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Comentários Eventos");
+            } else{
+                publishProgress("Tempos Músicas Eventos já atualizadas."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"Atualizando Comentários Eventos");
             }
 

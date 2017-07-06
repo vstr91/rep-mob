@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.vostre.repertori.adapter.EventoList;
@@ -20,6 +21,7 @@ import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
+import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 
 public class MusicaDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -30,6 +32,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     ListView listViewExecucoes;
     EventoList adapterEventos;
     Button btnBuscaVideo;
+    TextView textViewMedia;
 
     Musica musica;
 
@@ -53,6 +56,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         textViewTom = (TextView) findViewById(R.id.textViewTom);
         listViewExecucoes = (ListView) findViewById(R.id.listViewExecucoes);
         btnBuscaVideo = (Button) findViewById(R.id.btnBuscaVideo);
+        textViewMedia = (TextView) findViewById(R.id.textViewMedia);
 
         btnBuscaVideo.setOnClickListener(this);
 
@@ -78,7 +82,13 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         listViewExecucoes.setOnItemClickListener(this);
         listViewExecucoes.setEmptyView(findViewById(R.id.textViewListaVazia));
 
+        Calendar c = musica.calcularMedia(getBaseContext());
 
+        if(c != null){
+            textViewMedia.setText("Duração média: "+ DataUtils.toStringSomenteHoras(c, 1));
+        } else{
+            textViewMedia.setVisibility(View.GONE);
+        }
 
     }
 
@@ -109,4 +119,5 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         }
 
     }
+
 }

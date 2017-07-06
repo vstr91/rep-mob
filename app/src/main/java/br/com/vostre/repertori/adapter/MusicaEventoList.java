@@ -51,14 +51,16 @@ public class MusicaEventoList extends ArrayAdapter<Musica> implements CompoundBu
             TextView textViewTom = (TextView) convertView.findViewById(R.id.textViewTom);
 //        btnExcluir = (ImageButton) rowView.findViewById(R.id.btnExcluir);
 
+            String tom = musica.getTom().equals("null") || musica.getTom().isEmpty() ? "-" : musica.getTom();
+
             textViewNome.setText(musica.getNome());
             textViewArtista.setText(musica.getArtista().getNome());
-            textViewTom.setText(musica.getTom());
+            textViewTom.setText(tom);
         } else{
             viewHolder = (MusicaAdicionaList.ViewHolder) convertView.getTag();
         }
 
-        viewHolder.checkbox.setTag(position); // This line is important.
+        viewHolder.checkbox.setTag(position);
 
         viewHolder.text.setText(musicas.get(position).getNome());
         viewHolder.artista.setText(musicas.get(position).getArtista().getNome());

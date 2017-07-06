@@ -60,4 +60,36 @@ public class DataUtils {
         return df.format(data.getTime());
     }
 
+    public static String toStringSomenteHoras(Calendar data, int tipo){
+
+        DateFormat df = null;
+
+        switch(tipo){
+            case 0:
+                df = new SimpleDateFormat("HH:mm:ss");
+                break;
+            case 1:
+                df = new SimpleDateFormat("mm:ss");
+                break;
+            case 2:
+                df = new SimpleDateFormat("HH:mm");
+                break;
+        }
+
+        return df.format(data.getTime());
+    }
+
+    public static Calendar horaParaData(String data){
+        DateFormat df = new SimpleDateFormat("mm:ss");
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            cal.setTime(df.parse(data));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return cal;
+    }
+
 }

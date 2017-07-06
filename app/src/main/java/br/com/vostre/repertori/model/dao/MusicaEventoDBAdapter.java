@@ -249,10 +249,10 @@ public class MusicaEventoDBAdapter {
     }
 
     public List<Musica> listarTodosAusentesEvento(Evento umEvento){
-        Cursor cursor = database.rawQuery("SELECT _id, nome " +
-                "FROM musica WHERE _id NOT IN (SELECT id_musica " +
-                "FROM musica_evento WHERE id_evento = ? AND status != 2) AND status != 2 ORDER BY nome ASC",
-                new String[]{umEvento.getId()});
+        Cursor cursor = database.rawQuery("SELECT DISTINCT me.id_musica " +
+                "FROM musica_evento me INNER JOIN evento e ON e._id = me.id_evento INNER JOIN musica m ON m._id = me.id_musica WHERE e.id_projeto = ? AND e._id NOT IN (SELECT id_musica " +
+                "FROM musica_evento me1 WHERE me1.id_evento = ? AND me1.status != 2) AND me.status != 2 ORDER BY m.nome COLLATE LOCALIZED ASC",
+                new String[]{umEvento.getProjeto().getId(), umEvento.getId()});
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){

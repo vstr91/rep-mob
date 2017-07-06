@@ -1,5 +1,7 @@
 package br.com.vostre.repertori.listener;
 
+import android.view.View;
+
 import br.com.vostre.repertori.model.Musica;
 
 /**
@@ -7,6 +9,6 @@ import br.com.vostre.repertori.model.Musica;
  */
 public interface ButtonClickListener {
 
-    public void onButtonClicked(Musica musica);
+    public void onButtonClicked(View v, Musica musica);
 
 }
