@@ -150,10 +150,10 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
 
                 Toast.makeText(getContext(), "Tempo registrado com sucesso!", Toast.LENGTH_SHORT).show();
                 atualizaLista();
-                dismiss();
+                //dismiss();
                 break;
             case -2:
-                dismiss();
+                // nada ainda
                 break;
         }
 

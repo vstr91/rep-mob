@@ -16,11 +16,14 @@ import java.util.List;
 
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.adapter.TempoList;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
+import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 
@@ -30,7 +33,9 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     TextView textViewArtista;
     TextView textViewTom;
     ListView listViewExecucoes;
+    ListView listViewExecucoesCronometradas;
     EventoList adapterEventos;
+    TempoList adapterExecucoes;
     Button btnBuscaVideo;
     TextView textViewMedia;
 
@@ -44,6 +49,9 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         List<Evento> eventos;
         MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
 
+        List<TempoMusicaEvento> tmes;
+        TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getApplicationContext());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -55,6 +63,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         textViewArtista = (TextView) findViewById(R.id.textViewArtista);
         textViewTom = (TextView) findViewById(R.id.textViewTom);
         listViewExecucoes = (ListView) findViewById(R.id.listViewExecucoes);
+        listViewExecucoesCronometradas = (ListView) findViewById(R.id.listViewExecucoesCronometradas);
         btnBuscaVideo = (Button) findViewById(R.id.btnBuscaVideo);
         textViewMedia = (TextView) findViewById(R.id.textViewMedia);
 
@@ -81,6 +90,16 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         listViewExecucoes.setAdapter(adapterEventos);
         listViewExecucoes.setOnItemClickListener(this);
         listViewExecucoes.setEmptyView(findViewById(R.id.textViewListaVazia));
+
+        tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica);
+
+        adapterExecucoes =
+                new TempoList(this, android.R.layout.simple_spinner_dropdown_item, tmes);
+
+        adapterEventos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+        listViewExecucoesCronometradas.setAdapter(adapterExecucoes);
+        listViewExecucoesCronometradas.setEmptyView(findViewById(R.id.textViewListaVaziaCronometro));
 
         Calendar c = musica.calcularMedia(getBaseContext());
 

@@ -1,6 +1,7 @@
 package br.com.vostre.repertori;
 
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,13 +33,16 @@ import com.google.android.gms.common.api.Status;
 import br.com.vostre.repertori.fragment.ArtistasFragment;
 import br.com.vostre.repertori.fragment.EstilosFragment;
 import br.com.vostre.repertori.fragment.EventosFragment;
+import br.com.vostre.repertori.fragment.FragmentRepertorio;
 import br.com.vostre.repertori.fragment.MusicasFragment;
 import br.com.vostre.repertori.fragment.ProjetosFragment;
+import br.com.vostre.repertori.listener.LoadListener;
 import br.com.vostre.repertori.service.AtualizaDadosService;
+import br.com.vostre.repertori.utils.DialogUtils;
 import br.com.vostre.repertori.utils.ServiceUtils;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, LoadListener {
 
     private DrawerLayout drawer;
     private NavigationView navView;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Class fragmentClass = null;
     Fragment fragment = null;
     FragmentManager fragmentManager;
+    Dialog dialogLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +88,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 drawerToggle.syncState();
 
                 try {
-                    fragment = (Fragment) fragmentClass.newInstance();
+
+                    switch(fragmentClass.getCanonicalName()){
+                        case "br.com.vostre.repertori.fragment.MusicasFragment":
+                            fragment = (MusicasFragment) fragmentClass.newInstance();
+                            MusicasFragment f = (MusicasFragment) fragment;
+                            f.setListener(MainActivity.this);
+                            insereFragmento(f, true);
+                            break;
+                        case "br.com.vostre.repertori.fragment.ProjetosFragment":
+                            fragment = (ProjetosFragment) fragmentClass.newInstance();
+                            ProjetosFragment f2 = (ProjetosFragment) fragment;
+                            f2.setListener(MainActivity.this);
+                            insereFragmento(f2, false);
+                            break;
+                        default:
+                            fragment = (Fragment) fragmentClass.newInstance();
+                            insereFragmento(fragment, false);
+                            break;
+                    }
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                if(fragment != null){
-                    fragmentManager.beginTransaction().replace(R.id.conteudo, fragment).commit();
-                }
+
 
             }
 
@@ -111,6 +134,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
 //        textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
 
+    }
+
+    private void insereFragmento(Fragment f, boolean modal){
+        if(f != null){
+            fragmentManager.beginTransaction().replace(R.id.conteudo, f).commit();
+            fragmentManager.executePendingTransactions();
+
+            if(modal){
+                dialogLoad = DialogUtils.criarAlertaCarregando(MainActivity.this, "Carregando dados", "Por favor aguarde...");
+                dialogLoad.show();
+            }
+
+        }
     }
 
     @Override
@@ -230,4 +266,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    @Override
+    public void onLoadFinished() {
+
+        if(dialogLoad != null){
+            dialogLoad.dismiss();
+        }
+
+    }
 }

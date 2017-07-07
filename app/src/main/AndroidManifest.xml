@@ -47,6 +47,12 @@
         <activity android:name=".RelatoriosActivity" />
         <activity android:name=".CronometroActivity" />
         <activity android:name=".MusicaProjetoActivity"></activity>
+        <activity
+            android:name=".EstiloDetalheActivity"
+            android:label="@string/title_activity_estilo_detalhe" />
+        <activity
+            android:name=".ArtistaDetalheActivity"
+            android:label="@string/title_activity_artista_detalhe" />
     </application>
 
 </manifest>

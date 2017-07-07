@@ -229,6 +229,110 @@ public class MusicaDBAdapter {
         return musicas;
     }
 
+    public List<Musica> listarTodosPorEstilo(Estilo estilo){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug, id_estilo FROM musica WHERE id_estilo = ? ORDER BY nome COLLATE LOCALIZED", new String[]{estilo.getId()});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+            EstiloDBHelper estiloDBHelper = new EstiloDBHelper(context);
+
+            do{
+                Musica umMusica = new Musica();
+                umMusica.setId(cursor.getString(0));
+
+                umMusica.setNome(cursor.getString(1));
+                umMusica.setTom(cursor.getString(2));
+
+                Artista artista = new Artista();
+                artista.setId(cursor.getString(3));
+                artista = artistaDBHelper.carregar(context, artista);
+                umMusica.setArtista(artista);
+
+                umMusica.setStatus(cursor.getInt(4));
+
+                if(cursor.getString(5) != null){
+                    umMusica.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    umMusica.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                umMusica.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                umMusica.setSlug(cursor.getString(8));
+
+                if(cursor.getString(9) != null){
+                    Estilo umEstilo = new Estilo();
+                    umEstilo.setId(cursor.getString(9));
+                    umEstilo = estiloDBHelper.carregar(context, umEstilo);
+                    umMusica.setEstilo(umEstilo);
+                }
+
+                musicas.add(umMusica);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
+    public List<Musica> listarTodosPorArtista(Artista artista){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug, id_estilo FROM musica WHERE id_artista = ? ORDER BY nome COLLATE LOCALIZED", new String[]{artista.getId()});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+            EstiloDBHelper estiloDBHelper = new EstiloDBHelper(context);
+
+            do{
+                Musica umMusica = new Musica();
+                umMusica.setId(cursor.getString(0));
+
+                umMusica.setNome(cursor.getString(1));
+                umMusica.setTom(cursor.getString(2));
+
+                Artista umArtista = new Artista();
+                umArtista.setId(cursor.getString(3));
+                umArtista = artistaDBHelper.carregar(context, umArtista);
+                umMusica.setArtista(umArtista);
+
+                umMusica.setStatus(cursor.getInt(4));
+
+                if(cursor.getString(5) != null){
+                    umMusica.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    umMusica.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                umMusica.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                umMusica.setSlug(cursor.getString(8));
+
+                if(cursor.getString(9) != null){
+                    Estilo umEstilo = new Estilo();
+                    umEstilo.setId(cursor.getString(9));
+                    umEstilo = estiloDBHelper.carregar(context, umEstilo);
+                    umMusica.setEstilo(umEstilo);
+                }
+
+                musicas.add(umMusica);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
     public HashMap<Integer, Artista> contarTodosPorArtista(){
         Cursor cursor = database.rawQuery("SELECT COUNT(_id), id_artista FROM musica WHERE status != 2 " +
                 "GROUP BY id_artista ORDER BY COUNT(_id)", null);

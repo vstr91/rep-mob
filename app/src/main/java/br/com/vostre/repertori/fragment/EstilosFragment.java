@@ -1,5 +1,6 @@
 package br.com.vostre.repertori.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import br.com.vostre.repertori.EstiloDetalheActivity;
+import br.com.vostre.repertori.MusicaDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.EstiloList;
 import br.com.vostre.repertori.adapter.MusicaList;
@@ -68,7 +71,11 @@ public class EstilosFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(getContext(), "Clicou", Toast.LENGTH_LONG).show();
+        Estilo estilo = estilos.get(i);
+
+        Intent intent = new Intent(getContext(), EstiloDetalheActivity.class);
+        intent.putExtra("estilo", estilo.getId());
+        startActivity(intent);
     }
 
     public void atualizaLista(){

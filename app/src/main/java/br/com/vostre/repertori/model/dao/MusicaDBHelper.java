@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Musica;
 
 /**
@@ -49,6 +50,16 @@ public class MusicaDBHelper extends SQLiteOpenHelper {
     public List<Musica> listarTodosPorSituacao(Context context, int situacao){
         MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodosPorSituacao(situacao);
+    }
+
+    public List<Musica> listarTodosPorEstilo(Context context, Estilo estilo){
+        MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorEstilo(estilo);
+    }
+
+    public List<Musica> listarTodosPorArtista(Context context, Artista artista){
+        MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorArtista(artista);
     }
 
     public HashMap<Integer, Artista> contarTodosPorArtista(Context context){

@@ -66,6 +66,7 @@ public class MusicaProjetoActivity extends BaseActivity implements TabLayout.OnT
 
         pager.setAdapter(pagerAdapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        pager.setOffscreenPageLimit(2);
 
         Bundle argAtivo = new Bundle();
         argAtivo.putString("projeto", projeto.getId());
@@ -105,11 +106,11 @@ public class MusicaProjetoActivity extends BaseActivity implements TabLayout.OnT
 
         switch(tabAtual){
             case 0:
-                fabNova.setVisibility(View.VISIBLE);
+                //fabNova.setVisibility(View.VISIBLE);
                 break;
             case 1:
             case 2:
-                fabNova.setVisibility(View.INVISIBLE);
+                //fabNova.setVisibility(View.INVISIBLE);
                 break;
         }
 

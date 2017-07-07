@@ -120,6 +120,42 @@ public class MusicaProjetoDBAdapter {
         return musicaProjetos;
     }
 
+    public List<Projeto> listarTodosDisponiveisMusica(Musica musica){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, " +
+                "data_recebimento, ultima_alteracao, slug FROM projeto p1 WHERE p1._id NOT IN (" +
+                "SELECT id_projeto FROM musica_projeto mp WHERE mp.id_musica = ? AND mp.status  IN(0,1)" +
+                ") AND p1.status = 0", new String[]{musica.getId()});
+        List<Projeto> projetos = new ArrayList<Projeto>();
+
+        if(cursor.moveToFirst()){
+            do{
+                Projeto umProjeto = new Projeto();
+                umProjeto.setId(cursor.getString(0));
+
+                umProjeto.setNome(cursor.getString(1));
+                umProjeto.setStatus(cursor.getInt(2));
+
+                if(cursor.getString(3) != null){
+                    umProjeto.setDataCadastro(DataUtils.bancoParaData(cursor.getString(3)));
+                }
+
+                if(cursor.getString(4) != null){
+                    umProjeto.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(4)));
+                }
+
+                umProjeto.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(5)));
+                umProjeto.setSlug(cursor.getString(6));
+
+                projetos.add(umProjeto);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return projetos;
+    }
+
     public List<MusicaProjeto> listarTodosAEnviar(){
         Cursor cursor = database.rawQuery("SELECT _id, id_musica, id_projeto, status, data_cadastro, " +
                 "data_recebimento, ultima_alteracao FROM musica_projeto WHERE enviado = -1", null);

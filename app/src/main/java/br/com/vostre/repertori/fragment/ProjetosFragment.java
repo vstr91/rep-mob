@@ -17,6 +17,7 @@ import java.util.List;
 import br.com.vostre.repertori.MusicaProjetoActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ProjetoList;
+import br.com.vostre.repertori.listener.LoadListener;
 import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
 
@@ -24,6 +25,16 @@ public class ProjetosFragment extends Fragment implements AdapterView.OnItemClic
 
     ListView listViewProjetos;
     List<Projeto> projetos;
+
+    LoadListener listener;
+
+    public LoadListener getListener() {
+        return listener;
+    }
+
+    public void setListener(LoadListener listener) {
+        this.listener = listener;
+    }
 
     public ProjetosFragment() {
         // Required empty public constructor
@@ -53,6 +64,8 @@ public class ProjetosFragment extends Fragment implements AdapterView.OnItemClic
         ProjetoList adapter = new ProjetoList(getActivity(), R.layout.listview_projetos, projetos);
         listViewProjetos.setAdapter(adapter);
         listViewProjetos.setOnItemClickListener(this);
+
+        listener.onLoadFinished();
 
         return v;
     }

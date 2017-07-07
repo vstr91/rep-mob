@@ -36,4 +36,13 @@ public class DialogUtils {
         return builder.create();
     }
 
+    public static android.app.AlertDialog criarAlertaCarregando(Context context, String titulo, String mensagem){
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+        builder.setTitle(titulo)
+                .setMessage(mensagem)
+                .setCancelable(false);
+        // Create the AlertDialog object and return it
+        return builder.create();
+    }
+
 }

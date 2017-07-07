@@ -58,6 +58,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinnerEstilo"
         android:layout_weight="1"
+
         android:spinnerMode="dialog" />
 
     <TextView

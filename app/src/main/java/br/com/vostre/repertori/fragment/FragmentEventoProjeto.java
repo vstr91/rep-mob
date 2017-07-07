@@ -1,6 +1,8 @@
 package br.com.vostre.repertori.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,10 +16,13 @@ import java.util.List;
 import br.com.vostre.repertori.EventoDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.EventoList;
+import br.com.vostre.repertori.adapter.MusicaList;
 import br.com.vostre.repertori.model.Evento;
+import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
+import br.com.vostre.repertori.utils.DialogUtils;
 
 /**
  * Created by Almir on 17/06/2015.
@@ -30,6 +35,7 @@ public class FragmentEventoProjeto extends Fragment implements AdapterView.OnIte
 
     List<Evento> eventos;
     Projeto projeto;
+    Dialog dialogLoad;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,21 +49,13 @@ public class FragmentEventoProjeto extends Fragment implements AdapterView.OnIte
 
         idProjeto = getArguments().getString("projeto");
 
-        ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(getContext());
-        projeto = new Projeto();
-        projeto.setId(idProjeto);
-        projeto = projetoDBHelper.carregar(getContext(), projeto);
-
-        eventos = carregaEventos(projeto);
-
-        adapterEventos =
-                new EventoList(getActivity(), android.R.layout.simple_spinner_dropdown_item, eventos);
-
-        adapterEventos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
-
-        lista.setAdapter(adapterEventos);
-        lista.setOnItemClickListener(this);
         lista.setEmptyView(rootView.findViewById(R.id.textViewListaVazia));
+
+        dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Carregando dados", "Por favor aguarde. Carregando dados...");
+        dialogLoad.show();
+
+        CarregarItens carregarItens = new CarregarItens();
+        carregarItens.execute();
 
         return rootView;
     }
@@ -74,16 +72,12 @@ public class FragmentEventoProjeto extends Fragment implements AdapterView.OnIte
     @Override
     public void onResume() {
         super.onResume();
-        atualizaLista();
-
     }
 
     private List<Evento> carregaEventos(Projeto projeto){
         EventoDBHelper eventoDBHelper = new EventoDBHelper(getContext());
 
         eventos = eventoDBHelper.listarTodosAPartirDeHojePorProjeto(getContext(), projeto);
-
-
 
         return eventos;
 
@@ -97,6 +91,37 @@ public class FragmentEventoProjeto extends Fragment implements AdapterView.OnIte
 
         if(lista != null){
             lista.setAdapter(adapterEventos);
+        }
+    }
+
+    private class CarregarItens extends AsyncTask<Void, String, List<Evento>> {
+
+        @Override
+        protected List<Evento> doInBackground(Void... voids) {
+            ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(getContext());
+            projeto = new Projeto();
+            projeto.setId(idProjeto);
+            projeto = projetoDBHelper.carregar(getContext(), projeto);
+
+            eventos = carregaEventos(projeto);
+
+            adapterEventos =
+                    new EventoList(getActivity(), android.R.layout.simple_spinner_dropdown_item, eventos);
+
+            adapterEventos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Evento> eventos) {
+            super.onPostExecute(eventos);
+            lista.setAdapter(adapterEventos);
+            lista.setOnItemClickListener(FragmentEventoProjeto.this);
+            dialogLoad.dismiss();
+
         }
     }
 

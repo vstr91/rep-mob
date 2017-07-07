@@ -147,6 +147,10 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
         btnFechar.setOnClickListener(this);
         btnCadastrarNovoArtista.setOnClickListener(this);
 
+        if(musica != null){
+            spinnerEstilo.setSelection(estilos.indexOf(musica.getEstilo()));
+        }
+
         if(getMusica() != null){
             editTextNome.setText(getMusica().getNome());
             editTextTom.setText(getMusica().getTom().equals("null") ? "" : getMusica().getTom());

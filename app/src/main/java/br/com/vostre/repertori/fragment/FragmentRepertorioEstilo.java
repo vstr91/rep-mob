@@ -104,13 +104,6 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
         startActivity(intent);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        atualizaLista();
-        atualizaExecucoes();
-    }
-
     private List<Musica> carregaMusicas(){
 
         List<Musica> musicas = null;
