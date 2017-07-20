@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
@@ -249,10 +250,57 @@ public class MusicaEventoDBAdapter {
     }
 
     public List<Musica> listarTodosAusentesEvento(Evento umEvento){
-        Cursor cursor = database.rawQuery("SELECT DISTINCT me.id_musica " +
-                "FROM musica_evento me INNER JOIN evento e ON e._id = me.id_evento INNER JOIN musica m ON m._id = me.id_musica WHERE e.id_projeto = ? AND e._id NOT IN (SELECT id_musica " +
-                "FROM musica_evento me1 WHERE me1.id_evento = ? AND me1.status != 2) AND me.status != 2 ORDER BY m.nome COLLATE LOCALIZED ASC",
+        Cursor cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_projeto mp ON mp.id_musica = m._id " +
+                        "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
+                        "SELECT id_musica FROM musica_evento me1 WHERE me1.id_evento = ? AND me1.status != 2" +
+                        ") AND mp.status IN (0,1) ORDER BY m.nome COLLATE LOCALIZED ASC",
                 new String[]{umEvento.getProjeto().getId(), umEvento.getId()});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+
+            do{
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(0));
+                musica = musicaDBHelper.carregar(context, musica);
+
+                musicas.add(musica);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
+    public List<Musica> listarTodosAusentesEvento(Evento umEvento, Estilo estilo, Artista artista){
+
+        Cursor cursor;
+
+        if(estilo.getSlug() != null && artista.getSlug() != null){
+            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_projeto mp ON mp.id_musica = m._id " +
+                            "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
+                            "SELECT id_musica FROM musica_evento me1 WHERE me1.id_evento = ? AND me1.status != 2" +
+                            ") AND mp.status IN (0,1) AND m.id_estilo = ? AND m.id_artista = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
+                    new String[]{umEvento.getProjeto().getId(), umEvento.getId(), estilo.getId(), artista.getId()});
+        } else if(estilo.getSlug() != null && artista.getSlug() == null){
+            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_projeto mp ON mp.id_musica = m._id " +
+                            "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
+                            "SELECT id_musica FROM musica_evento me1 WHERE me1.id_evento = ? AND me1.status != 2" +
+                            ") AND mp.status IN (0,1) AND m.id_estilo = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
+                    new String[]{umEvento.getProjeto().getId(), umEvento.getId(), estilo.getId()});
+        } else{
+            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_projeto mp ON mp.id_musica = m._id " +
+                            "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
+                            "SELECT id_musica FROM musica_evento me1 WHERE me1.id_evento = ? AND me1.status != 2" +
+                            ") AND mp.status IN (0,1) AND m.id_artista = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
+                    new String[]{umEvento.getProjeto().getId(), umEvento.getId(), artista.getId()});
+        }
+
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){

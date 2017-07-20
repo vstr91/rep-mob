@@ -65,7 +65,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
 
         view.setMinimumWidth(700);
         tmeDBHelper = new TempoMusicaEventoDBHelper(getContext());
-        tmes = tmeDBHelper.listarTodosPorMusica(getContext(), musicaEvento.getMusica());
+        tmes = tmeDBHelper.listarTodosPorMusica(getContext(), musicaEvento.getMusica(), 10);
 
         chronometer = (Chronometer) view.findViewById(R.id.chronometer);
         btnFechar = (Button) view.findViewById(R.id.btnFechar);
@@ -160,7 +160,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
     }
 
     private void atualizaLista(){
-        tmes = tmeDBHelper.listarTodosPorMusica(getContext(), musicaEvento.getMusica());
+        tmes = tmeDBHelper.listarTodosPorMusica(getContext(), musicaEvento.getMusica(), 10);
         adapter = new TempoList(getActivity(), R.id.listViewTempos, tmes);
         adapter.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
 

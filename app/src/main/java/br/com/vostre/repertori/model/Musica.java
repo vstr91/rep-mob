@@ -29,6 +29,7 @@ public class Musica extends EntidadeBase {
     private String slug;
     private Artista artista;
     private Estilo estilo;
+    private String letra;
 
     private boolean checked;
 
@@ -80,6 +81,14 @@ public class Musica extends EntidadeBase {
         this.checked = checked;
     }
 
+    public String getLetra() {
+        return letra;
+    }
+
+    public void setLetra(String letra) {
+        this.letra = letra;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
@@ -115,6 +124,8 @@ public class Musica extends EntidadeBase {
             umMusica.setDataRecebimento(Calendar.getInstance());
             umMusica.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
 
+            umMusica.setLetra(object.getString("letra"));
+
             musicaDBHelper.salvarOuAtualizar(context, umMusica);
 
         }
@@ -128,7 +139,7 @@ public class Musica extends EntidadeBase {
         String estilo = this.getEstilo() == null ? "null" : this.getEstilo().getId();
 
         resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"tom\": \""+this.getTom()+"\", " +
-                "\"artista\": \""+this.getArtista().getId()+"\",  \"status\": "+this.getStatus()+", \"estilo\": \""+estilo+"\"}";
+                "\"artista\": \""+this.getArtista().getId()+"\",  \"status\": "+this.getStatus()+", \"estilo\": \""+estilo+"\", \"letra\": \""+this.getLetra()+"\"}";
 
 
         return resultado;
@@ -136,7 +147,7 @@ public class Musica extends EntidadeBase {
 
     public Calendar calcularMedia(Context context){
         TempoMusicaEventoDBHelper tmeDBHelper = new TempoMusicaEventoDBHelper(context);
-        List<TempoMusicaEvento> tmes = tmeDBHelper.listarTodosPorMusica(context, this);
+        List<TempoMusicaEvento> tmes = tmeDBHelper.listarTodosPorMusica(context, this, 10);
 
         if(tmes.size() > 0){
             long millis = 0;

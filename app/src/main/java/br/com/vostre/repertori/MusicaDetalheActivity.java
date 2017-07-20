@@ -17,6 +17,8 @@ import java.util.List;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
 import br.com.vostre.repertori.adapter.TempoList;
+import br.com.vostre.repertori.form.ModalEditaLetra;
+import br.com.vostre.repertori.form.ModalLetra;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
@@ -38,6 +40,8 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     TempoList adapterExecucoes;
     Button btnBuscaVideo;
     TextView textViewMedia;
+    Button btnLetra;
+    Button btnEditaLetra;
 
     Musica musica;
 
@@ -66,8 +70,12 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         listViewExecucoesCronometradas = (ListView) findViewById(R.id.listViewExecucoesCronometradas);
         btnBuscaVideo = (Button) findViewById(R.id.btnBuscaVideo);
         textViewMedia = (TextView) findViewById(R.id.textViewMedia);
+        btnLetra = (Button) findViewById(R.id.btnLetra);
+        btnEditaLetra = (Button) findViewById(R.id.btnEditaLetra);
 
         btnBuscaVideo.setOnClickListener(this);
+        btnLetra.setOnClickListener(this);
+        btnEditaLetra.setOnClickListener(this);
 
         musica = new Musica();
         musica.setId(getIntent().getStringExtra("musica"));
@@ -91,7 +99,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         listViewExecucoes.setOnItemClickListener(this);
         listViewExecucoes.setEmptyView(findViewById(R.id.textViewListaVazia));
 
-        tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica);
+        tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica, 10);
 
         adapterExecucoes =
                 new TempoList(this, android.R.layout.simple_spinner_dropdown_item, tmes);
@@ -108,6 +116,8 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         } else{
             textViewMedia.setVisibility(View.GONE);
         }
+
+        //btnLetra.setEnabled(!musica.getLetra().isEmpty());
 
     }
 
@@ -134,6 +144,18 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
+                break;
+            case R.id.btnLetra:
+                ModalLetra modalLetra = new ModalLetra();
+                modalLetra.setMusica(musica);
+
+                modalLetra.show(getSupportFragmentManager(), "modalLetra");
+                break;
+            case R.id.btnEditaLetra:
+                ModalEditaLetra modalEditaLetra = new ModalEditaLetra();
+                modalEditaLetra.setMusica(musica);
+
+                modalEditaLetra.show(getSupportFragmentManager(), "modalEditaLetra");
                 break;
         }
 

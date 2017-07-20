@@ -21,8 +21,11 @@ import java.util.List;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.MusicaAdicionaList;
 import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.listener.FiltroMusicaListener;
 import br.com.vostre.repertori.listener.ModalAdicionaListener;
 import br.com.vostre.repertori.listener.ModalHoraListener;
+import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
@@ -30,22 +33,27 @@ import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 
-public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemClickListener, FiltroMusicaListener {
 
     Button btnSalvar;
     Button btnFechar;
     ListView listViewMusicas;
     List<Musica> musicas;
     MusicaEventoDBHelper musicaEventoDBHelper;
+    Button btnFiltros;
 
     Evento evento;
 
     ModalAdicionaListener listener;
+    MusicaAdicionaList adapterMusica;
+
+    Estilo estiloFiltro;
+    Artista artistaFiltro;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
+        musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
 
         View view = inflater.inflate(R.layout.modal_adiciona_musica, container, false);
 
@@ -54,13 +62,15 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
         listViewMusicas = (ListView) view.findViewById(R.id.listViewMusicas);
         btnSalvar = (Button) view.findViewById(R.id.btnSalvar);
         btnFechar = (Button) view.findViewById(R.id.btnFechar);
+        btnFiltros = (Button) view.findViewById(R.id.btnFiltros);
 
         btnSalvar.setOnClickListener(this);
         btnFechar.setOnClickListener(this);
+        btnFiltros.setOnClickListener(this);
 
         musicas = musicaEventoDBHelper.listarTodosAusentesEvento(getContext(), evento);
 
-        MusicaAdicionaList adapterMusica = new MusicaAdicionaList(getActivity(), android.R.layout.simple_spinner_dropdown_item, musicas);
+        adapterMusica = new MusicaAdicionaList(getActivity(), android.R.layout.simple_spinner_dropdown_item, musicas);
         listViewMusicas.setAdapter(adapterMusica);
         listViewMusicas.setOnItemClickListener(this);
 
@@ -101,8 +111,6 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
 
                 int tamanhoLista = musicas.size();
 
-                musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
-
                 for(int i = 0; i < tamanhoLista; i++){
                     Musica musica = musicas.get(i);
 
@@ -141,6 +149,14 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
             case R.id.btnFechar:
                 dismiss();
                 break;
+            case R.id.btnFiltros:
+                ModalFiltros modalFiltros = new ModalFiltros();
+                modalFiltros.setListener(this);
+                modalFiltros.setArtista(artistaFiltro);
+                modalFiltros.setEstilo(estiloFiltro);
+
+                modalFiltros.show(getFragmentManager(), "modalFiltros");
+                break;
         }
 
     }
@@ -173,4 +189,23 @@ public class ModalAdicionaMusica extends android.support.v4.app.DialogFragment i
 
     }
 
+    private void atualizaLista(){
+        adapterMusica = new MusicaAdicionaList(getActivity(), android.R.layout.simple_spinner_dropdown_item, musicas);
+        listViewMusicas.setAdapter(adapterMusica);
+    }
+
+    @Override
+    public void onFiltroMusicaDismissed(Estilo estilo, Artista artista) {
+
+        artistaFiltro = artista;
+        estiloFiltro = estilo;
+
+        if(estilo.getSlug() != null || artista.getSlug() != null){
+            musicas = musicaEventoDBHelper.listarTodosAusentesEvento(getContext(), evento, estilo, artista);
+        } else{
+            musicas = musicaEventoDBHelper.listarTodosAusentesEvento(getContext(), evento);
+        }
+
+        atualizaLista();
+    }
 }

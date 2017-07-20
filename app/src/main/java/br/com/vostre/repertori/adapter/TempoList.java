@@ -39,7 +39,7 @@ public class TempoList extends ArrayAdapter<TempoMusicaEvento> {
         TempoMusicaEvento tme = tmes.get(position);
 
         textViewTempo.setText(DataUtils.toStringSomenteHoras(tme.getTempo(), 1));
-        textViewData.setText(DataUtils.toString(tme.getDataCadastro(), false));
+        textViewData.setText(DataUtils.toString(tme.getUltimaAlteracao(), false));
 
         return rowView;
     }

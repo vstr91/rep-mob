@@ -43,9 +43,9 @@ public class TempoMusicaEventoDBHelper extends SQLiteOpenHelper {
         //onCreate(db);
     }
 
-    public List<TempoMusicaEvento> listarTodosPorMusica(Context context, Musica musica){
+    public List<TempoMusicaEvento> listarTodosPorMusica(Context context, Musica musica, int limite){
         TempoMusicaEventoDBAdapter adapter = new TempoMusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
-        return adapter.listarTodosPorMusica(musica);
+        return adapter.listarTodosPorMusica(musica, limite);
     }
 
     public List<TempoMusicaEvento> listarTodosAEnviar(Context context){
