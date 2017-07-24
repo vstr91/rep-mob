@@ -33,10 +33,12 @@ public class EstiloList extends ArrayAdapter<Estilo> {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.listview_estilos, null, true);
         TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
+        TextView textViewMusicas = (TextView) rowView.findViewById(R.id.textViewMusicas);
 
         Estilo estilo = estilos.get(position);
 
         textViewNome.setText(estilo.getNome());
+        textViewMusicas.setText(estilo.contarMusicasAtivas(getContext())+" música(s)");
 
         return rowView;
     }

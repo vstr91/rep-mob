@@ -34,10 +34,12 @@ public class ArtistaList extends ArrayAdapter<Artista> {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.listview_artistas, null, true);
         TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
+        TextView textViewMusicas = (TextView) rowView.findViewById(R.id.textViewMusicas);
 
         Artista artista = artistas.get(position);
 
         textViewNome.setText(artista.getNome());
+        textViewMusicas.setText(artista.contarMusicasAtivas(getContext())+" música(s)");
 
         return rowView;
     }

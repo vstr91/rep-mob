@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
@@ -69,6 +70,11 @@ public class Projeto extends EntidadeBase {
 
 
         return resultado;
+    }
+
+    public int contarMusicasAtivas(Context context){
+        MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(context);
+        return musicaProjetoDBHelper.listarTodosPorProjeto(context, this, 0).size();
     }
 
     @Override

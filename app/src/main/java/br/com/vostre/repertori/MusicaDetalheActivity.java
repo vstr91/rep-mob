@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -43,6 +47,8 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     Button btnLetra;
     Button btnEditaLetra;
 
+    LineChart chart;
+
     Musica musica;
 
     @Override
@@ -72,6 +78,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         textViewMedia = (TextView) findViewById(R.id.textViewMedia);
         btnLetra = (Button) findViewById(R.id.btnLetra);
         btnEditaLetra = (Button) findViewById(R.id.btnEditaLetra);
+        chart = (LineChart) findViewById(R.id.chart);
 
         btnBuscaVideo.setOnClickListener(this);
         btnLetra.setOnClickListener(this);
@@ -86,7 +93,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
         String tom = musica.getTom().equals("null") ? "-" : musica.getTom();
 
-        textViewTom.setText("Tom: "+tom);
+        textViewTom.setText(tom);
 
         eventos = musicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica);
 
@@ -101,6 +108,21 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
         tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica, 10);
 
+//        List<Entry> dados = new ArrayList<>();
+//
+//        long ultimoStamp = tmes.get(0).getMusicaEvento().getEvento().getData().getTimeInMillis();
+//
+//        for(TempoMusicaEvento tme : tmes){
+//
+//            long date = tme.getMusicaEvento().getEvento().getData().getTimeInMillis();
+//            int dateInt =  (int) ultimoStamp - date;
+//
+//
+//
+//            dados.add(new Entry(,
+//                    DataUtils.toStringSomenteHoras(tme.getTempo(), 1)));
+//        }
+
         adapterExecucoes =
                 new TempoList(this, android.R.layout.simple_spinner_dropdown_item, tmes);
 
@@ -112,9 +134,9 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         Calendar c = musica.calcularMedia(getBaseContext());
 
         if(c != null){
-            textViewMedia.setText("Duração média: "+ DataUtils.toStringSomenteHoras(c, 1));
+            textViewMedia.setText(DataUtils.toStringSomenteHoras(c, 1));
         } else{
-            textViewMedia.setVisibility(View.GONE);
+            textViewMedia.setText("N/D");
         }
 
         //btnLetra.setEnabled(!musica.getLetra().isEmpty());

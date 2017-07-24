@@ -23,6 +23,7 @@ import java.util.List;
 
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ProjetoList;
+import br.com.vostre.repertori.adapter.TipoEventoLegendaList;
 import br.com.vostre.repertori.form.ModalCadastroEvento;
 import br.com.vostre.repertori.form.ModalEventos;
 import br.com.vostre.repertori.form.ModalHora;
@@ -31,16 +32,23 @@ import br.com.vostre.repertori.listener.ModalEventoListener;
 import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Projeto;
+import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
+import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 
 public class EventosFragment extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, ModalHoraListener, ModalEventoListener {
 
     List<Evento> eventos;
     EventoDBHelper eventoDBHelper;
 
+    List<TipoEvento> tiposEventos;
+    TipoEventoDBHelper tipoEventoDBHelper;
+
     Calendar dataEscolhida;
     CaldroidFragment caldroidFragment;
+
+    ListView listViewTiposEvento;
 
     public EventosFragment() {
         // Required empty public constructor
@@ -63,6 +71,14 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
         View v = inflater.inflate(R.layout.fragment_eventos, container, false);
 
         eventoDBHelper = new EventoDBHelper(getContext());
+        tipoEventoDBHelper = new TipoEventoDBHelper(getContext());
+
+        listViewTiposEvento = (ListView) v.findViewById(R.id.listViewTiposEvento);
+
+        tiposEventos = tipoEventoDBHelper.listarTodos(getContext());
+
+        TipoEventoLegendaList legendaAdapter = new TipoEventoLegendaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, tiposEventos);
+        listViewTiposEvento.setAdapter(legendaAdapter);
 
         caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();

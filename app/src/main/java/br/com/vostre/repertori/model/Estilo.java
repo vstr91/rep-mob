@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 import br.com.vostre.repertori.model.dao.EstiloDBHelper;
+import br.com.vostre.repertori.model.dao.EstiloMusicaDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
 /**
@@ -69,6 +71,11 @@ public class Estilo extends EntidadeBase {
 
 
         return resultado;
+    }
+
+    public int contarMusicasAtivas(Context context){
+        MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+        return musicaDBHelper.listarTodosPorEstilo(context, this).size();
     }
 
     @Override

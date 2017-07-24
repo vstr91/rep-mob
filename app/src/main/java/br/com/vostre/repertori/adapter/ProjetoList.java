@@ -31,12 +31,14 @@ public class ProjetoList extends ArrayAdapter<Projeto> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.listview_artistas, null, true);
+        View rowView = inflater.inflate(R.layout.listview_projetos, null, true);
         TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
+        TextView textViewMusicas = (TextView) rowView.findViewById(R.id.textViewMusicas);
 
         Projeto projeto = projetos.get(position);
 
         textViewNome.setText(projeto.getNome());
+        textViewMusicas.setText(projeto.contarMusicasAtivas(getContext())+" música(s)");
 
         return rowView;
     }

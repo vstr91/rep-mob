@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
 /**
@@ -84,6 +86,11 @@ public class Artista extends EntidadeBase {
 
 
         return resultado;
+    }
+
+    public int contarMusicasAtivas(Context context){
+        MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+        return musicaDBHelper.listarTodosPorArtista(context, this).size();
     }
 
     @Override

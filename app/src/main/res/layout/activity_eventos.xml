@@ -20,6 +20,18 @@
             android:layout_height="wrap_content"
             android:id="@+id/calendar"></CalendarView>
 
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Legenda"
+            android:textAlignment="center" />
+
+        <ListView
+            android:id="@+id/listViewTiposEvento"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
 

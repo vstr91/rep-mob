@@ -6,9 +6,29 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="br.com.vostre.repertori.fragment.ProjetosFragment">
 
-    <CalendarView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/calendar"></CalendarView>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <CalendarView
+            android:id="@+id/calendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></CalendarView>
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Legenda"
+            android:textAlignment="center" />
+
+        <ListView
+            android:id="@+id/listViewTiposEvento"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp" />
+    </LinearLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

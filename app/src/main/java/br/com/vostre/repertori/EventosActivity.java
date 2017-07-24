@@ -13,6 +13,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -23,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.vostre.repertori.adapter.ScreenPagerAdapter;
+import br.com.vostre.repertori.adapter.TipoEventoLegendaList;
 import br.com.vostre.repertori.form.ModalCadastroEvento;
 import br.com.vostre.repertori.form.ModalEventos;
 import br.com.vostre.repertori.form.ModalHora;
@@ -32,7 +35,9 @@ import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.listener.ModalEventoListener;
 import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Evento;
+import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
+import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 
 public class EventosActivity extends BaseActivity implements View.OnClickListener, ModalCadastroListener, ModalHoraListener, ModalEventoListener {
 
