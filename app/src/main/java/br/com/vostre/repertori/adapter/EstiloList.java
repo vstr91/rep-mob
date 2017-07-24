@@ -23,7 +23,7 @@ public class EstiloList extends ArrayAdapter<Estilo> {
 
 
     public EstiloList(Activity context, int resource, List<Estilo> objects) {
-        super(context, R.layout.listview_estilos, objects);
+        super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.estilos = objects;
     }

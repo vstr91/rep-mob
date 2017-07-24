@@ -24,7 +24,7 @@ public class ArtistaList extends ArrayAdapter<Artista> {
 
 
     public ArtistaList(Activity context, int resource, List<Artista> objects) {
-        super(context, R.layout.listview_artistas, objects);
+        super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.artistas = objects;
     }
