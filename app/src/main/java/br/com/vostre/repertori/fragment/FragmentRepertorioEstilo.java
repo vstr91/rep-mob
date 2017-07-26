@@ -188,9 +188,9 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
 //            case R.id.listViewMusicasEstilos:
 //                musica = adapterMusicasEstilos.getItem(position);
 //                break;
-//            case R.id.listViewMusicasExecucoes:
-//                musica = adapterMusicasExecucoes.getItem(position).getMusica();
-//                break;
+            case R.id.listViewMusicasExecucoes:
+                musica = adapterMusicasExecucoes.getItem(position).getMusica();
+                break;
         }
 
         Intent intent = new Intent(getContext(), MusicaDetalheActivity.class);
