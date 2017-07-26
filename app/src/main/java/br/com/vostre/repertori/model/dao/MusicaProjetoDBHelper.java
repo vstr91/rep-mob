@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +68,11 @@ public class MusicaProjetoDBHelper extends SQLiteOpenHelper {
     public List<Musica> listarTodosPorProjetoEEstilo(Context context, Projeto projeto, int situacao){
         MusicaProjetoDBAdapter adapter = new MusicaProjetoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodosPorProjetoEEstilo(projeto, situacao);
+    }
+
+    public Map<String, Integer> contarTodosPorProjetoEEstilo(Context context, Projeto projeto, int situacao){
+        MusicaProjetoDBAdapter adapter = new MusicaProjetoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.contarTodosPorProjetoEEstilo(projeto, situacao);
     }
 
     public long salvarOuAtualizar(Context context, MusicaProjeto musicaEvento){

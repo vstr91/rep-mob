@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "763791909416",
+    "project_id": "repertori-153316"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763791909416:android:b3aee91203c068a1",
+        "android_client_info": {
+          "package_name": "br.com.vostre.repertori"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763791909416-ghqeh915nv0kn36cs8b9drge984trpf5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVLC6OTHBSdYDe1Pz1LrPJ6UO5wBA0Kpc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

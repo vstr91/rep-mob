@@ -139,10 +139,11 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
                 modalCadastroEvento.show(getSupportFragmentManager(), "modalEvento");
 
                 break;
-            /*case R.id.icon_sobre:
-                intent = new Intent(this, Sobre.class);
+            case R.id.icon_letras:
+                intent = new Intent(this, MusicaEventoActivity.class);
+                intent.putExtra("evento", evento.getId());
                 startActivity(intent);
-                break;*/
+                break;
         }
 
         return super.onOptionsItemSelected(item);

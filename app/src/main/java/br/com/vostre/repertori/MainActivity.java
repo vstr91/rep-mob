@@ -34,6 +34,7 @@ import br.com.vostre.repertori.fragment.ArtistasFragment;
 import br.com.vostre.repertori.fragment.EstilosFragment;
 import br.com.vostre.repertori.fragment.EventosFragment;
 import br.com.vostre.repertori.fragment.FragmentRepertorio;
+import br.com.vostre.repertori.fragment.InfoFragment;
 import br.com.vostre.repertori.fragment.MusicasFragment;
 import br.com.vostre.repertori.fragment.ProjetosFragment;
 import br.com.vostre.repertori.listener.LoadListener;
@@ -256,6 +257,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.artistas:
                 fragmentClass = ArtistasFragment.class;
+                break;
+            case R.id.info:
+                fragmentClass = InfoFragment.class;
                 break;
         }
 

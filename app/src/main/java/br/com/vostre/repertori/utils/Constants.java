@@ -27,6 +27,6 @@ public class Constants {
     public static final String URLTOKEN = SERVIDOR+"/api/token";
     public static final String URLTOKENGOOGLE = SERVIDOR+"/api/valida-token";
 
-    public static final int TEMPO_ATUALIZACAO = 5;
+    public static final int TEMPO_ATUALIZACAO = 15;
 
 }

@@ -4,31 +4,40 @@
     android:layout_height="match_parent"
     tools:context="br.com.vostre.repertori.fragment.FragmentRepertorioEstilo">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView1"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".5"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Músicas Por Estilo"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:textColor="@color/colorPrimaryDark" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/listViewMusicasEstilos"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="2" />
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Músicas Por Estilo"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:textColor="@color/colorPrimaryDark" />
 
-        <TextView
+            <com.github.mikephil.charting.charts.RadarChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_weight="8"></com.github.mikephil.charting.charts.RadarChart>
+
+            <!--<ListView-->
+                <!--android:id="@+id/listViewMusicasEstilos"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="0dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_weight="2" />-->
+
+            <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -40,22 +49,23 @@
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:textColor="@color/colorPrimaryDark" />
 
-        <ListView
-            android:id="@+id/listViewMusicasExecucoes"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="2" />
+            <ListView
+                android:id="@+id/listViewMusicasExecucoes"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2" />
 
-        <TextView
-            android:id="@+id/textViewListaVazia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Nenhuma informação disponível."
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/textViewListaVazia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Nenhuma informação disponível."
+                android:visibility="gone" />
 
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

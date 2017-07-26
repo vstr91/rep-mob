@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="br.com.vostre.repertori.EventoDetalheActivity" >
 
+    <item android:id="@+id/icon_letras"
+        android:icon="@drawable/ic_subject_white_24dp"
+        android:title="@string/action_letras"
+        app:showAsAction="always" />
+
     <item android:id="@+id/icon_edit"
         android:icon="@drawable/ic_mode_edit_white_24dp"
         android:title="@string/action_edit"
