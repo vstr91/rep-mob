@@ -23,7 +23,7 @@ public class ProjetoList extends ArrayAdapter<Projeto> {
 
 
     public ProjetoList(Activity context, int resource, List<Projeto> objects) {
-        super(context, R.layout.listview_projetos, objects);
+        super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.projetos = objects;
     }

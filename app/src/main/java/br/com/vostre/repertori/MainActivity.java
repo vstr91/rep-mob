@@ -1,7 +1,9 @@
 package br.com.vostre.repertori;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -30,6 +32,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.util.concurrent.TimeUnit;
+
 import br.com.vostre.repertori.fragment.ArtistasFragment;
 import br.com.vostre.repertori.fragment.EstilosFragment;
 import br.com.vostre.repertori.fragment.EventosFragment;
@@ -39,6 +43,7 @@ import br.com.vostre.repertori.fragment.MusicasFragment;
 import br.com.vostre.repertori.fragment.ProjetosFragment;
 import br.com.vostre.repertori.listener.LoadListener;
 import br.com.vostre.repertori.service.AtualizaDadosService;
+import br.com.vostre.repertori.utils.Constants;
 import br.com.vostre.repertori.utils.DialogUtils;
 import br.com.vostre.repertori.utils.ServiceUtils;
 import br.com.vostre.repertori.utils.ToolbarUtils;
@@ -178,18 +183,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void iniciaServicoAtualizacao(){
-        final ServiceUtils serviceUtils = new ServiceUtils();
-        Intent serviceIntent = new Intent(getBaseContext(), AtualizaDadosService.class);
 
-        final ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        if(!serviceUtils.isMyServiceRunning(AtualizaDadosService.class, manager)){
-            stopService(serviceIntent);
-            startService(serviceIntent);
-            //Toast.makeText(this, "Iniciando serviço...", Toast.LENGTH_LONG).show();
-        } else{
-            //Toast.makeText(this, "Serviço já rodando...", Toast.LENGTH_LONG).show();
-        }
+        Intent serviceIntent = new Intent(this, AtualizaDadosService.class);
+        PendingIntent pi = PendingIntent.getService(this, 0, serviceIntent, 0);
+
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TimeUnit.MINUTES.toMillis(Constants.TEMPO_ATUALIZACAO), pi);
+
+        //
+
+//        final ServiceUtils serviceUtils = new ServiceUtils();
+//        Intent serviceIntent = new Intent(getBaseContext(), AtualizaDadosService.class);
+//
+//        final ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+//
+//        if(!serviceUtils.isMyServiceRunning(AtualizaDadosService.class, manager)){
+//            stopService(serviceIntent);
+//            startService(serviceIntent);
+//            //Toast.makeText(this, "Iniciando serviço...", Toast.LENGTH_LONG).show();
+//        } else{
+//            //Toast.makeText(this, "Serviço já rodando...", Toast.LENGTH_LONG).show();
+//        }
+
     }
 
     @Override

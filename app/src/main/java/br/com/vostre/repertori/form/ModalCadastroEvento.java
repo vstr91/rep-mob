@@ -166,6 +166,10 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
             int index = tiposEvento.indexOf(tipoEvento);
             spinnerTipoEvento.setSelection(index);
 
+            Projeto projeto = getEvento().getProjeto();
+            int indexProj = projetos.indexOf(projeto);
+            spinnerProjeto.setSelection(indexProj);
+
             switch(evento.getStatus()){
                 case 0:
                     spinnerStatus.setSelection(statusList.indexOf(ativo));

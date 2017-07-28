@@ -82,25 +82,30 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     @Override
     public void onCreate() {
         super.onCreate();
-        Timer timer = new Timer();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                serverUtils = new ServerUtils(AtualizaDadosService.this, true);
-                serverUtils.setOnResultsListener(AtualizaDadosService.this);
-                serverUtils.execute(new String[]{Constants.SERVIDOR_TESTE, String.valueOf(Constants.PORTA_SERVIDOR)});
+//        Timer timer = new Timer();
+//        TimerTask timerTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                serverUtils = new ServerUtils(AtualizaDadosService.this, true);
+//                serverUtils.setOnResultsListener(AtualizaDadosService.this);
+//                serverUtils.execute(new String[]{Constants.SERVIDOR_TESTE, String.valueOf(Constants.PORTA_SERVIDOR)});
+//
+//            }
+//        };
+//
+//        timer.scheduleAtFixedRate(timerTask, 0, TIME_TO_UPDATE);
 
-            }
-        };
-
-        timer.scheduleAtFixedRate(timerTask, 0, TIME_TO_UPDATE);
+        serverUtils = new ServerUtils(AtualizaDadosService.this, true);
+        serverUtils.setOnResultsListener(AtualizaDadosService.this);
+        serverUtils.execute(new String[]{Constants.SERVIDOR_TESTE, String.valueOf(Constants.PORTA_SERVIDOR)});
+        System.out.println("INICIOU");
 
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //Toast.makeText(MessageService.this, "Iniciando rodada", Toast.LENGTH_LONG).show();
-        return START_STICKY;
+        return START_NOT_STICKY;
         //return super.onStartCommand(intent, flags, startId);
     }
 
@@ -115,6 +120,9 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             tokenTask.setOnTokenTaskResultsListener(this);
             tokenTask.execute();
 
+        } else{
+            this.stopSelf();
+            System.out.println("TERMINOU ERRO INTERNET");
         }
 
     }
@@ -415,6 +423,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             }
 
         } catch (Exception e) {
+            this.stopSelf();
+            System.out.println("TERMINOU ERRO 1");
             e.printStackTrace();
         }
 
@@ -425,6 +435,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
         if(map == null || map.size() == 0){
             Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+            this.stopSelf();
+            System.out.println("TERMINOU ERRO 2");
             return;
         }
 
@@ -447,6 +459,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 }
             } else {
                 Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+                this.stopSelf();
+                System.out.println("TERMINOU ERRO 3");
             }
 
             if(registros > 0){
@@ -459,6 +473,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
                 }
 
+                this.stopSelf();
+                System.out.println("TERMINOU SEM REGISTROS");
             }
         } else{
 
@@ -512,6 +528,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             Intent intent = new Intent("AtualizaDadosService");
             intent.putExtra("registros", registros);
             broadcaster.sendBroadcast(intent);
+            this.stopSelf();
+            System.out.println("TERMINOU");
         }
 
     }

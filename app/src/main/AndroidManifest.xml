@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service android:name=".service.AtualizaDadosService" />
+        <service android:name=".service.AtualizaDadosService" android:enabled="true" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

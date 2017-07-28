@@ -58,9 +58,15 @@ public class InfoFragment extends Fragment {
         parametroDBHelper = new ParametroDBHelper(getContext());
         String ultimoAcesso = parametroDBHelper.carregarUltimoAcesso(getContext());
 
-        Calendar calendar = DataUtils.bancoParaData(ultimoAcesso);
+        if(!ultimoAcesso.equals("-")){
+            Calendar calendar = DataUtils.bancoParaData(ultimoAcesso);
 
-        textViewUltimaSincronizacao.setText(DataUtils.toString(calendar, true));
+            textViewUltimaSincronizacao.setText(DataUtils.toString(calendar, true));
+        } else{
+            textViewUltimaSincronizacao.setText("-");
+        }
+
+
 
         try {
             PackageInfo pInfo = this.getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);

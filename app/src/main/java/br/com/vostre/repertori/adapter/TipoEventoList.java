@@ -31,7 +31,7 @@ public class TipoEventoList extends ArrayAdapter<TipoEvento> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.listview_artistas, null, true);
+        View rowView = inflater.inflate(R.layout.listview_tipos_evento, null, true);
         TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
 
         TipoEvento tipoEvento = tiposEvento.get(position);

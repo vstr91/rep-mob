@@ -75,7 +75,7 @@ public class TempoMusicaEventoDBAdapter {
     public List<TempoMusicaEvento> listarTodosPorMusica(Musica musica, int limite){
         Cursor cursor = database.rawQuery("SELECT tme._id, tme.tempo, tme.id_musica_evento, tme.status, tme.data_cadastro, tme.data_recebimento, " +
                 "tme.ultima_alteracao FROM tempo_musica_evento tme INNER JOIN musica_evento me ON me._id = tme.id_musica_evento WHERE me.id_musica = ? AND tme.status = 0 " +
-                "ORDER BY tme.data_cadastro DESC LIMIT "+limite, new String[]{musica.getId()});
+                "ORDER BY tme.ultima_alteracao DESC LIMIT "+limite, new String[]{musica.getId()});
         List<TempoMusicaEvento> tmes = new ArrayList<TempoMusicaEvento>();
 
         if(cursor.moveToFirst()){
