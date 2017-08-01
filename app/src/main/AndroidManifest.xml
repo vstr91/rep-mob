@@ -39,6 +39,9 @@
         <activity
             android:name=".EventoDetalheActivity"
             android:label="@string/title_activity_evento_detalhe" />
+        <activity
+            android:name=".RepertorioDetalheActivity"
+            android:label="@string/title_activity_repertorio_detalhe" />
         <activity android:name=".BaseActivity" />
         <activity
             android:name=".ArtistasActivity"
@@ -47,6 +50,7 @@
         <activity android:name=".RelatoriosActivity" />
         <activity android:name=".CronometroActivity" />
         <activity android:name=".MusicaProjetoActivity"></activity>
+        <activity android:name=".MusicaRepertorioActivity"></activity>
         <activity android:name=".MusicaEventoActivity"
             android:label="@string/title_activity_musica_evento"></activity>
         <activity

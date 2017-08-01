@@ -85,7 +85,7 @@ public class MusicaEventoActivity extends BaseActivity implements View.OnClickLi
         btnProximo.setOnClickListener(this);
 
         evento = new Evento();
-        evento.setId(getIntent().getStringExtra("evento"));
+        evento.setId(getIntent().getStringExtra("repertorio"));
 
         carregaListaMusicas();
 

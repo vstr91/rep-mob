@@ -5,6 +5,7 @@
     <string name="title_activity_musica_detalhe">Detalhes da Música</string>
     <string name="title_activity_musica_evento">Letras por Evento</string>
     <string name="title_activity_evento_detalhe">Detalhes do Evento</string>
+    <string name="title_activity_repertorio_detalhe">Detalhes do Repertório</string>
     <string name="title_activity_estilo_detalhe">Detalhes do Estilo</string>
     <string name="title_activity_artista_detalhe">Detalhes do Artista</string>
     <string name="title_activity_artistas">Artistas</string>

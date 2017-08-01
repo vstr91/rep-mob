@@ -97,7 +97,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         btnAdicionaMusica.setOnClickListener(this);
 
         evento = new Evento();
-        evento.setId(getIntent().getStringExtra("evento"));
+        evento.setId(getIntent().getStringExtra("repertorio"));
 
         carregaInformacaoEvento();
 
@@ -141,7 +141,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
                 break;
             case R.id.icon_letras:
                 intent = new Intent(this, MusicaEventoActivity.class);
-                intent.putExtra("evento", evento.getId());
+                intent.putExtra("repertorio", evento.getId());
                 startActivity(intent);
                 break;
         }

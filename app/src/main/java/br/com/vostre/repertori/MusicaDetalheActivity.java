@@ -148,7 +148,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         Evento evento = adapterEventos.getItem(position);
 
         Intent intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
-        intent.putExtra("evento", evento.getId());
+        intent.putExtra("repertorio", evento.getId());
         startActivity(intent);
 
     }

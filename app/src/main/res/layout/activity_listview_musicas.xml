@@ -16,6 +16,30 @@
         <!--android:textColorHint="#888888" />-->
 
     <TextView
+        android:id="@+id/textViewEspera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Repertórios"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Medium" />
+
+    <ListView
+        android:id="@+id/listViewRepertorios"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nenhum repertório foi encontrado."
+        android:id="@+id/textViewListaRepertoriosVazia"
+        android:padding="5dp"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/textViewAtivas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,21 +57,6 @@
 
     <ListView
         android:id="@+id/listViewMusicasAtivas"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/textViewEspera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Músicas em Espera"
-        android:textAlignment="center"
-        android:textAppearance="@android:style/TextAppearance.Medium" />
-
-    <ListView
-        android:id="@+id/listViewMusicasEmEspera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"

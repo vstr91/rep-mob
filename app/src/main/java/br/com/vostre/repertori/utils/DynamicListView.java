@@ -48,6 +48,7 @@ import br.com.vostre.repertori.adapter.StableArrayAdapter;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.Repertorio;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 
 /**
@@ -106,6 +107,7 @@ public class DynamicListView extends ListView {
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 
     private Evento evento;
+    private Repertorio repertorio;
 
     public DynamicListView(Context context) {
         super(context);
@@ -587,6 +589,14 @@ public class DynamicListView extends ListView {
 
     public void setEvento(Evento evento) {
         this.evento = evento;
+    }
+
+    public Repertorio getRepertorio() {
+        return repertorio;
+    }
+
+    public void setRepertorio(Repertorio repertorio) {
+        this.repertorio = repertorio;
     }
 
     /**

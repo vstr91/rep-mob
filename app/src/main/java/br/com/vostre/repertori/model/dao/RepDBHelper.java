@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import br.com.vostre.repertori.model.MusicaRepertorio;
+import br.com.vostre.repertori.model.Repertorio;
 import br.com.vostre.repertori.model.TipoEvento;
 
 /**
@@ -32,6 +34,9 @@ public class RepDBHelper extends SQLiteOpenHelper {
         db.execSQL(ProjetoDBHelper.DBCREATE);
         db.execSQL(EstiloDBHelper.DBCREATE);
         db.execSQL(TempoMusicaEventoDBHelper.DBCREATE);
+
+        db.execSQL(RepertorioDBHelper.DBCREATE);
+        db.execSQL(MusicaRepertorioDBHelper.DBCREATE);
 
         db.execSQL(ParametroDBHelper.DBPOPULATE);
     }

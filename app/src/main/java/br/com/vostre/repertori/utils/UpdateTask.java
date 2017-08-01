@@ -20,7 +20,9 @@ import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.MusicaProjeto;
+import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Projeto;
+import br.com.vostre.repertori.model.Repertorio;
 import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
@@ -103,6 +105,9 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             JSONArray musicasProjetos = jObj.getJSONArray("musicas_projetos");
             JSONArray temposMusicasEventos = jObj.getJSONArray("tempos_musicas_eventos");
 
+            JSONArray repertorios = jObj.getJSONArray("repertorios");
+            JSONArray musicasRepertorios = jObj.getJSONArray("musicas_repertorios");
+
             // Objetos que contem os metodos de atualizacao
             Artista artista = new Artista();
             TipoEvento tipoEvento = new TipoEvento();
@@ -116,6 +121,9 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             EstiloMusica estiloMusica = new EstiloMusica();
             MusicaProjeto musicaProjeto = new MusicaProjeto();
             TempoMusicaEvento tempoMusicaEvento = new TempoMusicaEvento();
+
+            Repertorio repertorio = new Repertorio();
+            MusicaRepertorio musicaRepertorio = new MusicaRepertorio();
 
             RepDBHelper repDBHelper = new RepDBHelper(ctx);
 
@@ -276,6 +284,38 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             } else{
                 publishProgress("Músicas Projetos já atualizadas."+System.getProperty("line.separator")
                         +System.getProperty("line.separator"),"");
+            }
+
+            int qtdRepertorios = repertorios.length();
+
+            if(qtdRepertorios > 0){
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+
+                repertorio.atualizarDados(repertorios, qtdRepertorios, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdEventos+ " repertorio(s) atualizado(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            } else{
+                publishProgress("Repertorios já atualizados."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            }
+
+            int qtdMusicasRepertorios = musicasRepertorios.length();
+
+            if(qtdMusicasRepertorios > 0){
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+
+                musicaRepertorio.atualizarDados(musicasRepertorios, qtdMusicasRepertorios, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdEventos+ " musica(s)-repertorio atualizada(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            } else{
+                publishProgress("Músicas-Repertório já atualizadas."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
             }
 
         } /*catch (ParseException e) {

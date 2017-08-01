@@ -36,7 +36,9 @@ import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.MusicaProjeto;
+import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Projeto;
+import br.com.vostre.repertori.model.Repertorio;
 import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
@@ -46,8 +48,10 @@ import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
+import br.com.vostre.repertori.model.dao.RepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 import br.com.vostre.repertori.utils.Constants;
@@ -145,6 +149,9 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         List<TipoEvento> tiposEventos;
         List<TempoMusicaEvento> temposMusicasEventos;
 
+        List<Repertorio> repertorios;
+        List<MusicaRepertorio> musicasRepertorios;
+
         ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
         ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(getApplicationContext());
@@ -156,6 +163,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         EstiloDBHelper estiloDBHelper = new EstiloDBHelper(getApplicationContext());
         MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(getApplicationContext());
         TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getApplicationContext());
+        RepertorioDBHelper repertorioDBHelper = new RepertorioDBHelper(getApplicationContext());
+        MusicaRepertorioDBHelper musicaRepertorioDBHelper = new MusicaRepertorioDBHelper(getApplicationContext());
 
         try {
             tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
@@ -179,9 +188,13 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
             temposMusicasEventos = tempoMusicaEventoDBHelper.listarTodosAEnviar(getApplicationContext());
 
+            repertorios = repertorioDBHelper.listarTodosAEnviar(getApplicationContext());
+            musicasRepertorios = musicaRepertorioDBHelper.listarTodosAEnviar(getApplicationContext());
+
             // COMENTARIOS
             int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size()
-                    + musicasEventos.size() + projetos.size() + estilos.size() + musicasProjetos.size() + tiposEventos.size() + temposMusicasEventos.size();
+                    + musicasEventos.size() + projetos.size() + estilos.size() + musicasProjetos.size() + tiposEventos.size() + temposMusicasEventos.size()
+                    + repertorios.size() + musicasRepertorios.size();
 
             if(totalRegistros > 0){
                 String json = "{";
@@ -336,6 +349,28 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     }
                 }
 
+                // REPERTORIOS
+
+                json = json.concat("],");
+
+                json = json.concat("\"repertorios\":[");
+                cont = 1;
+                int qtdRepertorios = repertorios.size();
+
+                if(qtdRepertorios > 0) {
+                    for (Repertorio umRepertorio : repertorios) {
+
+                        if (cont < qtdRepertorios) {
+                            json = json.concat(umRepertorio.toJson() + ",");
+                        } else {
+                            json = json.concat(umRepertorio.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
                 // MUSICA EVENTO
 
                 json = json.concat("],");
@@ -358,7 +393,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     }
                 }
 
-                // MUSICA EVENTO
+                // TEMPOS MUSICA EVENTO
 
                 json = json.concat("],");
 
@@ -373,6 +408,28 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                             json = json.concat(umTempoMusicaEvento.toJson() + ",");
                         } else {
                             json = json.concat(umTempoMusicaEvento.toJson());
+                        }
+
+                        cont++;
+
+                    }
+                }
+
+                // MUSICA REPERTORIO
+
+                json = json.concat("],");
+
+                json = json.concat("\"musicas_repertorios\":[");
+                cont = 1;
+                int qtdMusicasRepertorios = musicasRepertorios.size();
+
+                if(qtdMusicasRepertorios > 0) {
+                    for (MusicaRepertorio umMusicaRepertorio : musicasRepertorios) {
+
+                        if (cont < qtdMusicasRepertorios) {
+                            json = json.concat(umMusicaRepertorio.toJson() + ",");
+                        } else {
+                            json = json.concat(umMusicaRepertorio.toJson());
                         }
 
                         cont++;
