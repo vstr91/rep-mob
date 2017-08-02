@@ -56,6 +56,7 @@ import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 import br.com.vostre.repertori.utils.Constants;
 import br.com.vostre.repertori.utils.Crypt;
+import br.com.vostre.repertori.utils.ParametrosUtils;
 import br.com.vostre.repertori.utils.ServerUtils;
 import br.com.vostre.repertori.utils.TarefaAssincrona;
 import br.com.vostre.repertori.utils.TokenTask;
@@ -169,7 +170,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         try {
             tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
 
-            dataUltimoAcesso = getDataUltimoAcesso(this.getBaseContext());
+            dataUltimoAcesso = ParametrosUtils.getDataUltimoAcesso(this.getBaseContext());
             dataUltimoAcesso = dataUltimoAcesso.equals("") ? "-" : dataUltimoAcesso;
 
             String urlEnvio = Constants.URLSERVIDORENVIO+tokenCriptografado+"/"+dataUltimoAcesso;
@@ -527,7 +528,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             } else{
 
                 if(dataUltimoAcesso != null){
-                    setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
+                    ParametrosUtils.setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
                 }
 
                 this.stopSelf();
@@ -579,7 +580,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     public void onUpdateTaskResultsSucceeded(boolean result) {
 
         if(result){
-            setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
+            ParametrosUtils.setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
 
             LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(this);
             Intent intent = new Intent("AtualizaDadosService");
@@ -591,39 +592,39 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
     }
 
-    public static String getDataUltimoAcesso(Context context){
-        DateFormat dateFormat = new SimpleDateFormat("E dd MMM yyyy hh:mm:ss Z", Locale.ENGLISH);
-        DateFormat dateFormatWeb = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date data = null;
-        ParametroDBHelper parametroDBHelper = new ParametroDBHelper(context);
-
-        String ultimaData = parametroDBHelper.carregarUltimoAcesso(context);
-
-        try {
-
-            if(!ultimaData.equals("-")){
-                data = dateFormat.parse(ultimaData.replace(",", "").replace("%20", " "));
-            }
-
-        } catch(ParseException ex){
-            ex.printStackTrace();
-        }
-
-        if(null != data){
-            return dateFormatWeb.format(data).replace(" ", "%20");
-        } else{
-            return "-";
-        }
-
-    }
-
-    public void setDataUltimoAcesso(Context context, String dataUltimoAcesso){
-
-        if(dataUltimoAcesso != null){
-            ParametroDBHelper parametroDBHelper = new ParametroDBHelper(context);
-            parametroDBHelper.gravarUltimoAcesso(context, dataUltimoAcesso);
-        }
-
-    }
+//    public static String getDataUltimoAcesso(Context context){
+//        DateFormat dateFormat = new SimpleDateFormat("E dd MMM yyyy hh:mm:ss Z", Locale.ENGLISH);
+//        DateFormat dateFormatWeb = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Date data = null;
+//        ParametroDBHelper parametroDBHelper = new ParametroDBHelper(context);
+//
+//        String ultimaData = parametroDBHelper.carregarUltimoAcesso(context);
+//
+//        try {
+//
+//            if(!ultimaData.equals("-")){
+//                data = dateFormat.parse(ultimaData.replace(",", "").replace("%20", " "));
+//            }
+//
+//        } catch(ParseException ex){
+//            ex.printStackTrace();
+//        }
+//
+//        if(null != data){
+//            return dateFormatWeb.format(data).replace(" ", "%20");
+//        } else{
+//            return "-";
+//        }
+//
+//    }
+//
+//    public void setDataUltimoAcesso(Context context, String dataUltimoAcesso){
+//
+//        if(dataUltimoAcesso != null){
+//            ParametroDBHelper parametroDBHelper = new ParametroDBHelper(context);
+//            parametroDBHelper.gravarUltimoAcesso(context, dataUltimoAcesso);
+//        }
+//
+//    }
 
 }

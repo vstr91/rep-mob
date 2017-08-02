@@ -40,6 +40,7 @@ import br.com.vostre.repertori.utils.SnackbarHelper;
 
 public class ModalCadastroRepertorio extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
+    TextView textViewProjeto;
     EditText editTextNome;
     Spinner spinnerProjeto;
     Spinner spinnerStatus;
@@ -89,6 +90,7 @@ public class ModalCadastroRepertorio extends android.support.v4.app.DialogFragme
 
         view.setMinimumWidth(700);
 
+        textViewProjeto = (TextView) view.findViewById(R.id.textViewProjeto);
         editTextNome = (EditText) view.findViewById(R.id.editTextNome);
         spinnerProjeto = (Spinner) view.findViewById(R.id.spinnerProjeto);
         spinnerStatus = (Spinner) view.findViewById(R.id.spinnerStatus);
@@ -122,6 +124,14 @@ public class ModalCadastroRepertorio extends android.support.v4.app.DialogFragme
 
         btnSalvar.setOnClickListener(this);
         btnFechar.setOnClickListener(this);
+
+        if(getProjeto() != null){
+            Projeto projeto = getProjeto();
+            int indexProj = projetos.indexOf(projeto);
+            spinnerProjeto.setSelection(indexProj);
+            spinnerProjeto.setVisibility(View.GONE);
+            textViewProjeto.setVisibility(View.GONE);
+        }
 
         if(getRepertorio() != null){
             editTextNome.setText(getRepertorio().getNome());

@@ -12,6 +12,8 @@ import br.com.vostre.repertori.adapter.ScreenPagerAdapter;
 import br.com.vostre.repertori.form.ModalAdicionaMusicaProjeto;
 import br.com.vostre.repertori.form.ModalCadastroMusica;
 import br.com.vostre.repertori.form.ModalCadastroMusicaProjeto;
+import br.com.vostre.repertori.form.ModalCadastroRepertorio;
+import br.com.vostre.repertori.form.ModalOpcaoRepertorio;
 import br.com.vostre.repertori.fragment.FragmentEventoProjeto;
 import br.com.vostre.repertori.fragment.FragmentRepertorio;
 import br.com.vostre.repertori.fragment.FragmentRepertorioEstilo;
@@ -131,11 +133,13 @@ public class MusicaProjetoActivity extends BaseActivity implements TabLayout.OnT
 
         switch(v.getId()){
             case R.id.fabNova:
-                ModalAdicionaMusicaProjeto modalAdicionaoMusicaProjeto = new ModalAdicionaMusicaProjeto();
-                modalAdicionaoMusicaProjeto.setListener(this);
-                modalAdicionaoMusicaProjeto.setProjeto(projeto);
 
-                modalAdicionaoMusicaProjeto.show(getSupportFragmentManager(), "modalMusicaProjeto");
+                ModalOpcaoRepertorio modalOpcaoRepertorio = new ModalOpcaoRepertorio();
+                modalOpcaoRepertorio.setListenerAdiciona(this);
+                modalOpcaoRepertorio.setListenerRepertorio(this);
+                modalOpcaoRepertorio.setProjeto(projeto);
+
+                modalOpcaoRepertorio.show(getSupportFragmentManager(), "modalOpcaoRepertorio");
 
                 break;
         }

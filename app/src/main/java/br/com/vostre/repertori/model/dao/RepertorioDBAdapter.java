@@ -158,9 +158,9 @@ public class RepertorioDBAdapter {
         return repertorios;
     }
 
-    public List<Repertorio> listarTodosPorProjeto(Projeto projeto){
+    public List<Repertorio> listarTodosAtivosPorProjeto(Projeto projeto){
         Cursor cursor = database.rawQuery("SELECT _id, nome, id_projeto, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug FROM repertorio WHERE id_projeto = ?", new String[]{projeto.getId()});
+                "ultima_alteracao, slug FROM repertorio WHERE id_projeto = ? AND status = 0", new String[]{projeto.getId()});
         List<Repertorio> repertorios = new ArrayList<Repertorio>();
 
         if(cursor.moveToFirst()){

@@ -97,7 +97,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         btnAdicionaMusica.setOnClickListener(this);
 
         evento = new Evento();
-        evento.setId(getIntent().getStringExtra("repertorio"));
+        evento.setId(getIntent().getStringExtra("evento"));
 
         carregaInformacaoEvento();
 

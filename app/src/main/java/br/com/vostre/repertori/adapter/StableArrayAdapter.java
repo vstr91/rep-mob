@@ -62,11 +62,14 @@ public class StableArrayAdapter extends ArrayAdapter<Musica> {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.listview_musicas_evento, null, true);
 
+        TextView textViewCont = (TextView) rowView.findViewById(R.id.textViewCont);
         TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
         TextView textViewArtista = (TextView) rowView.findViewById(R.id.textViewArtista);
         TextView textViewTom = (TextView) rowView.findViewById(R.id.textViewTom);
         btnExcluir = (ImageButton) rowView.findViewById(R.id.btnExcluir);
         btnTempo = (ImageButton) rowView.findViewById(R.id.btnTempo);
+
+        textViewCont.setText(String.valueOf(position+1));
 
         String tom = musica.getTom().equals("null") || musica.getTom().isEmpty() ? "-" : musica.getTom();
 

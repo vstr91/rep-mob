@@ -44,12 +44,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.vostre.repertori.adapter.MusicaRepertorioAdapter;
 import br.com.vostre.repertori.adapter.StableArrayAdapter;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Repertorio;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
 
 /**
  * The dynamic listview is an extension of listview that supports cell dragging
@@ -214,23 +217,47 @@ public class DynamicListView extends ListView {
      */
     private void updateNeighborViewsForID(long itemID) {
         int position = getPositionForID(itemID);
-        StableArrayAdapter adapter = ((StableArrayAdapter)getAdapter());
-        mAboveItemId = adapter.getItemId(position - 1);
-        mBelowItemId = adapter.getItemId(position + 1);
+
+        if(repertorio != null){
+            MusicaRepertorioAdapter adapter = ((MusicaRepertorioAdapter) getAdapter());
+            mAboveItemId = adapter.getItemId(position - 1);
+            mBelowItemId = adapter.getItemId(position + 1);
+        } else{
+            StableArrayAdapter adapter = ((StableArrayAdapter)getAdapter());
+            mAboveItemId = adapter.getItemId(position - 1);
+            mBelowItemId = adapter.getItemId(position + 1);
+        }
+
+
     }
 
     /** Retrieves the view in the list corresponding to itemID */
     public View getViewForID (long itemID) {
         int firstVisiblePosition = getFirstVisiblePosition();
-        StableArrayAdapter adapter = ((StableArrayAdapter)getAdapter());
-        for(int i = 0; i < getChildCount(); i++) {
-            View v = getChildAt(i);
-            int position = firstVisiblePosition + i;
-            long id = adapter.getItemId(position);
-            if (id == itemID) {
-                return v;
+
+        if(repertorio != null){
+            MusicaRepertorioAdapter adapter = ((MusicaRepertorioAdapter) getAdapter());
+            for(int i = 0; i < getChildCount(); i++) {
+                View v = getChildAt(i);
+                int position = firstVisiblePosition + i;
+                long id = adapter.getItemId(position);
+                if (id == itemID) {
+                    return v;
+                }
+            }
+        } else{
+            StableArrayAdapter adapter = ((StableArrayAdapter)getAdapter());
+            for(int i = 0; i < getChildCount(); i++) {
+                View v = getChildAt(i);
+                int position = firstVisiblePosition + i;
+                long id = adapter.getItemId(position);
+                if (id == itemID) {
+                    return v;
+                }
             }
         }
+
+
         return null;
     }
 
@@ -488,24 +515,48 @@ public class DynamicListView extends ListView {
 
     private void atualizaOrdem(List<Musica> musicas){
         int total = musicas.size();
-        MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
 
-        for(int i = 0; i < total; i++){
-            MusicaEvento musicaEvento = new MusicaEvento();
-            Musica musica = musicas.get(i);
-            Evento evento = getEvento();
+        if(repertorio != null){
+            MusicaRepertorioDBHelper musicaRepertorioDBHelper = new MusicaRepertorioDBHelper(getContext());
 
-            musicaEvento.setMusica(musica);
-            musicaEvento.setEvento(evento);
+            for(int i = 0; i < total; i++){
+                MusicaRepertorio musicaRepertorio = new MusicaRepertorio();
+                Musica musica = musicas.get(i);
+                Repertorio repertorio = getRepertorio();
 
-            musicaEvento = musicaEventoDBHelper.carregarPorMusicaEEvento(getContext(), musicaEvento);
-            musicaEvento.setOrdem(i+1);
-            musicaEvento.setEnviado(-1);
-            musicaEvento.setUltimaAlteracao(Calendar.getInstance());
+                musicaRepertorio.setMusica(musica);
+                musicaRepertorio.setRepertorio(repertorio);
 
-            musicaEventoDBHelper.salvarOuAtualizar(getContext(), musicaEvento);
+                musicaRepertorio = musicaRepertorioDBHelper.carregarPorMusicaERepertorio(getContext(), musicaRepertorio);
+                musicaRepertorio.setOrdem(i+1);
+                musicaRepertorio.setEnviado(-1);
+                musicaRepertorio.setUltimaAlteracao(Calendar.getInstance());
 
+                musicaRepertorioDBHelper.salvarOuAtualizar(getContext(), musicaRepertorio);
+
+            }
+        } else{
+            MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
+
+            for(int i = 0; i < total; i++){
+                MusicaEvento musicaEvento = new MusicaEvento();
+                Musica musica = musicas.get(i);
+                Evento evento = getEvento();
+
+                musicaEvento.setMusica(musica);
+                musicaEvento.setEvento(evento);
+
+                musicaEvento = musicaEventoDBHelper.carregarPorMusicaEEvento(getContext(), musicaEvento);
+                musicaEvento.setOrdem(i+1);
+                musicaEvento.setEnviado(-1);
+                musicaEvento.setUltimaAlteracao(Calendar.getInstance());
+
+                musicaEventoDBHelper.salvarOuAtualizar(getContext(), musicaEvento);
+
+            }
         }
+
+
 
     }
 

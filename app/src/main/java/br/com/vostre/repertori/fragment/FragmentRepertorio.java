@@ -20,6 +20,7 @@ import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.RepertorioDetalheActivity;
 import br.com.vostre.repertori.adapter.RepertorioList;
 import br.com.vostre.repertori.form.ModalCadastroMusicaProjeto;
+import br.com.vostre.repertori.form.ModalCadastroRepertorio;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaRepertorio;
@@ -149,7 +150,7 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
             projeto.setId(idProjeto);
             projeto = projetoDBHelper.carregar(getContext(), projeto);
 
-            repertorios = repertorioDBHelper.listarTodosPorProjeto(getContext(), projeto);
+            repertorios = repertorioDBHelper.listarTodosAtivosPorProjeto(getContext(), projeto);
 
 
             return repertorios;
@@ -221,19 +222,25 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
         switch(parent.getId()){
             case R.id.listViewMusicasAtivas:
                 musica = musicasAtivas.get(position);
+                ModalCadastroMusicaProjeto modalCadastroMusicaProjeto = new ModalCadastroMusicaProjeto();
+                modalCadastroMusicaProjeto.setListener(this);
+                modalCadastroMusicaProjeto.setMusica(musica);
+                modalCadastroMusicaProjeto.setProjeto(projeto);
+
+                modalCadastroMusicaProjeto.show(this.getFragmentManager(), "modalMusicaProjeto");
                 break;
-//            case R.id.listViewMusicasEmEspera:
-//                musica = musicasEmEspera.get(position);
-//                break;
+            case R.id.listViewRepertorios:
+                Repertorio repertorio = repertorios.get(position);
+                ModalCadastroRepertorio modalCadastroRepertorio = new ModalCadastroRepertorio();
+                modalCadastroRepertorio.setListener(this);
+                modalCadastroRepertorio.setRepertorio(repertorio);
+
+                modalCadastroRepertorio.show(this.getFragmentManager(), "modalRepertorio");
+                break;
         }
 
 
-        ModalCadastroMusicaProjeto modalCadastroMusicaProjeto = new ModalCadastroMusicaProjeto();
-        modalCadastroMusicaProjeto.setListener(this);
-        modalCadastroMusicaProjeto.setMusica(musica);
-        modalCadastroMusicaProjeto.setProjeto(projeto);
 
-        modalCadastroMusicaProjeto.show(this.getFragmentManager(), "modalMusicaProjeto");
 
         return true;
 

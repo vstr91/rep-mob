@@ -32,6 +32,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import br.com.vostre.repertori.fragment.ArtistasFragment;
@@ -44,7 +45,9 @@ import br.com.vostre.repertori.fragment.ProjetosFragment;
 import br.com.vostre.repertori.listener.LoadListener;
 import br.com.vostre.repertori.service.AtualizaDadosService;
 import br.com.vostre.repertori.utils.Constants;
+import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
+import br.com.vostre.repertori.utils.ParametrosUtils;
 import br.com.vostre.repertori.utils.ServiceUtils;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
@@ -184,12 +187,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void iniciaServicoAtualizacao(){
 
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        String ultimoAcesso = ParametrosUtils.getDataUltimoAcesso(getBaseContext());
+        Calendar dataUltimoAcesso;
 
-        Intent serviceIntent = new Intent(this, AtualizaDadosService.class);
-        PendingIntent pi = PendingIntent.getService(this, 0, serviceIntent, 0);
+        if(!ultimoAcesso.equals("-")){
+            dataUltimoAcesso = DataUtils.bancoParaData(ultimoAcesso);
+        } else{
+            dataUltimoAcesso = Calendar.getInstance();
+            dataUltimoAcesso.add(Calendar.YEAR, -1);
+        }
 
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TimeUnit.MINUTES.toMillis(Constants.TEMPO_ATUALIZACAO), pi);
+        Calendar agora = Calendar.getInstance();
+
+        agora.add(Calendar.HOUR_OF_DAY, -1);
+
+        if(dataUltimoAcesso.before(agora) ){
+            Intent serviceIntent = new Intent(getBaseContext(), AtualizaDadosService.class);
+            stopService(serviceIntent);
+            startService(serviceIntent);
+        }
+
+//        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//
+//        Intent serviceIntent = new Intent(this, AtualizaDadosService.class);
+//        PendingIntent pi = PendingIntent.getService(this, 0, serviceIntent, 0);
+//
+//        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TimeUnit.MINUTES.toMillis(Constants.TEMPO_ATUALIZACAO), pi);
 
         //
 

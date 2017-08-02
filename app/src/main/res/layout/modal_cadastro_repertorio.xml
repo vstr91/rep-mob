@@ -21,10 +21,10 @@
     </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:text="Selecione o Projeto"
+        android:id="@+id/textViewProjeto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView5"
+        android:text="Selecione o Projeto"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <Spinner

@@ -39,7 +39,6 @@ public class MusicaRepertorioAdapter extends ArrayAdapter<Musica> {
     List<Musica> musicas;
     private Activity context;
     ImageButton btnExcluir;
-    ImageButton btnTempo;
     ButtonClickListener listener;
 
     public MusicaRepertorioAdapter(Activity context, int textViewResourceId, List<Musica> objects) {
@@ -55,16 +54,19 @@ public class MusicaRepertorioAdapter extends ArrayAdapter<Musica> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         final Musica musica = musicas.get(position);
 
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.listview_musicas_repertorio, null, true);
 
+        TextView textViewCont = (TextView) rowView.findViewById(R.id.textViewCont);
         TextView textViewNome = (TextView) rowView.findViewById(R.id.textViewNome);
         TextView textViewArtista = (TextView) rowView.findViewById(R.id.textViewArtista);
         TextView textViewTom = (TextView) rowView.findViewById(R.id.textViewTom);
         btnExcluir = (ImageButton) rowView.findViewById(R.id.btnExcluir);
-        btnTempo = (ImageButton) rowView.findViewById(R.id.btnTempo);
+
+        textViewCont.setText(String.valueOf(position+1));
 
         String tom = musica.getTom().equals("null") || musica.getTom().isEmpty() ? "-" : musica.getTom();
 
@@ -81,16 +83,6 @@ public class MusicaRepertorioAdapter extends ArrayAdapter<Musica> {
         });
 
         btnExcluir.setFocusable(false);
-
-        btnTempo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                listener.onButtonClicked(v, musica);
-            }
-        });
-
-        btnTempo.setFocusable(false);
 
         return rowView;
     }

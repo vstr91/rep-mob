@@ -51,9 +51,9 @@ public class RepertorioDBHelper extends SQLiteOpenHelper {
         return adapter.listarTodosAEnviar();
     }
 
-    public List<Repertorio> listarTodosPorProjeto(Context context, Projeto projeto){
+    public List<Repertorio> listarTodosAtivosPorProjeto(Context context, Projeto projeto){
         RepertorioDBAdapter adapter = new RepertorioDBAdapter(context, repDBHelper.getReadableDatabase());
-        return adapter.listarTodosPorProjeto(projeto);
+        return adapter.listarTodosAtivosPorProjeto(projeto);
     }
 
     public long salvarOuAtualizar(Context context, Repertorio repertorio){
