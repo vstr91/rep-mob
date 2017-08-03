@@ -1,5 +1,7 @@
 package br.com.vostre.repertori.utils;
 
+import android.text.format.DateUtils;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,6 +20,19 @@ public class DataUtils {
 
     public static Calendar bancoParaData(String data){
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            cal.setTime(df.parse(data));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return cal;
+    }
+
+    public static Calendar bancoParaDataComEspaco(String data){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'%20'HH:mm:ss");
         Calendar cal = Calendar.getInstance();
 
         try {
@@ -90,6 +105,19 @@ public class DataUtils {
         }
 
         return cal;
+    }
+
+    public static long tempoParaSegundos(String tempo){
+        String[] tempoSplit = tempo.split(":");
+        long minutos = Long.parseLong(tempoSplit[0]);
+        long segundos = Long.parseLong(tempoSplit[1]);
+
+        return minutos * 60 + segundos;
+
+    }
+
+    public static String segundosParaTempo(long segundos){
+        return DateUtils.formatElapsedTime(segundos);
     }
 
 }

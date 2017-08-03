@@ -76,6 +76,19 @@
         android:spinnerMode="dialog"
         android:entries="@array/valores_status" />
 
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Observações" />
+
+    <EditText
+        android:id="@+id/editTextObservacoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

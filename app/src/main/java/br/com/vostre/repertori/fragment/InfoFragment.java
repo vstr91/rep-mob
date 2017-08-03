@@ -25,10 +25,10 @@ import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
+import br.com.vostre.repertori.utils.ParametrosUtils;
 
 public class InfoFragment extends Fragment {
 
-    ParametroDBHelper parametroDBHelper;
     TextView textViewUltimaSincronizacao;
     TextView textViewVersao;
 
@@ -55,11 +55,10 @@ public class InfoFragment extends Fragment {
         textViewUltimaSincronizacao = (TextView) v.findViewById(R.id.textViewUltimoAcesso);
         textViewVersao = (TextView) v.findViewById(R.id.textViewVersao);
 
-        parametroDBHelper = new ParametroDBHelper(getContext());
-        String ultimoAcesso = parametroDBHelper.carregarUltimoAcesso(getContext());
+        String ultimoAcesso = ParametrosUtils.getDataUltimoAcesso(getContext());
 
         if(!ultimoAcesso.equals("-")){
-            Calendar calendar = DataUtils.bancoParaData(ultimoAcesso);
+            Calendar calendar = DataUtils.bancoParaDataComEspaco(ultimoAcesso);
 
             textViewUltimaSincronizacao.setText(DataUtils.toString(calendar, true));
         } else{

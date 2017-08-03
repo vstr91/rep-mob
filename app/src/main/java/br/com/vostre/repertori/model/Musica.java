@@ -30,6 +30,7 @@ public class Musica extends EntidadeBase {
     private Artista artista;
     private Estilo estilo;
     private String letra;
+    private String observacoes;
 
     private boolean checked;
 
@@ -89,6 +90,14 @@ public class Musica extends EntidadeBase {
         this.letra = letra;
     }
 
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
@@ -125,6 +134,7 @@ public class Musica extends EntidadeBase {
             umMusica.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
 
             umMusica.setLetra(object.getString("letra"));
+            umMusica.setObservacoes(object.getString("observacoes"));
 
             musicaDBHelper.salvarOuAtualizar(context, umMusica);
 
@@ -139,7 +149,8 @@ public class Musica extends EntidadeBase {
         String estilo = this.getEstilo() == null ? "null" : this.getEstilo().getId();
 
         resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"tom\": \""+this.getTom()+"\", " +
-                "\"artista\": \""+this.getArtista().getId()+"\",  \"status\": "+this.getStatus()+", \"estilo\": \""+estilo+"\", \"letra\": \""+this.getLetra()+"\"}";
+                "\"artista\": \""+this.getArtista().getId()+"\",  \"status\": "+this.getStatus()+", \"estilo\": \""+estilo+"\", \"letra\": \""+this.getLetra()+"\", " +
+                "\"observacoes\": \"" + this.getObservacoes() + "\"}";
 
 
         return resultado;
@@ -153,13 +164,21 @@ public class Musica extends EntidadeBase {
             long millis = 0;
 
             for(TempoMusicaEvento tme : tmes){
-                millis += tme.getTempo().getTimeInMillis();
+                Calendar tempo = tme.getTempo();
+                tempo.set(Calendar.DAY_OF_MONTH, 1);
+                tempo.set(Calendar.MONTH, 1);
+                tempo.set(Calendar.YEAR, 2000);
+
+                millis += tempo.getTimeInMillis();
             }
 
             long result = millis / tmes.size();
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(result);
 
+//            c.set(Calendar.DAY_OF_MONTH, 1);
+//            c.set(Calendar.MONTH, 1);
+//            c.set(Calendar.YEAR, 2000);
             return c;
         } else{
             return null;

@@ -61,6 +61,7 @@ public class MusicaDBAdapter {
 
         cv.put("ultima_alteracao", DataUtils.dataParaBanco(musica.getUltimaAlteracao()));
         cv.put("letra", musica.getLetra());
+        cv.put("observacoes", musica.getObservacoes());
 
         if(database.update("musica", cv, "_id = '"+musica.getId()+"'", null) < 1){
             retorno = database.insert("musica", null, cv);
@@ -81,7 +82,7 @@ public class MusicaDBAdapter {
 
     public List<Musica> listarTodos(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug, id_estilo, letra FROM musica ORDER BY nome COLLATE LOCALIZED", null);
+                "ultima_alteracao, slug, id_estilo, letra, observacoes FROM musica ORDER BY nome COLLATE LOCALIZED", null);
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){
@@ -125,6 +126,7 @@ public class MusicaDBAdapter {
                 }
 
                 umMusica.setLetra(cursor.getString(10));
+                umMusica.setObservacoes(cursor.getString(11));
 
                 musicas.add(umMusica);
             } while (cursor.moveToNext());
@@ -138,7 +140,7 @@ public class MusicaDBAdapter {
 
     public List<Musica> listarTodosAEnviar(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug, id_estilo, letra FROM musica WHERE enviado = -1", null);
+                "ultima_alteracao, slug, id_estilo, letra, observacoes FROM musica WHERE enviado = -1", null);
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){
@@ -179,6 +181,7 @@ public class MusicaDBAdapter {
                 }
 
                 umMusica.setLetra(cursor.getString(10));
+                umMusica.setObservacoes(cursor.getString(11));
 
                 musicas.add(umMusica);
             } while (cursor.moveToNext());
@@ -366,7 +369,7 @@ public class MusicaDBAdapter {
 
     public Musica carregar(Musica musica){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug, id_estilo, letra FROM musica WHERE _id = ?", new String[]{musica.getId()});
+                "ultima_alteracao, slug, id_estilo, letra, observacoes FROM musica WHERE _id = ?", new String[]{musica.getId()});
 
         Musica umMusica = null;
 
@@ -408,6 +411,7 @@ public class MusicaDBAdapter {
                 }
 
                 umMusica.setLetra(cursor.getString(10));
+                umMusica.setObservacoes(cursor.getString(11));
 
             } while (cursor.moveToNext());
         }

@@ -47,6 +47,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
     Button btnSalvar;
     Button btnFechar;
     Button btnCadastrarNovoArtista;
+    EditText editTextObservacoes;
 
     TextView textViewLabelStatus;
 
@@ -100,6 +101,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
         btnCadastrarNovoArtista = (Button) view.findViewById(R.id.btnCadastrarNovoArtista);
 
         textViewLabelStatus = (TextView) view.findViewById(R.id.textViewLabelStatus);
+        editTextObservacoes = (EditText) view.findViewById(R.id.editTextObservacoes);
 
         artistaDBHelper = new ArtistaDBHelper(getContext());
         artistas = artistaDBHelper.listarTodos(getContext());
@@ -158,6 +160,12 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
             int index = artistas.indexOf(artista);
             spinnerArtista.setSelection(index);
 
+            if(musica.getObservacoes() != null && !musica.getObservacoes().equals("") && !musica.getObservacoes().equals("null")){
+                editTextObservacoes.setText(musica.getObservacoes());
+            } else{
+                editTextObservacoes.setText("");
+            }
+
             switch(musica.getStatus()){
                 case 0:
                     spinnerStatus.setSelection(statusList.indexOf(ativo));
@@ -208,6 +216,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
 
                 String nome = editTextNome.getText().toString();
                 String tom = editTextTom.getText().toString();
+                String observacoes = editTextObservacoes.getText().toString();
                 StatusMusica status = (StatusMusica) spinnerStatus.getSelectedItem();
 
                 if(nome.isEmpty() || artista == null || (musica != null && status == null)){
@@ -219,6 +228,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                     if(getMusica() != null){
                         musica.setNome(nome);
                         musica.setTom(tom);
+                        musica.setObservacoes(observacoes);
                         musica.setArtista(artista);
                         musica.setEstilo(estilo);
                         musica.setUltimaAlteracao(Calendar.getInstance());
@@ -230,6 +240,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
                         musica = new Musica();
                         musica.setNome(nome);
                         musica.setTom(tom);
+                        musica.setObservacoes(observacoes);
                         musica.setArtista(artista);
                         musica.setEstilo(estilo);
                         musica.setDataCadastro(Calendar.getInstance());

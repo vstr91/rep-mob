@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
 
@@ -192,21 +193,25 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
     private String calcularTempoTotalRepertorio(){
         long tempoMedio = 0;
         int cont = 0;
+        BigInteger total = BigInteger.ZERO;
 
         for(Musica musica : musicasAtivas){
 
             Calendar c = musica.calcularMedia(getContext());
 
             if(c != null){
-                tempoMedio += c.getTimeInMillis();
+                //System.out.println(musica.getNome()+" | "+DataUtils.toStringSomenteHoras(c, 0)+" | "+DataUtils.tempoParaSegundos(DataUtils.toStringSomenteHoras(c, 1)));
+                total = total.add(BigInteger.valueOf(c.getTimeInMillis()));
+                tempoMedio += DataUtils.tempoParaSegundos(DataUtils.toStringSomenteHoras(c, 1));
                 cont++;
             }
 
         }
 
         Calendar tempoMedioAtivo = Calendar.getInstance();
-        tempoMedioAtivo.setTimeInMillis(tempoMedio);
-        return "Tempo Total: "+DataUtils.toStringSomenteHoras(tempoMedioAtivo, 1)+" ("+cont+" música(s) considerada(s))";
+        tempoMedioAtivo.setTimeInMillis(total.longValue());
+        //System.out.println("Tempo Médio: "+DataUtils.segundosParaTempo(tempoMedio));
+        return "Tempo Total: "+DataUtils.segundosParaTempo(tempoMedio)+" ("+cont+" música(s) considerada(s))";
     }
 
     @Override

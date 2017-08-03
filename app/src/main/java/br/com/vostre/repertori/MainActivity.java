@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar dataUltimoAcesso;
 
         if(!ultimoAcesso.equals("-")){
-            dataUltimoAcesso = DataUtils.bancoParaData(ultimoAcesso);
+            dataUltimoAcesso = DataUtils.bancoParaDataComEspaco(ultimoAcesso);
         } else{
             dataUltimoAcesso = Calendar.getInstance();
             dataUltimoAcesso.add(Calendar.YEAR, -1);
@@ -200,6 +200,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar agora = Calendar.getInstance();
 
         agora.add(Calendar.HOUR_OF_DAY, -1);
+        System.out.println("Acesso: "+DataUtils.toString(dataUltimoAcesso, true));
+        System.out.println("Agora: "+DataUtils.toString(agora, true));
 
         if(dataUltimoAcesso.before(agora) ){
             Intent serviceIntent = new Intent(getBaseContext(), AtualizaDadosService.class);
