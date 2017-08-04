@@ -12,7 +12,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,15 +48,17 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     TextView textViewArtista;
     TextView textViewTom;
     ListView listViewExecucoes;
-    ListView listViewExecucoesCronometradas;
+//    ListView listViewExecucoesCronometradas;
     EventoList adapterEventos;
-    TempoList adapterExecucoes;
+//    TempoList adapterExecucoes;
     Button btnBuscaVideo;
     TextView textViewMedia;
     Button btnLetra;
     Button btnEditaLetra;
 
     LineChart chart;
+    TextView textViewLabelObservacoes;
+    TextView textViewObservacoes;
 
     Musica musica;
 
@@ -59,7 +70,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         List<Evento> eventos;
         MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
 
-        List<TempoMusicaEvento> tmes;
+        final List<TempoMusicaEvento> tmes;
         TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -73,12 +84,14 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         textViewArtista = (TextView) findViewById(R.id.textViewArtista);
         textViewTom = (TextView) findViewById(R.id.textViewTom);
         listViewExecucoes = (ListView) findViewById(R.id.listViewExecucoes);
-        listViewExecucoesCronometradas = (ListView) findViewById(R.id.listViewExecucoesCronometradas);
+//        listViewExecucoesCronometradas = (ListView) findViewById(R.id.listViewExecucoesCronometradas);
         btnBuscaVideo = (Button) findViewById(R.id.btnBuscaVideo);
         textViewMedia = (TextView) findViewById(R.id.textViewMedia);
         btnLetra = (Button) findViewById(R.id.btnLetra);
         btnEditaLetra = (Button) findViewById(R.id.btnEditaLetra);
         chart = (LineChart) findViewById(R.id.chart);
+        textViewObservacoes = (TextView) findViewById(R.id.textViewObservacoes);
+        textViewLabelObservacoes = (TextView) findViewById(R.id.textViewLabelObservacoes);
 
         btnBuscaVideo.setOnClickListener(this);
         btnLetra.setOnClickListener(this);
@@ -108,28 +121,96 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
         tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica, 10);
 
-//        List<Entry> dados = new ArrayList<>();
-//
-//        long ultimoStamp = tmes.get(0).getMusicaEvento().getEvento().getData().getTimeInMillis();
-//
-//        for(TempoMusicaEvento tme : tmes){
-//
-//            long date = tme.getMusicaEvento().getEvento().getData().getTimeInMillis();
-//            int dateInt =  (int) ultimoStamp - date;
-//
-//
-//
-//            dados.add(new Entry(,
-//                    DataUtils.toStringSomenteHoras(tme.getTempo(), 1)));
-//        }
+        if(!musica.getObservacoes().equals("null") && !musica.getObservacoes().isEmpty()){
+            textViewObservacoes.setText(musica.getObservacoes());
+        } else{
+            textViewLabelObservacoes.setVisibility(View.GONE);
+            textViewObservacoes.setVisibility(View.GONE);
+        }
 
-        adapterExecucoes =
-                new TempoList(this, android.R.layout.simple_spinner_dropdown_item, tmes);
+        if(tmes.size() > 0){
+            int cont = 0;
+            List<Entry> dados = new ArrayList<>();
 
-        adapterEventos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+            //long ultimoStamp = tmes.get(0).getMusicaEvento().getEvento().getData().getTimeInMillis();
 
-        listViewExecucoesCronometradas.setAdapter(adapterExecucoes);
-        listViewExecucoesCronometradas.setEmptyView(findViewById(R.id.textViewListaVaziaCronometro));
+            for(TempoMusicaEvento tme : tmes){
+
+                String tempo = DataUtils.toStringSomenteHoras(tme.getTempo(), 1);
+                //int dateInt =  (int) ultimoStamp - date;
+
+
+
+                dados.add(new Entry(cont, DataUtils.tempoParaSegundos(tempo)));
+                cont++;
+            }
+
+            LineDataSet dataSet = new LineDataSet(dados, "Tempos");
+            dataSet.setDrawFilled(true);
+
+            dataSet.setValueFormatter(new IValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                    return DataUtils.segundosParaTempo((long) value);
+                }
+            });
+
+            dataSet.setColor(R.color.colorPrimary);
+
+            LineData lineData = new LineData(dataSet);
+            chart.setData(lineData);
+
+            XAxis xAxis = chart.getXAxis();
+            xAxis.setGranularity(1f);
+            xAxis.setValueFormatter(new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+
+                    TempoMusicaEvento tme = null;
+
+                    try{
+                        tme = tmes.get((int) value);
+                    }catch(ArrayIndexOutOfBoundsException e){
+                        return "";
+                    }
+
+
+                    if(tme != null){
+                        return DataUtils.toString(tme.getUltimaAlteracao(), false);
+                    } else{
+                        return String.valueOf(value);
+                    }
+
+
+                }
+            });
+
+            IAxisValueFormatter formatterY  = new IAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    return DataUtils.segundosParaTempo((long) value);
+                }
+            };
+
+            YAxis yAxis = chart.getAxisLeft();
+            yAxis.setValueFormatter(formatterY);
+
+            YAxis yAxisRight = chart.getAxisRight();
+            yAxisRight.setValueFormatter(formatterY);
+
+            chart.setExtraOffsets(10f, 10f, 10f, 10f);
+
+            chart.invalidate();
+
+        }
+
+//        adapterExecucoes =
+//                new TempoList(this, android.R.layout.simple_spinner_dropdown_item, tmes);
+//
+//        adapterEventos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+//
+//        listViewExecucoesCronometradas.setAdapter(adapterExecucoes);
+//        listViewExecucoesCronometradas.setEmptyView(findViewById(R.id.textViewListaVaziaCronometro));
 
         Calendar c = musica.calcularMedia(getBaseContext());
 
@@ -148,7 +229,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         Evento evento = adapterEventos.getItem(position);
 
         Intent intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
-        intent.putExtra("repertorio", evento.getId());
+        intent.putExtra("evento", evento.getId());
         startActivity(intent);
 
     }

@@ -173,38 +173,45 @@
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-            <ListView
-                android:id="@+id/listViewExecucoesCronometradas"
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="10" />
+                android:layout_weight="8"
+                android:visibility="visible" />
+
+            <!--<ListView-->
+                <!--android:id="@+id/listViewExecucoesCronometradas"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="10" />-->
 
 
+
+            <!--<TextView-->
+                <!--android:id="@+id/textViewListaVaziaCronometro"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--android:padding="5dp"-->
+                <!--android:text="Nenhum tempo encontrado"-->
+                <!--android:visibility="gone" />-->
 
             <TextView
-                android:id="@+id/textViewListaVaziaCronometro"
+                android:id="@+id/textViewLabelObservacoes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Nenhum tempo encontrado"
-                android:visibility="gone" />
+                android:text="Observações"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textViewObservacoes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            </LinearLayout>
+                android:padding="5dp" />
 
         </LinearLayout>
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:visibility="gone" />
 
     </LinearLayout>
 
