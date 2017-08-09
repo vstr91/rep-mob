@@ -1,9 +1,11 @@
 package br.com.vostre.repertori.fragment;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.res.ResourcesCompat;
@@ -50,6 +52,8 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
 
     ListView listViewTiposEvento;
 
+    ModalEventos modalEventos;
+
     public EventosFragment() {
         // Required empty public constructor
     }
@@ -95,16 +99,8 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
             @Override
             public void onSelectDate(Date date, View view) {
 
-                dataEscolhida = Calendar.getInstance();
-                dataEscolhida.setTime(date);
+                abrirModalData(date);
 
-                List<Evento> eventosData = eventoDBHelper.listarTodosPorData(getContext(), dataEscolhida);
-
-                if(eventosData.size() > 0){
-                    abrirModalEventos(eventosData);
-                } else{
-                    abrirModalHora();
-                }
             }
 
             @Override
@@ -118,6 +114,36 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
         atualizaCalendario();
 
         caldroidFragment.refreshView();
+
+        if(savedInstanceState != null){
+
+            if(savedInstanceState.getLong("data") > 0){
+                Date date = new Date(savedInstanceState.getLong("data"));
+                abrirModalData(date);
+            }
+
+            ModalCadastroEvento modalCadastroEvento = (ModalCadastroEvento) getFragmentManager()
+                    .findFragmentByTag("modalEvento");
+
+            if (modalCadastroEvento != null) {
+                modalCadastroEvento.setListener(this);
+            }
+
+            ModalHora modalHora = (ModalHora) getFragmentManager()
+                    .findFragmentByTag("modalHora");
+
+            if (modalHora != null) {
+                modalHora.setListener(this);
+            }
+
+            ModalEventos modalEventos = (ModalEventos) getFragmentManager()
+                    .findFragmentByTag("modalEventos");
+
+            if (modalEventos != null) {
+                modalEventos.setListener(this);
+            }
+
+        }
 
         return v;
     }
@@ -187,12 +213,25 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void abrirModalEventos(List<Evento> eventos){
-        ModalEventos modalEventos = new ModalEventos();
+        modalEventos = new ModalEventos();
         modalEventos.setEventos(eventos);
         modalEventos.setListener(this);
         modalEventos.setData(dataEscolhida);
 
         modalEventos.show(getFragmentManager(), "modalEventos");
+    }
+
+    private void abrirModalData(Date date){
+        dataEscolhida = Calendar.getInstance();
+        dataEscolhida.setTime(date);
+
+        List<Evento> eventosData = eventoDBHelper.listarTodosPorData(getContext(), dataEscolhida);
+
+        if(eventosData.size() > 0){
+            abrirModalEventos(eventosData);
+        } else{
+            abrirModalHora();
+        }
     }
 
     @Override

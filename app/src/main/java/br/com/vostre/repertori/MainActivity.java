@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FragmentManager fragmentManager;
     Dialog dialogLoad;
 
+    int fragmentoAtual;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +78,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         navView.setNavigationItemSelectedListener(this);
 
-        fragmentClass = EventosFragment.class;
+        if(savedInstanceState != null && savedInstanceState.getInt("fragmento") > 0) {
+            fragmentoAtual = savedInstanceState.getInt("fragmento");
+            carregaFragmentoAtual(fragmentoAtual);
+
+        } else{
+            fragmentClass = EventosFragment.class;
+        }
+
+
         fragmentManager = getSupportFragmentManager();
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -142,6 +152,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 //        GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
 //        textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putInt("fragmento", fragmentoAtual);
+
+        super.onSaveInstanceState(outState);
 
     }
 
@@ -283,7 +302,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-        switch (menuItem.getItemId()){
+        carregaFragmentoAtual(menuItem.getItemId());
+
+        fragmentoAtual = menuItem.getItemId();
+
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        drawer.closeDrawers();
+
+        return true;
+    }
+
+    @Override
+    public void onLoadFinished() {
+
+        if(dialogLoad != null){
+            dialogLoad.dismiss();
+        }
+
+    }
+
+    private void carregaFragmentoAtual(int fragmentoAtual){
+
+        switch (fragmentoAtual){
             case R.id.projetos:
                 fragmentClass = ProjetosFragment.class;
                 break;
@@ -304,19 +345,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
 
-        menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
-        drawer.closeDrawers();
-
-        return true;
     }
 
-    @Override
-    public void onLoadFinished() {
-
-        if(dialogLoad != null){
-            dialogLoad.dismiss();
-        }
-
-    }
 }

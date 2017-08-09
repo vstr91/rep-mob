@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme">
         <service android:name=".service.AtualizaDadosService" android:enabled="true" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,35 +29,43 @@
         </activity>
         <activity
             android:name=".RepertorioActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_repertorio" />
         <activity
             android:name=".EventosActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_eventos" />
         <activity
             android:name=".MusicaDetalheActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_musica_detalhe" />
         <activity
             android:name=".EventoDetalheActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_evento_detalhe" />
         <activity
             android:name=".RepertorioDetalheActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_repertorio_detalhe" />
         <activity android:name=".BaseActivity" />
         <activity
             android:name=".ArtistasActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_artistas" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RelatoriosActivity" />
-        <activity android:name=".CronometroActivity" />
-        <activity android:name=".MusicaProjetoActivity"></activity>
-        <activity android:name=".MusicaRepertorioActivity"></activity>
-        <activity android:name=".MusicaEventoActivity"
+        <activity android:name=".LoginActivity" android:screenOrientation="portrait" />
+        <activity android:name=".RelatoriosActivity" android:screenOrientation="portrait" />
+        <activity android:name=".CronometroActivity" android:screenOrientation="portrait" />
+        <activity android:name=".MusicaProjetoActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".MusicaRepertorioActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".MusicaEventoActivity" android:screenOrientation="portrait"
             android:label="@string/title_activity_musica_evento"></activity>
         <activity
             android:name=".EstiloDetalheActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_estilo_detalhe" />
         <activity
             android:name=".ArtistaDetalheActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_artista_detalhe" />
     </application>
 

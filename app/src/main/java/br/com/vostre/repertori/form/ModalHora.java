@@ -56,6 +56,8 @@ public class ModalHora extends android.support.v4.app.DialogFragment implements 
 
         timePicker.setIs24HourView(true);
 
+        setRetainInstance(true);
+
         return view;
 
     }
@@ -67,6 +69,16 @@ public class ModalHora extends android.support.v4.app.DialogFragment implements 
         // request a window without the title
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Dialog dialog = getDialog();
+        // handles https://code.google.com/p/android/issues/detail?id=17423
+        if (dialog != null && getRetainInstance()) {
+            dialog.setDismissMessage(null);
+        }
+        super.onDestroyView();
     }
 
     public ModalHoraListener getListener() {
@@ -91,11 +103,18 @@ public class ModalHora extends android.support.v4.app.DialogFragment implements 
                     hora = timePicker.getCurrentHour()+":"+timePicker.getCurrentMinute();
                 }
 
-                listener.onModalHoraDismissed(hora);
+                if(listener != null){
+                    listener.onModalHoraDismissed(hora);
+                }
+
                 dismiss();
                 break;
             case R.id.btnFechar:
-                listener.onModalHoraDismissed(null);
+
+                //if(listener != null){
+                    listener.onModalHoraDismissed(null);
+                //}
+
                 dismiss();
                 break;
         }

@@ -87,8 +87,20 @@ public class ModalEventos extends android.support.v4.app.DialogFragment implemen
             listViewEventos.setOnItemClickListener(this);
         }
 
+        setRetainInstance(true);
+
         return view;
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        Dialog dialog = getDialog();
+        // handles https://code.google.com/p/android/issues/detail?id=17423
+        if (dialog != null && getRetainInstance()) {
+            dialog.setDismissMessage(null);
+        }
+        super.onDestroyView();
     }
 
     @Override

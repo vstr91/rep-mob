@@ -65,7 +65,10 @@ public class ProjetosFragment extends Fragment implements AdapterView.OnItemClic
         listViewProjetos.setAdapter(adapter);
         listViewProjetos.setOnItemClickListener(this);
 
-        listener.onLoadFinished();
+        if(listener != null){
+            listener.onLoadFinished();
+        }
+
 
         return v;
     }

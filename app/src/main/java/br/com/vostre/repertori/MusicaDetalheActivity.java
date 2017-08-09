@@ -1,10 +1,12 @@
 package br.com.vostre.repertori;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -119,6 +121,16 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         listViewExecucoes.setOnItemClickListener(this);
         listViewExecucoes.setEmptyView(findViewById(R.id.textViewListaVazia));
 
+        listViewExecucoes.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
         tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica, 10);
 
         if(!musica.getObservacoes().equals("null") && !musica.getObservacoes().isEmpty()){
@@ -127,6 +139,11 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             textViewLabelObservacoes.setVisibility(View.GONE);
             textViewObservacoes.setVisibility(View.GONE);
         }
+
+        chart.setExtraOffsets(10f, 10f, 10f, 10f);
+        chart.getDescription().setEnabled(false);
+        chart.setNoDataText("Nenhum registro encontrado.");
+        chart.setNoDataTextColor(R.color.colorAccent);
 
         if(tmes.size() > 0){
             int cont = 0;
@@ -147,6 +164,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
             LineDataSet dataSet = new LineDataSet(dados, "Tempos");
             dataSet.setDrawFilled(true);
+            dataSet.setFillColor(R.color.colorAccent);
 
             dataSet.setValueFormatter(new IValueFormatter() {
                 @Override
@@ -155,7 +173,9 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
                 }
             });
 
-            dataSet.setColor(R.color.colorPrimary);
+            dataSet.setColor(Color.RED);
+            dataSet.setValueTextSize(12f);
+            dataSet.setValueTextColor(Color.RED);
 
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);
@@ -170,7 +190,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
                     try{
                         tme = tmes.get((int) value);
-                    }catch(ArrayIndexOutOfBoundsException e){
+                    }catch(IndexOutOfBoundsException e){
                         return "";
                     }
 
@@ -194,11 +214,11 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
             YAxis yAxis = chart.getAxisLeft();
             yAxis.setValueFormatter(formatterY);
+            yAxis.setGranularity(10f);
 
             YAxis yAxisRight = chart.getAxisRight();
             yAxisRight.setValueFormatter(formatterY);
-
-            chart.setExtraOffsets(10f, 10f, 10f, 10f);
+            yAxisRight.setGranularity(10f);
 
             chart.invalidate();
 
