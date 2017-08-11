@@ -23,6 +23,7 @@
         android:id="@+id/btnFiltros"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        style="@style/botao"
         android:layout_weight=".1"
         android:text="Filtros" />
 
@@ -43,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnSalvar"
+            style="@style/botao"
             android:layout_weight="1" />
 
         <Button
@@ -50,6 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnFechar"
+            style="@style/botao"
             android:layout_weight="1" />
     </LinearLayout>
 

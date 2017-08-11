@@ -5,6 +5,12 @@
         <item name="android:dividerHeight">0.5dp</item>
     </style>
 
+    <!--<style name="ListView" parent="@android:style/Widget.ListView">-->
+        <!--<item name="android:background">@color/white</item>-->
+        <!--<item name="android:divider">@color/colorAccent</item>-->
+        <!--<item name="android:dividerHeight">1dp</item>-->
+    <!--</style>-->
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -12,6 +18,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item>
+    </style>
+
+    <style name="botao" parent="Base.TextAppearance.AppCompat.Button">
+        <item name="android:background">@drawable/botao</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_margin">5dp</item>
     </style>
 
 </resources>

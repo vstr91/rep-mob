@@ -25,7 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Selecione o Projeto"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
 
     <Spinner
         android:layout_width="match_parent"
@@ -35,11 +36,12 @@
         android:spinnerMode="dialog" />
 
     <TextView
-        android:text="Selecione o Status"
+        android:id="@+id/textViewLabelStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewLabelStatus"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:text="Selecione o Status"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
 
     <Spinner
         android:layout_width="match_parent"
@@ -58,6 +60,7 @@
             android:text="Salvar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/botao"
             android:id="@+id/btnSalvar"
             android:layout_weight="1" />
 
@@ -65,6 +68,7 @@
             android:text="Cancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/botao"
             android:id="@+id/btnFechar"
             android:layout_weight="1" />
     </LinearLayout>

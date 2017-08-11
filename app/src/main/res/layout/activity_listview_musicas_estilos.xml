@@ -27,6 +27,7 @@
             <com.github.mikephil.charting.charts.RadarChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
+                android:background="@drawable/lista"
                 android:layout_height="350dp"
                 android:layout_weight="8"></com.github.mikephil.charting.charts.RadarChart>
 
@@ -53,6 +54,7 @@
                 android:id="@+id/listViewMusicasExecucoes"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:background="@drawable/lista"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2" />
 

@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:minHeight="0dp"
         android:text="Letra não cadastrada"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold" />
 
@@ -48,6 +49,7 @@
             android:id="@+id/btnSalvar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            style="@style/botao"
             android:layout_weight="1"
             android:text="Salvar" />
 
@@ -55,6 +57,7 @@
             android:id="@+id/btnFechar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            style="@style/botao"
             android:layout_weight="1"
             android:text="Fechar" />
     </LinearLayout>

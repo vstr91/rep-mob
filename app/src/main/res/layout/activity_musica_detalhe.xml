@@ -116,30 +116,43 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2.3"
-                    android:orientation="horizontal">
+                    android:layout_weight="2.5"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp">
 
                     <Button
                         android:id="@+id/btnLetra"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:text="Ver Letra" />
+                        android:background="@drawable/botao"
+                        android:text="Ver Letra"
+                        android:textColor="@color/white" />
 
                     <Button
                         android:id="@+id/btnEditaLetra"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:text="Editar Letra" />
+                        android:background="@drawable/botao"
+                        android:text="Editar Letra"
+                        android:textColor="@color/white" />
 
                     <Button
                         android:id="@+id/btnBuscaVideo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:text="Pesquisar Vídeos"
-                        android:textAlignment="center" />
+                        android:background="@drawable/botao"
+                        android:text="Vídeos"
+                        android:textAlignment="center"
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -153,15 +166,18 @@
                         android:id="@+id/textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
+                        android:padding="5dp"
                         android:text="Execuções"
                         android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                        android:textAllCaps="false"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textStyle="bold" />
 
                     <ListView
                         android:id="@+id/listViewExecucoes"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:background="@drawable/lista"
                         android:layout_weight="4" />
 
                     <TextView
@@ -176,19 +192,24 @@
                     <TextView
                         android:id="@+id/textView2"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1.5"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:paddingBottom="0dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="Tempos Registrados"
                         android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textStyle="bold" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/chart"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="7"
-                        android:minHeight="160dp"
+                        android:minHeight="142dp"
+                        android:background="@drawable/lista"
                         android:visibility="visible" />
 
                     <!--<ListView-->
@@ -212,9 +233,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:padding="10dp"
                         android:text="Observações"
                         android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewObservacoes"

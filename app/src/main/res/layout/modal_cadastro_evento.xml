@@ -49,6 +49,7 @@
             android:text="Trocar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            style="@style/botao"
             android:id="@+id/btnData"
             android:layout_weight="1" />
 
@@ -107,6 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnSalvar"
+            style="@style/botao"
             android:layout_weight="1" />
 
         <Button
@@ -114,6 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnFechar"
+            style="@style/botao"
             android:layout_weight="1" />
     </LinearLayout>
 

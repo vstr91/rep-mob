@@ -22,13 +22,14 @@
             android:padding="5dp">
 
             <TextView
-                android:text="TextView"
+                android:id="@+id/textViewNome"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:id="@+id/textViewNome"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_weight=".23"
+                android:text="TextView"
                 android:textAlignment="center"
-                android:layout_weight=".23" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
 
             <TextView
                 android:text="TextView"
@@ -39,20 +40,21 @@
                 android:layout_weight=".25" />
 
             <TextView
-                android:text="Repertório"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
                 android:id="@+id/textView"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Repertório"
                 android:textAlignment="center"
-                android:paddingTop="10dp"
-                android:layout_weight=".5" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
 
             <br.com.vostre.repertori.utils.DynamicListView
                 android:layout_width="match_parent"
                 android:id="@+id/listViewMusicas"
                 android:focusable="true"
                 android:layout_height="0dp"
+                android:background="@drawable/lista"
                 android:layout_weight="1.5" />
 
             <TextView
@@ -65,24 +67,29 @@
                 android:visibility="gone" />
 
             <Button
-                android:text="Adiciona Música"
+                android:id="@+id/btnAdicionaMusica"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/btnAdicionaMusica" />
+                android:layout_marginTop="5dp"
+                android:background="@drawable/botao"
+                android:text="Adiciona Música"
+                android:textColor="@color/white" />
 
             <TextView
-                android:text="Comentários"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
                 android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Comentários"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:layout_weight=".25"
-                android:gravity="center" />
+                android:textStyle="bold" />
 
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:background="@drawable/lista"
                 android:id="@+id/listViewComentarios" />
 
             <TextView
@@ -112,6 +119,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:id="@+id/btnComentario"
+                    android:background="@drawable/botao"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1" />
             </LinearLayout>
 

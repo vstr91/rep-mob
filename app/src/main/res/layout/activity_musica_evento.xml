@@ -42,6 +42,7 @@
                     android:id="@+id/btnAnterior"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    style="@style/botao"
                     android:layout_weight="1"
                     android:text="Anterior" />
 
@@ -49,6 +50,7 @@
                     android:id="@+id/btnProximo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    style="@style/botao"
                     android:layout_weight="1"
                     android:text="Próximo" />
             </LinearLayout>
