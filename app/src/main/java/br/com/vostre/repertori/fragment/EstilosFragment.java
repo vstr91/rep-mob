@@ -1,6 +1,8 @@
 package br.com.vostre.repertori.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -24,6 +26,8 @@ import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.EstiloDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.utils.DialogUtils;
 
 public class EstilosFragment extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
 
@@ -32,6 +36,8 @@ public class EstilosFragment extends Fragment implements AdapterView.OnItemClick
     EstiloDBHelper estiloDBHelper;
     List<Estilo> estilos;
     FloatingActionButton fabNova;
+
+    Dialog dialogLoad;
 
     public EstilosFragment() {
         // Required empty public constructor
@@ -56,15 +62,10 @@ public class EstilosFragment extends Fragment implements AdapterView.OnItemClick
         listViewEstilos = (ListView) v.findViewById(R.id.listViewEstilos);
         fabNova = (FloatingActionButton) v.findViewById(R.id.fabNova);
 
-        estiloDBHelper = new EstiloDBHelper(getContext());
-        estilos = estiloDBHelper.listarTodos(getContext());
-
-        adapter = new EstiloList(getActivity(), R.layout.listview_estilos, estilos);
-        listViewEstilos.setAdapter(adapter);
-        listViewEstilos.setOnItemClickListener(this);
-        listViewEstilos.setOnItemLongClickListener(this);
-
         fabNova.setOnClickListener(this);
+
+        CarregarItens carregarItens = new CarregarItens();
+        carregarItens.execute();
 
         return v;
     }
@@ -80,7 +81,7 @@ public class EstilosFragment extends Fragment implements AdapterView.OnItemClick
 
     public void atualizaLista(){
         estilos = estiloDBHelper.listarTodos(getContext());
-        adapter = new EstiloList(getActivity(), android.R.layout.simple_spinner_dropdown_item, estilos);
+        adapter = new EstiloList(getActivity(), android.R.layout.simple_spinner_dropdown_item, estilos, true);
 
         if(listViewEstilos != null){
             listViewEstilos.setAdapter(adapter);
@@ -119,6 +120,35 @@ public class EstilosFragment extends Fragment implements AdapterView.OnItemClick
 
         return true;
 
+    }
+
+    private class CarregarItens extends AsyncTask<Void, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Carregando dados", "Por favor aguarde...");
+            dialogLoad.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            estiloDBHelper = new EstiloDBHelper(getContext());
+            estilos = estiloDBHelper.listarTodos(getContext());
+
+            adapter = new EstiloList(getActivity(), R.layout.listview_estilos, estilos, true);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String tempo) {
+            super.onPostExecute(tempo);
+            listViewEstilos.setAdapter(adapter);
+            listViewEstilos.setOnItemClickListener(EstilosFragment.this);
+            listViewEstilos.setOnItemLongClickListener(EstilosFragment.this);
+            dialogLoad.dismiss();
+        }
     }
 
 }

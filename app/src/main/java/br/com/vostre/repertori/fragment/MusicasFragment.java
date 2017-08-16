@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -138,6 +137,13 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
     private class CarregarItens extends AsyncTask<Void, String, String> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Carregando dados", "Por favor aguarde...");
+            dialogLoad.show();
+        }
+
+        @Override
         protected String doInBackground(Void... voids) {
             musicaDBHelper = new MusicaDBHelper(getContext());
             musicas = musicaDBHelper.listarTodos(getContext());
@@ -153,7 +159,7 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
             listViewMusicas.setAdapter(adapter);
             listViewMusicas.setOnItemClickListener(MusicasFragment.this);
             listViewMusicas.setOnItemLongClickListener(MusicasFragment.this);
-            listener.onLoadFinished();
+            dialogLoad.dismiss();
         }
     }
 

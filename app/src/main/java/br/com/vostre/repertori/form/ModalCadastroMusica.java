@@ -105,11 +105,11 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
 
         artistaDBHelper = new ArtistaDBHelper(getContext());
         artistas = artistaDBHelper.listarTodos(getContext());
-        adapterArtista = new ArtistaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas);
+        adapterArtista = new ArtistaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas, false);
 
         estiloDBHelper = new EstiloDBHelper(getContext());
         estilos = estiloDBHelper.listarTodos(getContext());
-        EstiloList adapterEstilo = new EstiloList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, estilos);
+        EstiloList adapterEstilo = new EstiloList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, estilos, false);
 
         statusList = new ArrayList<>();
 
@@ -288,7 +288,7 @@ public class ModalCadastroMusica extends android.support.v4.app.DialogFragment i
 
     public void atualizaArtistas(){
         artistas = artistaDBHelper.listarTodos(getContext());
-        adapterArtista = new ArtistaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas);
+        adapterArtista = new ArtistaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas, false);
         spinnerArtista.setAdapter(adapterArtista);
     }
 

@@ -58,7 +58,7 @@ public class ModalMusicaProjeto extends android.support.v4.app.DialogFragment im
         MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(getContext());
 
         projetos = musicaProjetoDBHelper.listarTodosDisponiveisMusica(getContext(), musica);
-        ProjetoList adapter = new ProjetoList(getActivity(), R.layout.listview_estilos, projetos);
+        ProjetoList adapter = new ProjetoList(getActivity(), R.layout.listview_estilos, projetos, false);
 
         spinnerProjetos.setAdapter(adapter);
         spinnerProjetos.setOnItemSelectedListener(this);

@@ -20,12 +20,14 @@ public class EstiloList extends ArrayAdapter<Estilo> {
 
     private final Activity context;
     private final List<Estilo> estilos;
+    private final boolean completo;
 
 
-    public EstiloList(Activity context, int resource, List<Estilo> objects) {
+    public EstiloList(Activity context, int resource, List<Estilo> objects, boolean completo) {
         super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.estilos = objects;
+        this.completo = completo;
     }
 
     @Override
@@ -38,7 +40,12 @@ public class EstiloList extends ArrayAdapter<Estilo> {
         Estilo estilo = estilos.get(position);
 
         textViewNome.setText(estilo.getNome());
-        textViewMusicas.setText(estilo.contarMusicasAtivas(getContext())+" música(s)");
+
+        if(completo){
+            textViewMusicas.setText(estilo.contarMusicasAtivas(getContext())+" música(s)");
+        } else{
+            textViewMusicas.setVisibility(View.GONE);
+        }
 
         return rowView;
     }

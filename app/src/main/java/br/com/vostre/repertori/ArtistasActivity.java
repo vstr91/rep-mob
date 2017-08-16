@@ -71,7 +71,7 @@ public class ArtistasActivity extends BaseActivity implements ModalCadastroListe
     private void carregarLista(){
         artistas = artistaDBHelper.listarTodos(getBaseContext());
 
-        ArtistaList adapterArtistas = new ArtistaList(this, android.R.layout.simple_spinner_dropdown_item, artistas);
+        ArtistaList adapterArtistas = new ArtistaList(this, android.R.layout.simple_spinner_dropdown_item, artistas, true);
         listViewArtistas.setAdapter(adapterArtistas);
     }
 

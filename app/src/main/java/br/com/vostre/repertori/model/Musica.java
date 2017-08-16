@@ -31,6 +31,7 @@ public class Musica extends EntidadeBase {
     private Estilo estilo;
     private String letra;
     private String observacoes;
+    private String cifra;
 
     private boolean checked;
 
@@ -98,6 +99,14 @@ public class Musica extends EntidadeBase {
         this.observacoes = observacoes;
     }
 
+    public String getCifra() {
+        return cifra;
+    }
+
+    public void setCifra(String cifra) {
+        this.cifra = cifra;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
@@ -135,6 +144,7 @@ public class Musica extends EntidadeBase {
 
             umMusica.setLetra(object.getString("letra"));
             umMusica.setObservacoes(object.getString("observacoes"));
+            umMusica.setCifra(object.getString("cifra"));
 
             musicaDBHelper.salvarOuAtualizar(context, umMusica);
 
@@ -150,6 +160,7 @@ public class Musica extends EntidadeBase {
 
         resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"tom\": \""+this.getTom()+"\", " +
                 "\"artista\": \""+this.getArtista().getId()+"\",  \"status\": "+this.getStatus()+", \"estilo\": \""+estilo+"\", \"letra\": \""+this.getLetra()+"\", " +
+                "\"cifra\": \"" + this.getCifra() + "\", " +
                 "\"observacoes\": \"" + this.getObservacoes() + "\"}";
 
 

@@ -20,12 +20,13 @@ public class ProjetoList extends ArrayAdapter<Projeto> {
 
     private final Activity context;
     private final List<Projeto> projetos;
+    private final boolean completo;
 
-
-    public ProjetoList(Activity context, int resource, List<Projeto> objects) {
+    public ProjetoList(Activity context, int resource, List<Projeto> objects, boolean completo) {
         super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.projetos = objects;
+        this.completo = completo;
     }
 
     @Override
@@ -38,7 +39,12 @@ public class ProjetoList extends ArrayAdapter<Projeto> {
         Projeto projeto = projetos.get(position);
 
         textViewNome.setText(projeto.getNome());
-        textViewMusicas.setText(projeto.contarMusicasAtivas(getContext())+" música(s)");
+
+        if(completo){
+            textViewMusicas.setText(projeto.contarMusicasAtivas(getContext())+" música(s)");
+        } else{
+            textViewMusicas.setVisibility(View.GONE);
+        }
 
         return rowView;
     }

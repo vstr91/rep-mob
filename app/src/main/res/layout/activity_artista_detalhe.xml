@@ -60,6 +60,7 @@
             <ListView
                 android:id="@+id/listViewMusicas"
                 android:layout_width="match_parent"
+                android:background="@drawable/lista"
                 android:layout_height="0dp"
                 android:layout_weight="10" />
 

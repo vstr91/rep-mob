@@ -85,8 +85,8 @@ public class ModalFiltros extends android.support.v4.app.DialogFragment implemen
         estilos = estiloDBHelper.listarTodos(getContext());
         artistas = artistaDBHelper.listarTodos(getContext());
 
-        ArtistaList adapterArtistas = new ArtistaList(getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas);
-        EstiloList adapterEstilos = new EstiloList(getActivity(), android.R.layout.simple_spinner_dropdown_item, estilos);
+        ArtistaList adapterArtistas = new ArtistaList(getActivity(), android.R.layout.simple_spinner_dropdown_item, artistas, false);
+        EstiloList adapterEstilos = new EstiloList(getActivity(), android.R.layout.simple_spinner_dropdown_item, estilos, false);
 
         Artista aTodos = new Artista();
         aTodos.setId("-1");

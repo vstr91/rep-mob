@@ -1,8 +1,11 @@
 package br.com.vostre.repertori.fragment;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,19 +17,27 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import br.com.vostre.repertori.MainActivity;
 import br.com.vostre.repertori.MusicaProjetoActivity;
 import br.com.vostre.repertori.R;
+import br.com.vostre.repertori.adapter.MusicaList;
 import br.com.vostre.repertori.adapter.ProjetoList;
 import br.com.vostre.repertori.listener.LoadListener;
 import br.com.vostre.repertori.model.Projeto;
+import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
+import br.com.vostre.repertori.utils.DialogUtils;
 
-public class ProjetosFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ProjetosFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     ListView listViewProjetos;
     List<Projeto> projetos;
 
     LoadListener listener;
+
+    ProjetoDBHelper projetoDBHelper;
+    ProjetoList adapter;
+    Dialog dialogLoad;
 
     public LoadListener getListener() {
         return listener;
@@ -58,17 +69,8 @@ public class ProjetosFragment extends Fragment implements AdapterView.OnItemClic
 
         listViewProjetos = (ListView) v.findViewById(R.id.listViewProjetos);
 
-        ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(getContext());
-        projetos = projetoDBHelper.listarTodosAtivos(getContext());
-
-        ProjetoList adapter = new ProjetoList(getActivity(), R.layout.listview_projetos, projetos);
-        listViewProjetos.setAdapter(adapter);
-        listViewProjetos.setOnItemClickListener(this);
-
-        if(listener != null){
-            listener.onLoadFinished();
-        }
-
+        CarregarItens carregarItens = new CarregarItens();
+        carregarItens.execute();
 
         return v;
     }
@@ -81,6 +83,40 @@ public class ProjetosFragment extends Fragment implements AdapterView.OnItemClic
         intent.putExtra("projeto", projeto.getId());
         startActivity(intent);
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        return false;
+    }
+
+    private class CarregarItens extends AsyncTask<Void, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Carregando dados", "Por favor aguarde...");
+            dialogLoad.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            projetoDBHelper = new ProjetoDBHelper(getContext());
+            projetos = projetoDBHelper.listarTodosAtivos(getContext());
+
+            adapter = new ProjetoList(getActivity(), R.layout.listview_projetos, projetos, false);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String tempo) {
+            super.onPostExecute(tempo);
+            listViewProjetos.setAdapter(adapter);
+            listViewProjetos.setOnItemClickListener(ProjetosFragment.this);
+            listViewProjetos.setOnItemLongClickListener(ProjetosFragment.this);
+            dialogLoad.dismiss();
+        }
     }
 
 }

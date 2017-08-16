@@ -99,7 +99,7 @@ public class ModalCadastroRepertorio extends android.support.v4.app.DialogFragme
 
         projetoDBHelper = new ProjetoDBHelper(getContext());
         projetos = projetoDBHelper.listarTodosAtivos(getContext());
-        ProjetoList adapterProjeto = new ProjetoList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, projetos);
+        ProjetoList adapterProjeto = new ProjetoList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, projetos, false);
 
         statusList = new ArrayList<>();
 

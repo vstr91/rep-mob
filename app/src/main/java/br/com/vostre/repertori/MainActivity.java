@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Dialog dialogLoad;
 
     int fragmentoAtual;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             fragment = (ProjetosFragment) fragmentClass.newInstance();
                             ProjetosFragment f2 = (ProjetosFragment) fragment;
                             f2.setListener(MainActivity.this);
-                            insereFragmento(f2, false);
+                            insereFragmento(f2, true);
                             break;
                         default:
                             fragment = (Fragment) fragmentClass.newInstance();
@@ -168,12 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(f != null){
             fragmentManager.beginTransaction().replace(R.id.conteudo, f).commit();
             fragmentManager.executePendingTransactions();
-
-            if(modal){
-                dialogLoad = DialogUtils.criarAlertaCarregando(MainActivity.this, "Carregando dados", "Por favor aguarde...");
-                dialogLoad.show();
-            }
-
         }
     }
 
@@ -316,8 +313,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onLoadFinished() {
 
-        if(dialogLoad != null){
-            dialogLoad.dismiss();
+        if(pd != null){
+            pd.dismiss();
         }
 
     }

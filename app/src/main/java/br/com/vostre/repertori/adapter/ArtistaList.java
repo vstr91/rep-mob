@@ -21,12 +21,14 @@ public class ArtistaList extends ArrayAdapter<Artista> {
 
     private final Activity context;
     private final List<Artista> artistas;
+    private final boolean completo;
 
 
-    public ArtistaList(Activity context, int resource, List<Artista> objects) {
+    public ArtistaList(Activity context, int resource, List<Artista> objects, boolean completo) {
         super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.artistas = objects;
+        this.completo = completo;
     }
 
     @Override
@@ -39,7 +41,14 @@ public class ArtistaList extends ArrayAdapter<Artista> {
         Artista artista = artistas.get(position);
 
         textViewNome.setText(artista.getNome());
-        textViewMusicas.setText(artista.contarMusicasAtivas(getContext())+" música(s)");
+
+        if(completo){
+            textViewMusicas.setText(artista.contarMusicasAtivas(getContext())+" música(s)");
+        } else{
+            textViewMusicas.setVisibility(View.GONE);
+        }
+
+
 
         return rowView;
     }

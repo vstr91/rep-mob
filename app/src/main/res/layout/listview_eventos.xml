@@ -34,6 +34,7 @@
                 android:id="@+id/textViewData"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_weight="1"
+                android:textColor="@color/grey500"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center_vertical" />
 
