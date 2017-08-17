@@ -1,49 +1,36 @@
 package br.com.vostre.repertori.fragment;
 
 import android.animation.ObjectAnimator;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import java.util.List;
-
-import br.com.vostre.repertori.ArtistaDetalheActivity;
 import br.com.vostre.repertori.R;
-import br.com.vostre.repertori.adapter.ArtistaList;
-import br.com.vostre.repertori.form.ModalCadastroArtista;
-import br.com.vostre.repertori.listener.ModalCadastroListener;
-import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Musica;
-import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.utils.CustomScrollView;
 
-public class LetraFragment extends Fragment implements CustomScrollView.OnScrollChangedListener, View.OnTouchListener {
+public class CifraFragment extends Fragment implements CustomScrollView.OnScrollChangedListener, View.OnTouchListener {
 
     TextView textViewNome;
     TextView textViewArtista;
-    TextView textViewLetra;
+    TextView textViewCifra;
     CustomScrollView scrollView;
     MusicaDBHelper musicaDBHelper;
     ObjectAnimator animator;
 
-    public LetraFragment() {
+    public CifraFragment() {
         // Required empty public constructor
     }
 
 
-    public static LetraFragment newInstance() {
-        LetraFragment fragment = new LetraFragment();
+    public static CifraFragment newInstance() {
+        CifraFragment fragment = new CifraFragment();
         return fragment;
     }
 
@@ -55,11 +42,11 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_letra, container, false);
+        View v = inflater.inflate(R.layout.fragment_cifra, container, false);
 
         textViewNome = (TextView) v.findViewById(R.id.textViewNome);
         textViewArtista = (TextView) v.findViewById(R.id.textViewArtista);
-        textViewLetra = (TextView) v.findViewById(R.id.textViewLetra);
+        textViewCifra = (TextView) v.findViewById(R.id.textViewCifra);
         scrollView = (CustomScrollView) v.findViewById(R.id.scrollView);
 
         musicaDBHelper = new MusicaDBHelper(getContext());
@@ -70,11 +57,13 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
         textViewNome.setText(musica.getNome());
         textViewArtista.setText(musica.getArtista().getNome());
 
-        if(!musica.getLetra().equals("null") && !musica.getLetra().isEmpty()){
-            textViewLetra.setText(musica.getLetra());
+        if(!musica.getCifra().equals("null") && !musica.getCifra().isEmpty()){
+            textViewCifra.setText(musica.getCifra());
         } else{
-            textViewLetra.setText("Letra não cadastrada.");
+            textViewCifra.setText("Cifra não cadastrada.");
         }
+
+
 
 //        scrollView.setOnScrollChangedListener(this);
         scrollView.setOnTouchListener(this);

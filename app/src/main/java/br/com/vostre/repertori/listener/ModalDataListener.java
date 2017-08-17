@@ -5,8 +5,8 @@ import java.util.Calendar;
 /**
  * Created by Almir on 30/11/2015.
  */
-public interface ModalHoraListener {
+public interface ModalDataListener {
 
-    public void onModalHoraDismissed(Calendar data);
+    public void onModalDataDismissed(Calendar data);
 
 }

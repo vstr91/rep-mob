@@ -13,7 +13,7 @@
         android:id="@+id/textViewMusica"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Letra não cadastrada"
+        android:text="Cifra não cadastrada"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold" />
@@ -23,7 +23,7 @@
         style="@style/botao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Editar Letra" />
+        android:text="Editar Cifra" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewLetra"
+                android:id="@+id/textViewCifra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />

@@ -180,18 +180,17 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
     private void abrirModalHora(){
         ModalHora modalHora = new ModalHora();
         modalHora.setListener(this);
+        modalHora.setData(dataEscolhida);
 
         modalHora.show(getFragmentManager(), "modalHora");
     }
 
     @Override
-    public void onModalHoraDismissed(String hora) {
+    public void onModalHoraDismissed(Calendar hora) {
 
         if(hora != null){
-            String[] dadosHora = hora.split(":");
-
-            dataEscolhida.set(Calendar.HOUR_OF_DAY, Integer.parseInt(dadosHora[0]));
-            dataEscolhida.set(Calendar.MINUTE, Integer.parseInt(dadosHora[1]));
+            dataEscolhida.set(Calendar.HOUR_OF_DAY, hora.get(Calendar.HOUR_OF_DAY));
+            dataEscolhida.set(Calendar.MINUTE, hora.get(Calendar.MINUTE));
             abrirModalCadastro(null, dataEscolhida);
         }
 

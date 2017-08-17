@@ -59,6 +59,8 @@
         <activity android:name=".MusicaRepertorioActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".MusicaEventoActivity" android:screenOrientation="portrait"
             android:label="@string/title_activity_musica_evento"></activity>
+        <activity android:name=".CifraMusicaEventoActivity" android:screenOrientation="portrait"
+            android:label="@string/title_activity_cifra_musica_evento"></activity>
         <activity
             android:name=".EstiloDetalheActivity"
             android:screenOrientation="portrait"

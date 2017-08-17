@@ -32,6 +32,7 @@ import java.util.List;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
 import br.com.vostre.repertori.adapter.TempoList;
+import br.com.vostre.repertori.form.ModalCifra;
 import br.com.vostre.repertori.form.ModalEditaLetra;
 import br.com.vostre.repertori.form.ModalLetra;
 import br.com.vostre.repertori.model.Evento;
@@ -56,7 +57,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     Button btnBuscaVideo;
     TextView textViewMedia;
     Button btnLetra;
-    Button btnEditaLetra;
+    Button btnCifra;
 
     LineChart chart;
     TextView textViewLabelObservacoes;
@@ -90,14 +91,14 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         btnBuscaVideo = (Button) findViewById(R.id.btnBuscaVideo);
         textViewMedia = (TextView) findViewById(R.id.textViewMedia);
         btnLetra = (Button) findViewById(R.id.btnLetra);
-        btnEditaLetra = (Button) findViewById(R.id.btnEditaLetra);
+        btnCifra = (Button) findViewById(R.id.btnCifra);
         chart = (LineChart) findViewById(R.id.chart);
         textViewObservacoes = (TextView) findViewById(R.id.textViewObservacoes);
         textViewLabelObservacoes = (TextView) findViewById(R.id.textViewLabelObservacoes);
 
         btnBuscaVideo.setOnClickListener(this);
         btnLetra.setOnClickListener(this);
-        btnEditaLetra.setOnClickListener(this);
+        btnCifra.setOnClickListener(this);
 
         musica = new Musica();
         musica.setId(getIntent().getStringExtra("musica"));
@@ -274,11 +275,11 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
                 modalLetra.show(getSupportFragmentManager(), "modalLetra");
                 break;
-            case R.id.btnEditaLetra:
-                ModalEditaLetra modalEditaLetra = new ModalEditaLetra();
-                modalEditaLetra.setMusica(musica);
+            case R.id.btnCifra:
+                ModalCifra modalCifra = new ModalCifra();
+                modalCifra.setMusica(musica);
 
-                modalEditaLetra.show(getSupportFragmentManager(), "modalEditaLetra");
+                modalCifra.show(getSupportFragmentManager(), "modalCifra");
                 break;
         }
 

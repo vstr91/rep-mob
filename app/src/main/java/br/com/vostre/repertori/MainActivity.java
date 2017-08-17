@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawer.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        iniciaServicoAtualizacao();
+        ServiceUtils.iniciaServicoAtualizacao(true, getBaseContext());
 
 //        GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
 //        textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
@@ -201,53 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    private void iniciaServicoAtualizacao(){
 
-        String ultimoAcesso = ParametrosUtils.getDataUltimoAcesso(getBaseContext());
-        Calendar dataUltimoAcesso;
-
-        if(!ultimoAcesso.equals("-")){
-            dataUltimoAcesso = DataUtils.bancoParaDataComEspaco(ultimoAcesso);
-        } else{
-            dataUltimoAcesso = Calendar.getInstance();
-            dataUltimoAcesso.add(Calendar.YEAR, -1);
-        }
-
-        Calendar agora = Calendar.getInstance();
-
-        agora.add(Calendar.HOUR_OF_DAY, -1);
-        System.out.println("Acesso: "+DataUtils.toString(dataUltimoAcesso, true));
-        System.out.println("Agora: "+DataUtils.toString(agora, true));
-
-        if(dataUltimoAcesso.before(agora) ){
-            Intent serviceIntent = new Intent(getBaseContext(), AtualizaDadosService.class);
-            stopService(serviceIntent);
-            startService(serviceIntent);
-        }
-
-//        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//
-//        Intent serviceIntent = new Intent(this, AtualizaDadosService.class);
-//        PendingIntent pi = PendingIntent.getService(this, 0, serviceIntent, 0);
-//
-//        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TimeUnit.MINUTES.toMillis(Constants.TEMPO_ATUALIZACAO), pi);
-
-        //
-
-//        final ServiceUtils serviceUtils = new ServiceUtils();
-//        Intent serviceIntent = new Intent(getBaseContext(), AtualizaDadosService.class);
-//
-//        final ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-//
-//        if(!serviceUtils.isMyServiceRunning(AtualizaDadosService.class, manager)){
-//            stopService(serviceIntent);
-//            startService(serviceIntent);
-//            //Toast.makeText(this, "Iniciando serviço...", Toast.LENGTH_LONG).show();
-//        } else{
-//            //Toast.makeText(this, "Serviço já rodando...", Toast.LENGTH_LONG).show();
-//        }
-
-    }
 
     @Override
     public void onClick(View v) {

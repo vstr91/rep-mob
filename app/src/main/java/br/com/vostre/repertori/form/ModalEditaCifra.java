@@ -3,7 +3,6 @@ package br.com.vostre.repertori.form;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Display;
@@ -13,20 +12,19 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TimePicker;
+import android.widget.Toast;
 
 import br.com.vostre.repertori.R;
-import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Musica;
-import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 
-public class ModalLetra extends android.support.v4.app.DialogFragment implements View.OnClickListener {
+public class ModalEditaCifra extends android.support.v4.app.DialogFragment implements View.OnClickListener {
 
+    Button btnSalvar;
     Button btnFechar;
-    Button btnEditar;
-    TextView textViewLetra;
+    EditText editTextCifra;
     TextView textViewMusica;
     Musica musica;
 
@@ -41,7 +39,7 @@ public class ModalLetra extends android.support.v4.app.DialogFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.modal_letra, container, false);
+        View view = inflater.inflate(R.layout.modal_edita_cifra, container, false);
 
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -51,16 +49,16 @@ public class ModalLetra extends android.support.v4.app.DialogFragment implements
 
         view.setMinimumWidth(width);
 
+        btnSalvar = (Button) view.findViewById(R.id.btnSalvar);
         btnFechar = (Button) view.findViewById(R.id.btnFechar);
-        btnEditar = (Button) view.findViewById(R.id.btnEditar);
         textViewMusica = (TextView) view.findViewById(R.id.textViewMusica);
-        textViewLetra = (TextView) view.findViewById(R.id.textViewLetra);
+        editTextCifra = (EditText) view.findViewById(R.id.editTextCifra);
 
         textViewMusica.setText(musica.getNome());
-        textViewLetra.setText(musica.getLetra());
+        editTextCifra.setText(musica.getCifra());
 
         btnFechar.setOnClickListener(this);
-        btnEditar.setOnClickListener(this);
+        btnSalvar.setOnClickListener(this);
 
         return view;
 
@@ -79,15 +77,16 @@ public class ModalLetra extends android.support.v4.app.DialogFragment implements
     public void onClick(View v) {
 
         switch(v.getId()){
-            case R.id.btnFechar:
+            case R.id.btnSalvar:
+                musica.setCifra(editTextCifra.getText().toString());
+                musica.setEnviado(-1);
+                MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getContext());
+                musicaDBHelper.salvarOuAtualizar(getContext(), musica);
+                Toast.makeText(getContext(), "Cifra Cadastrada!", Toast.LENGTH_SHORT).show();
                 dismiss();
                 break;
-            case R.id.btnEditar:
+            case R.id.btnFechar:
                 dismiss();
-                ModalEditaLetra modalEditaLetra = new ModalEditaLetra();
-                modalEditaLetra.setMusica(musica);
-
-                modalEditaLetra.show(getFragmentManager(), "modalEditaLetra");
                 break;
         }
 

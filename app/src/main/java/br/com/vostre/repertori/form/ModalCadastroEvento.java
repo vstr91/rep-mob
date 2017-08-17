@@ -28,6 +28,7 @@ import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.ProjetoList;
 import br.com.vostre.repertori.adapter.TipoEventoList;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
+import br.com.vostre.repertori.listener.ModalDataListener;
 import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Evento;
@@ -43,7 +44,7 @@ import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 
-public class ModalCadastroEvento extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, ModalHoraListener {
+public class ModalCadastroEvento extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, ModalHoraListener, ModalDataListener {
 
     EditText editTextNome;
     TextView textViewData;
@@ -258,10 +259,11 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
                 dismiss();
                 break;
             case R.id.btnData:
-                ModalHora modalHora = new ModalHora();
-                modalHora.setListener(this);
+                ModalData modalData = new ModalData();
+                modalData.setListener(this);
+                modalData.setData(data);
 
-                modalHora.show(getFragmentManager(), "modalHora");
+                modalData.show(getFragmentManager(), "modalData");
                 break;
         }
 
@@ -285,15 +287,30 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
     }
 
     @Override
-    public void onModalHoraDismissed(String hora) {
+    public void onModalHoraDismissed(Calendar hora) {
 
         if(hora != null){
-            String[] stringHora = hora.split(":");
-
-            data.set(Calendar.HOUR_OF_DAY, Integer.parseInt(stringHora[0]));
-            data.set(Calendar.MINUTE, Integer.parseInt(stringHora[1]));
+            this.data = hora;
 
             textViewData.setText(DataUtils.toString(data, true));
+        }
+
+    }
+
+    @Override
+    public void onModalDataDismissed(Calendar data) {
+
+        if(data != null){
+            this.data.set(Calendar.DAY_OF_MONTH, data.get(Calendar.DAY_OF_MONTH));
+            this.data.set(Calendar.MONTH, data.get(Calendar.MONTH));
+            this.data.set(Calendar.YEAR, data.get(Calendar.YEAR));
+
+            ModalHora modalHora = new ModalHora();
+            modalHora.setListener(this);
+            modalHora.setData(this.data);
+            modalHora.setEvento(evento);
+
+            modalHora.show(getFragmentManager(), "modalHora");
         }
 
     }

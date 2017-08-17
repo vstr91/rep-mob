@@ -134,13 +134,13 @@
                         android:textColor="@color/white" />
 
                     <Button
-                        android:id="@+id/btnEditaLetra"
+                        android:id="@+id/btnCifra"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@drawable/botao"
-                        android:text="Editar Letra"
+                        android:text="Ver Cifra"
                         android:textColor="@color/white" />
 
                     <Button

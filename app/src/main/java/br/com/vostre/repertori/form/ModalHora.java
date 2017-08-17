@@ -20,12 +20,14 @@ import android.widget.Toast;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.StatusMusica;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.utils.SnackbarHelper;
@@ -37,6 +39,24 @@ public class ModalHora extends android.support.v4.app.DialogFragment implements 
     TimePicker timePicker;
 
     ModalHoraListener listener;
+    Calendar data;
+    Evento evento;
+
+    public Calendar getData() {
+        return data;
+    }
+
+    public void setData(Calendar data) {
+        this.data = data;
+    }
+
+    public Evento getEvento() {
+        return evento;
+    }
+
+    public void setEvento(Evento evento) {
+        this.evento = evento;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,6 +75,18 @@ public class ModalHora extends android.support.v4.app.DialogFragment implements 
         btnFechar.setOnClickListener(this);
 
         timePicker.setIs24HourView(true);
+
+        if(data != null){
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                timePicker.setHour(data.get(Calendar.HOUR_OF_DAY));
+                timePicker.setMinute(data.get(Calendar.MINUTE));
+            } else{
+                timePicker.setCurrentHour(data.get(Calendar.HOUR_OF_DAY));
+                timePicker.setCurrentMinute(data.get(Calendar.MINUTE));
+            }
+
+        }
 
         setRetainInstance(true);
 
@@ -97,14 +129,27 @@ public class ModalHora extends android.support.v4.app.DialogFragment implements 
 
                 String hora = "";
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    hora = timePicker.getHour()+":"+timePicker.getMinute();
-                } else{
-                    hora = timePicker.getCurrentHour()+":"+timePicker.getCurrentMinute();
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    hora = timePicker.getHour()+":"+timePicker.getMinute();
+//                } else{
+//                    hora = timePicker.getCurrentHour()+":"+timePicker.getCurrentMinute();
+//                }
+
+                if(data != null){
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        data.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                        data.set(Calendar.MINUTE, timePicker.getMinute());
+                    } else{
+                        data.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+                        data.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+                    }
+
+
                 }
 
                 if(listener != null){
-                    listener.onModalHoraDismissed(hora);
+                    listener.onModalHoraDismissed(data);
                 }
 
                 dismiss();

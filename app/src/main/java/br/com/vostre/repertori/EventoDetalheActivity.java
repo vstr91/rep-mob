@@ -144,6 +144,11 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
                 intent.putExtra("repertorio", evento.getId());
                 startActivity(intent);
                 break;
+            case R.id.icon_cifras:
+                intent = new Intent(this, CifraMusicaEventoActivity.class);
+                intent.putExtra("repertorio", evento.getId());
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

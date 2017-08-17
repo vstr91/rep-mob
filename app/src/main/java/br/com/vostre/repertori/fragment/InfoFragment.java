@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.vostre.repertori.ArtistaDetalheActivity;
+import br.com.vostre.repertori.MainActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ArtistaList;
 import br.com.vostre.repertori.form.ModalCadastroArtista;
@@ -26,11 +28,13 @@ import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.ParametrosUtils;
+import br.com.vostre.repertori.utils.ServiceUtils;
 
-public class InfoFragment extends Fragment {
+public class InfoFragment extends Fragment implements View.OnClickListener {
 
     TextView textViewUltimaSincronizacao;
     TextView textViewVersao;
+    Button btnAtualizar;
 
     public InfoFragment() {
         // Required empty public constructor
@@ -54,6 +58,7 @@ public class InfoFragment extends Fragment {
 
         textViewUltimaSincronizacao = (TextView) v.findViewById(R.id.textViewUltimoAcesso);
         textViewVersao = (TextView) v.findViewById(R.id.textViewVersao);
+        btnAtualizar = (Button) v.findViewById(R.id.btnAtualizar);
 
         String ultimoAcesso = ParametrosUtils.getDataUltimoAcesso(getContext());
 
@@ -75,8 +80,19 @@ public class InfoFragment extends Fragment {
             e.printStackTrace();
         }
 
+        btnAtualizar.setOnClickListener(this);
 
         return v;
     }
 
+    @Override
+    public void onClick(View view) {
+
+        switch(view.getId()){
+            case R.id.btnAtualizar:
+                ServiceUtils.iniciaServicoAtualizacao(false, getContext());
+                break;
+        }
+
+    }
 }

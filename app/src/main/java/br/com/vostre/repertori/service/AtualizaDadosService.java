@@ -103,6 +103,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         serverUtils = new ServerUtils(AtualizaDadosService.this, true);
         serverUtils.setOnResultsListener(AtualizaDadosService.this);
         serverUtils.execute(new String[]{Constants.SERVIDOR_TESTE, String.valueOf(Constants.PORTA_SERVIDOR)});
+        Toast.makeText(this, "Iniciando atualização.", Toast.LENGTH_LONG).show();
         System.out.println("INICIOU");
 
     }
@@ -483,6 +484,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         } catch (Exception e) {
             this.stopSelf();
             System.out.println("TERMINOU ERRO 1");
+            Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
 
@@ -531,6 +533,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     ParametrosUtils.setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
                 }
 
+                Toast.makeText(this, "Seu sistema já está atualizado.", Toast.LENGTH_LONG).show();
                 this.stopSelf();
                 System.out.println("TERMINOU SEM REGISTROS");
             }
@@ -586,6 +589,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             Intent intent = new Intent("AtualizaDadosService");
             intent.putExtra("registros", registros);
             broadcaster.sendBroadcast(intent);
+            Toast.makeText(this, "Atualização finalizada com sucesso.", Toast.LENGTH_LONG).show();
             this.stopSelf();
             System.out.println("TERMINOU");
         }

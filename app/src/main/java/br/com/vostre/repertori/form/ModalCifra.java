@@ -3,7 +3,6 @@ package br.com.vostre.repertori.form;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Display;
@@ -14,19 +13,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import br.com.vostre.repertori.R;
-import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Musica;
-import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
-import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 
-public class ModalLetra extends android.support.v4.app.DialogFragment implements View.OnClickListener {
+public class ModalCifra extends android.support.v4.app.DialogFragment implements View.OnClickListener {
 
     Button btnFechar;
     Button btnEditar;
-    TextView textViewLetra;
+    TextView textViewCifra;
     TextView textViewMusica;
     Musica musica;
 
@@ -41,7 +36,7 @@ public class ModalLetra extends android.support.v4.app.DialogFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.modal_letra, container, false);
+        View view = inflater.inflate(R.layout.modal_cifra, container, false);
 
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -54,10 +49,10 @@ public class ModalLetra extends android.support.v4.app.DialogFragment implements
         btnFechar = (Button) view.findViewById(R.id.btnFechar);
         btnEditar = (Button) view.findViewById(R.id.btnEditar);
         textViewMusica = (TextView) view.findViewById(R.id.textViewMusica);
-        textViewLetra = (TextView) view.findViewById(R.id.textViewLetra);
+        textViewCifra = (TextView) view.findViewById(R.id.textViewCifra);
 
         textViewMusica.setText(musica.getNome());
-        textViewLetra.setText(musica.getLetra());
+        textViewCifra.setText(musica.getCifra());
 
         btnFechar.setOnClickListener(this);
         btnEditar.setOnClickListener(this);
@@ -84,10 +79,10 @@ public class ModalLetra extends android.support.v4.app.DialogFragment implements
                 break;
             case R.id.btnEditar:
                 dismiss();
-                ModalEditaLetra modalEditaLetra = new ModalEditaLetra();
-                modalEditaLetra.setMusica(musica);
+                ModalEditaCifra modalEditaCifra = new ModalEditaCifra();
+                modalEditaCifra.setMusica(musica);
 
-                modalEditaLetra.show(getFragmentManager(), "modalEditaLetra");
+                modalEditaCifra.show(getFragmentManager(), "modalEditaCifra");
                 break;
         }
 
