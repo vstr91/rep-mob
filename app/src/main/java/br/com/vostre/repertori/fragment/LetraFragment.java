@@ -15,8 +15,11 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.List;
 
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.ArtistaDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ArtistaList;
@@ -26,6 +29,7 @@ import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.CustomScrollView;
 
 public class LetraFragment extends Fragment implements CustomScrollView.OnScrollChangedListener, View.OnTouchListener {
@@ -36,6 +40,8 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
     CustomScrollView scrollView;
     MusicaDBHelper musicaDBHelper;
     ObjectAnimator animator;
+
+    Tracker mTracker;
 
     public LetraFragment() {
         // Required empty public constructor
@@ -49,6 +55,8 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        App application = (App) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
         super.onCreate(savedInstanceState);
     }
 

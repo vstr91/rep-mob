@@ -14,6 +14,7 @@ import java.util.List;
 
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.form.ModalOpcoesMusica;
 import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
@@ -22,7 +23,7 @@ import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
-public class EstiloDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class EstiloDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     TextView textViewNome;
     ListView listViewMusicas;
@@ -33,12 +34,14 @@ public class EstiloDetalheActivity extends BaseActivity implements AdapterView.O
     Estilo estilo;
     List<Musica> musicas;
 
+    MusicaDBHelper musicaDBHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_estilo_detalhe);
 
-        MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
+        musicaDBHelper = new MusicaDBHelper(getApplicationContext());
         EstiloDBHelper estiloDBHelper = new EstiloDBHelper(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -57,15 +60,10 @@ public class EstiloDetalheActivity extends BaseActivity implements AdapterView.O
 
         textViewNome.setText(estilo.getNome());
 
-        musicas = musicaDBHelper.listarTodosPorEstilo(getApplicationContext(), estilo);
+        atualizarTabela();
 
-        adapter =
-                new MusicaList(this, android.R.layout.simple_spinner_dropdown_item, musicas);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
-
-        listViewMusicas.setAdapter(adapter);
         listViewMusicas.setOnItemClickListener(this);
+        listViewMusicas.setOnItemLongClickListener(this);
         listViewMusicas.setEmptyView(findViewById(R.id.textViewListaVazia));
 
 //        Calendar c = null;
@@ -79,6 +77,17 @@ public class EstiloDetalheActivity extends BaseActivity implements AdapterView.O
         textViewMedia.setText(musicas.size()+" música(s)");
         calcularTempoTotalRepertorio();
 
+    }
+
+    private void atualizarTabela() {
+        musicas = musicaDBHelper.listarTodosPorEstilo(getApplicationContext(), estilo);
+
+        adapter =
+                new MusicaList(this, android.R.layout.simple_spinner_dropdown_item, musicas);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+        listViewMusicas.setAdapter(adapter);
     }
 
     private void calcularTempoTotalRepertorio(){
@@ -118,4 +127,23 @@ public class EstiloDetalheActivity extends BaseActivity implements AdapterView.O
 
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Musica musica = musicas.get(position);
+
+        ModalOpcoesMusica modalOpcoesMusica = new ModalOpcoesMusica();
+        modalOpcoesMusica.setMusica(musica);
+
+        modalOpcoesMusica.show(getSupportFragmentManager(), "modalOpcoesMusica");
+
+        return true;
+
+    }
+
+    @Override
+    protected void onResume() {
+        atualizarTabela();
+        super.onResume();
+    }
 }

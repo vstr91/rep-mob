@@ -1,10 +1,14 @@
 package br.com.vostre.repertori.fragment;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +16,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.MusicaDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.RepertorioDetalheActivity;
@@ -57,6 +65,16 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
 
     Projeto projeto;
     Dialog dialogLoad;
+    BroadcastReceiver br;
+
+    Tracker mTracker;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        App application = (App) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -249,6 +267,30 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
 
         return true;
 
+    }
+
+    @Override
+    public void onResume() {
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                CarregarItens carregarItens = new CarregarItens();
+                carregarItens.execute();
+            }
+        };
+
+        mTracker.setScreenName("Tela Repertório");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(br, new IntentFilter("br.com.vostre.repertori.AtualizaDadosService"));
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(br);
+        super.onPause();
     }
 
     private class CarregarItens extends AsyncTask<Void, String, String>{

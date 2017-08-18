@@ -10,9 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.CustomScrollView;
 
 public class CifraFragment extends Fragment implements CustomScrollView.OnScrollChangedListener, View.OnTouchListener {
@@ -23,6 +28,7 @@ public class CifraFragment extends Fragment implements CustomScrollView.OnScroll
     CustomScrollView scrollView;
     MusicaDBHelper musicaDBHelper;
     ObjectAnimator animator;
+    Tracker mTracker;
 
     public CifraFragment() {
         // Required empty public constructor
@@ -36,6 +42,8 @@ public class CifraFragment extends Fragment implements CustomScrollView.OnScroll
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        App application = (App) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
         super.onCreate(savedInstanceState);
     }
 
@@ -70,6 +78,13 @@ public class CifraFragment extends Fragment implements CustomScrollView.OnScroll
         scrollDown();
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        mTracker.setScreenName("Tela Cifra");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        super.onResume();
     }
 
     @Override

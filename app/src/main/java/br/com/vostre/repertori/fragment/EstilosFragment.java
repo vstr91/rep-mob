@@ -13,8 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.List;
 
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.EstiloDetalheActivity;
 import br.com.vostre.repertori.MusicaDetalheActivity;
 import br.com.vostre.repertori.R;
@@ -27,6 +31,7 @@ import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.EstiloDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
+import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.DialogUtils;
 
 public class EstilosFragment extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
@@ -38,6 +43,7 @@ public class EstilosFragment extends Fragment implements AdapterView.OnItemClick
     FloatingActionButton fabNova;
 
     Dialog dialogLoad;
+    Tracker mTracker;
 
     public EstilosFragment() {
         // Required empty public constructor
@@ -51,6 +57,8 @@ public class EstilosFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        App application = (App) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
         super.onCreate(savedInstanceState);
     }
 
@@ -120,6 +128,13 @@ public class EstilosFragment extends Fragment implements AdapterView.OnItemClick
 
         return true;
 
+    }
+
+    @Override
+    public void onResume() {
+        mTracker.setScreenName("Tela Estilos");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        super.onResume();
     }
 
     private class CarregarItens extends AsyncTask<Void, String, String> {

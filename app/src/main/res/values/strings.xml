@@ -36,6 +36,5 @@
     </string>
     <string name="server_client_id">763791909416-aim4u63mdttsktinjqroogqdndlibf7l.apps.googleusercontent.com</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="analytics">UA-65884694-3</string>
 </resources>

@@ -1,5 +1,9 @@
 package br.com.vostre.repertori.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -8,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -23,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ProjetoList;
 import br.com.vostre.repertori.adapter.TipoEventoLegendaList;
@@ -38,6 +46,7 @@ import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
+import br.com.vostre.repertori.utils.AnalyticsApplication;
 
 public class EventosFragment extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, ModalHoraListener, ModalEventoListener {
 
@@ -53,6 +62,8 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
     ListView listViewTiposEvento;
 
     ModalEventos modalEventos;
+    BroadcastReceiver br;
+    Tracker mTracker;
 
     public EventosFragment() {
         // Required empty public constructor
@@ -66,6 +77,8 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        App application = (App) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
         super.onCreate(savedInstanceState);
     }
 
@@ -242,4 +255,26 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
 
     }
 
+    @Override
+    public void onResume() {
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                atualizaCalendario();
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(br, new IntentFilter("br.com.vostre.repertori.AtualizaDadosService"));
+
+        mTracker.setScreenName("Tela Eventos");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(br);
+        super.onPause();
+    }
 }

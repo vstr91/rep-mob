@@ -12,13 +12,14 @@ import java.util.Calendar;
 import java.util.List;
 
 import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.form.ModalOpcoesMusica;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
-public class ArtistaDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class ArtistaDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     TextView textViewNome;
     ListView listViewMusicas;
@@ -62,6 +63,7 @@ public class ArtistaDetalheActivity extends BaseActivity implements AdapterView.
 
         listViewMusicas.setAdapter(adapter);
         listViewMusicas.setOnItemClickListener(this);
+        listViewMusicas.setOnItemLongClickListener(this);
         listViewMusicas.setEmptyView(findViewById(R.id.textViewListaVazia));
 
 //        Calendar c = null;
@@ -111,6 +113,20 @@ public class ArtistaDetalheActivity extends BaseActivity implements AdapterView.
         Intent intent = new Intent(getBaseContext(), MusicaDetalheActivity.class);
         intent.putExtra("musica", musica.getId());
         startActivity(intent);
+
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Musica musica = musicas.get(position);
+
+        ModalOpcoesMusica modalOpcoesMusica = new ModalOpcoesMusica();
+        modalOpcoesMusica.setMusica(musica);
+
+        modalOpcoesMusica.show(getSupportFragmentManager(), "modalOpcoesMusica");
+
+        return true;
 
     }
 

@@ -11,17 +11,23 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.List;
 
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.EventoDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
+import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.DialogUtils;
 
 /**
@@ -36,6 +42,15 @@ public class FragmentEventoProjeto extends Fragment implements AdapterView.OnIte
     List<Evento> eventos;
     Projeto projeto;
     Dialog dialogLoad;
+
+    Tracker mTracker;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        App application = (App) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,6 +86,8 @@ public class FragmentEventoProjeto extends Fragment implements AdapterView.OnIte
 
     @Override
     public void onResume() {
+        mTracker.setScreenName("Tela Evento Projeto");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         super.onResume();
     }
 

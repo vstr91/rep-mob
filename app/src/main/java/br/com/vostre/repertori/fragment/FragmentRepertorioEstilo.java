@@ -25,6 +25,8 @@ import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.MusicaDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.MusicaEstiloList;
@@ -49,6 +52,7 @@ import br.com.vostre.repertori.model.MusicaExecucao;
 import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
+import br.com.vostre.repertori.utils.AnalyticsApplication;
 
 /**
  * Created by Almir on 17/06/2015.
@@ -70,6 +74,15 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
     Projeto projeto;
 
     RadarChart chart;
+
+    Tracker mTracker;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        App application = (App) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -196,6 +209,13 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
         Intent intent = new Intent(getContext(), MusicaDetalheActivity.class);
         intent.putExtra("musica", musica.getId());
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        mTracker.setScreenName("Tela Informações Projeto");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        super.onResume();
     }
 
     private Map<String, Integer> carregaMusicas(){

@@ -13,8 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.List;
 
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.ArtistaDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ArtistaList;
@@ -24,6 +28,7 @@ import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.EstiloDBHelper;
+import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.DialogUtils;
 
 public class ArtistasFragment extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
@@ -34,6 +39,7 @@ public class ArtistasFragment extends Fragment implements AdapterView.OnItemClic
     List<Artista> artistas;
     FloatingActionButton fabNova;
     Dialog dialogLoad;
+    Tracker mTracker;
 
     public ArtistasFragment() {
         // Required empty public constructor
@@ -47,6 +53,8 @@ public class ArtistasFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        App application = (App) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
         super.onCreate(savedInstanceState);
     }
 
@@ -116,6 +124,13 @@ public class ArtistasFragment extends Fragment implements AdapterView.OnItemClic
 
         return true;
 
+    }
+
+    @Override
+    public void onResume() {
+        mTracker.setScreenName("Tela Artistas");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        super.onResume();
     }
 
     private class CarregarItens extends AsyncTask<Void, String, String> {

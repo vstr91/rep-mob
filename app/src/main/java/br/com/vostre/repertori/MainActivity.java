@@ -29,6 +29,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ResultCallback;
@@ -46,6 +48,7 @@ import br.com.vostre.repertori.fragment.MusicasFragment;
 import br.com.vostre.repertori.fragment.ProjetosFragment;
 import br.com.vostre.repertori.listener.LoadListener;
 import br.com.vostre.repertori.service.AtualizaDadosService;
+import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.Constants;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     int fragmentoAtual;
     ProgressDialog pd;
+    Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +93,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fragmentClass = EventosFragment.class;
         }
 
+
+        App application = (App) getApplication();
+        mTracker = application.getDefaultTracker();
+
+        mTracker.setScreenName("Tela Principal");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         fragmentManager = getSupportFragmentManager();
         try {

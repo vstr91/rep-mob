@@ -103,7 +103,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         serverUtils = new ServerUtils(AtualizaDadosService.this, true);
         serverUtils.setOnResultsListener(AtualizaDadosService.this);
         serverUtils.execute(new String[]{Constants.SERVIDOR_TESTE, String.valueOf(Constants.PORTA_SERVIDOR)});
-        Toast.makeText(this, "Iniciando atualização.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Iniciando atualização.", Toast.LENGTH_SHORT).show();
         System.out.println("INICIOU");
 
     }
@@ -127,6 +127,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             tokenTask.execute();
 
         } else{
+            Toast.makeText(this, "Não foi possível estabelecer conexão com o servidor. Por favor verifique sua conexão com a internet.", Toast.LENGTH_SHORT).show();
             this.stopSelf();
             System.out.println("TERMINOU ERRO INTERNET");
         }
@@ -533,7 +534,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     ParametrosUtils.setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
                 }
 
-                Toast.makeText(this, "Seu sistema já está atualizado.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Seu sistema já está atualizado.", Toast.LENGTH_SHORT).show();
+                enviaBroadcast();
                 this.stopSelf();
                 System.out.println("TERMINOU SEM REGISTROS");
             }
@@ -585,15 +587,19 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         if(result){
             ParametrosUtils.setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
 
-            LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(this);
-            Intent intent = new Intent("AtualizaDadosService");
-            intent.putExtra("registros", registros);
-            broadcaster.sendBroadcast(intent);
+            enviaBroadcast();
             Toast.makeText(this, "Atualização finalizada com sucesso.", Toast.LENGTH_LONG).show();
             this.stopSelf();
             System.out.println("TERMINOU");
         }
 
+    }
+
+    private void enviaBroadcast() {
+        LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(this);
+        Intent intent = new Intent("br.com.vostre.repertori.AtualizaDadosService");
+        intent.putExtra("registros", registros);
+        broadcaster.sendBroadcast(intent);
     }
 
 //    public static String getDataUltimoAcesso(Context context){
