@@ -11,9 +11,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.Tracker;
 
@@ -32,7 +35,7 @@ import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.CustomScrollView;
 
-public class LetraFragment extends Fragment implements CustomScrollView.OnScrollChangedListener, View.OnTouchListener {
+public class LetraFragment extends Fragment implements CustomScrollView.OnScrollChangedListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
 
     TextView textViewNome;
     TextView textViewArtista;
@@ -42,6 +45,11 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
     ObjectAnimator animator;
 
     Tracker mTracker;
+
+    SeekBar seekBarVelocidade;
+    int velocidade = 0;
+
+    LinearLayout linearLayout;
 
     public LetraFragment() {
         // Required empty public constructor
@@ -69,6 +77,9 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
         textViewArtista = (TextView) v.findViewById(R.id.textViewArtista);
         textViewLetra = (TextView) v.findViewById(R.id.textViewLetra);
         scrollView = (CustomScrollView) v.findViewById(R.id.scrollView);
+        seekBarVelocidade = (SeekBar) v.findViewById(R.id.seekBarVelocidade);
+
+        linearLayout = (LinearLayout) v.findViewById(R.id.linearLayout);
 
         musicaDBHelper = new MusicaDBHelper(getContext());
         Musica musica = new Musica();
@@ -86,6 +97,10 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
 
 //        scrollView.setOnScrollChangedListener(this);
         scrollView.setOnTouchListener(this);
+        //scrollView.setScrollY(0);
+
+        seekBarVelocidade.setOnSeekBarChangeListener(this);
+
         scrollDown();
 
         return v;
@@ -102,24 +117,36 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
     }
 
     private void scrollDown(){
-        scrollView.post(new Runnable() {
 
-            public void run() {
+        if(velocidade > 0 && velocidade < 50000){
+            scrollView.post(new Runnable() {
 
-                if(scrollView.getScrollY() != scrollView.getBottom()){
-                    animator = ObjectAnimator.ofInt(scrollView, "ScrollY", scrollView.getBottom());
-                    animator.setDuration(50000);
-                    animator.start();
-                } else{
-                    animator.cancel();
+                public void run() {
+
+                    int diff = (scrollView.getChildAt(0).getHeight()-(scrollView.getHeight()+scrollView.getScrollY()));
+
+                    System.out.println("Diff: "+diff+" | "+scrollView.getBottom()+" | "+scrollView.getChildAt(0).getHeight()+" | "+velocidade);
+
+                    if(diff > 0){
+                        animator = ObjectAnimator.ofInt(scrollView, "ScrollY", scrollView.getChildAt(0).getHeight());
+                        animator.setDuration(velocidade);
+                        animator.start();
+                    } else{
+
+                        if(animator != null){
+                            animator.cancel();
+                        }
+
+                    }
+
+
+
+
                 }
 
+            });
+        }
 
-
-
-            }
-
-        });
     }
 
     @Override
@@ -140,6 +167,8 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
             scrollDown();
         }
 
+        //scrollDown();
+
         return false;
 
     }
@@ -153,4 +182,25 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
         }
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        velocidade = (100000 - i * 1000) / 2;
+
+        if(animator != null){
+            animator.cancel();
+        }
+
+        scrollDown();
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
 }
