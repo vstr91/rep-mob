@@ -126,6 +126,11 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
                 intent.putExtra("repertorio", repertorio.getId());
                 startActivity(intent);
                 break;
+            case R.id.icon_cifras:
+                intent = new Intent(this, CifraMusicaRepertorioActivity.class);
+                intent.putExtra("repertorio", repertorio.getId());
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

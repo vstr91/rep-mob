@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -220,6 +221,11 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             YAxis yAxisRight = chart.getAxisRight();
             yAxisRight.setValueFormatter(formatterY);
             yAxisRight.setGranularity(10f);
+
+            chart.animateXY(
+                    400, 1000,
+                    Easing.EasingOption.EaseInSine,
+                    Easing.EasingOption.EaseInSine);
 
             chart.invalidate();
 

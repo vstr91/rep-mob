@@ -173,7 +173,7 @@ public class MusicaEventoDBAdapter {
     }
 
     public List<Evento> listarTodosPorMusica(Musica umaMusica){
-        Cursor cursor = database.rawQuery("SELECT id_evento FROM musica_evento WHERE id_musica = ? AND status != 2", new String[]{umaMusica.getId()});
+        Cursor cursor = database.rawQuery("SELECT id_evento FROM musica_evento me INNER JOIN evento e ON e._id = me.id_evento WHERE id_musica = ? AND me.status != 2 ORDER BY e.data DESC", new String[]{umaMusica.getId()});
         List<Evento> eventos = new ArrayList<Evento>();
 
         if(cursor.moveToFirst()){

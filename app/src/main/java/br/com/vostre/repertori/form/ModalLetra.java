@@ -6,6 +6,8 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import br.com.vostre.repertori.R;
+import br.com.vostre.repertori.fragment.LetraFragment;
 import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
@@ -57,7 +60,12 @@ public class ModalLetra extends android.support.v4.app.DialogFragment implements
         textViewLetra = (TextView) view.findViewById(R.id.textViewLetra);
 
         textViewMusica.setText(musica.getNome());
-        textViewLetra.setText(musica.getLetra());
+
+        if(!musica.getLetra().equals("null") && !musica.getLetra().isEmpty()){
+            textViewLetra.setText(musica.getLetra());
+        } else{
+            textViewLetra.setText("Letra não cadastrada.");
+        }
 
         btnFechar.setOnClickListener(this);
         btnEditar.setOnClickListener(this);

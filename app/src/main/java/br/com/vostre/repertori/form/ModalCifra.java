@@ -52,7 +52,12 @@ public class ModalCifra extends android.support.v4.app.DialogFragment implements
         textViewCifra = (TextView) view.findViewById(R.id.textViewCifra);
 
         textViewMusica.setText(musica.getNome());
-        textViewCifra.setText(musica.getCifra());
+
+        if(!musica.getCifra().equals("null") && !musica.getCifra().isEmpty()){
+            textViewCifra.setText(musica.getCifra());
+        } else{
+            textViewCifra.setText("Cifra não cadastrada.");
+        }
 
         btnFechar.setOnClickListener(this);
         btnEditar.setOnClickListener(this);

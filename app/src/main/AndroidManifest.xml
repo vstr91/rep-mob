@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".service.AtualizaDadosService" android:enabled="true" />
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
 
         <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
@@ -61,6 +62,8 @@
             android:label="@string/title_activity_musica_evento"></activity>
         <activity android:name=".CifraMusicaEventoActivity" android:screenOrientation="portrait"
             android:label="@string/title_activity_cifra_musica_evento"></activity>
+        <activity android:name=".CifraMusicaRepertorioActivity" android:screenOrientation="portrait"
+            android:label="@string/title_activity_cifra_musica_repertorio"></activity>
         <activity
             android:name=".EstiloDetalheActivity"
             android:screenOrientation="portrait"

@@ -108,6 +108,8 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
             labels.add(estilo);
         }
 
+        //System.out.println("Entries: "+entries.size()+" | Labels: "+labels.size());
+
         XAxis xAxis = chart.getXAxis();
         YAxis yAxis = chart.getYAxis();
 
@@ -117,7 +119,14 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return labels.get((int) value);
+                //System.out.println("AA >> Entries: "+entries.size()+" | Labels: "+labels.size());
+
+                if((int) value >= labels.size()){
+                    return "";
+                } else{
+                    return labels.get((int) value);
+                }
+
             }
         });
 

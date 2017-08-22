@@ -41,7 +41,9 @@ public class App extends Application {
     synchronized public Tracker getDefaultTracker() {
         // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
         if (sTracker == null) {
-            sTracker = sAnalytics.newTracker(R.string.analytics);
+            sTracker = sAnalytics.newTracker("UA-65884694-3");
+            sTracker.enableExceptionReporting(true);
+            sTracker.enableAutoActivityTracking(true);
         }
 
         return sTracker;
