@@ -11,6 +11,8 @@
     <string name="title_activity_estilo_detalhe">Detalhes do Estilo</string>
     <string name="title_activity_artista_detalhe">Detalhes do Artista</string>
     <string name="title_activity_artistas">Artistas</string>
+    <string name="title_activity_letra">Letra da Música</string>
+    <string name="title_activity_cifra">Cifra da Música</string>
     <string name="action_edit">Editar</string>
     <string name="action_letras">Modo Show</string>
     <string name="action_cifras">Modo Show - Cifras</string>

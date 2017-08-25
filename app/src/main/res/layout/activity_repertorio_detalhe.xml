@@ -60,10 +60,10 @@
 
             <Button
                 android:id="@+id/btnAdicionaMusica"
+                style="@style/botao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/botao"
-                android:text="Adiciona Música" />
+                android:text="Adicionar Música" />
 
         </LinearLayout>
     </LinearLayout>

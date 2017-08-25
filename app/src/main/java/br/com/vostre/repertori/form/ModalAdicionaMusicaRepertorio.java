@@ -1,6 +1,7 @@
 package br.com.vostre.repertori.form;
 
 import android.app.Dialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.List;
@@ -23,10 +25,13 @@ import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.MusicaProjeto;
 import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Repertorio;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
+import br.com.vostre.repertori.utils.DialogUtils;
 
 public class ModalAdicionaMusicaRepertorio extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemClickListener, FiltroMusicaListener {
 
@@ -44,6 +49,9 @@ public class ModalAdicionaMusicaRepertorio extends android.support.v4.app.Dialog
 
     Estilo estiloFiltro;
     Artista artistaFiltro;
+
+    Dialog dialog;
+    Dialog dialogLoad;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,7 +83,7 @@ public class ModalAdicionaMusicaRepertorio extends android.support.v4.app.Dialog
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog = super.onCreateDialog(savedInstanceState);
 
         // request a window without the title
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -104,42 +112,8 @@ public class ModalAdicionaMusicaRepertorio extends android.support.v4.app.Dialog
         switch(v.getId()){
             case R.id.btnSalvar:
 
-                int tamanhoLista = musicas.size();
-
-                for(int i = 0; i < tamanhoLista; i++){
-                    Musica musica = musicas.get(i);
-
-                    if(musica.isChecked()){
-                        MusicaRepertorio musicaRepertorio = new MusicaRepertorio();
-                        musicaRepertorio.setMusica(musicas.get(i));
-                        musicaRepertorio.setRepertorio(repertorio);
-
-                        musicaRepertorio = musicaRepertorioDBHelper.carregarPorMusicaERepertorio(getContext(), musicaRepertorio);
-
-                        if(musicaRepertorio == null){
-                            musicaRepertorio = new MusicaRepertorio();
-                            musicaRepertorio.setMusica(musicas.get(i));
-                            musicaRepertorio.setRepertorio(repertorio);
-                        }
-
-                        musicaRepertorio.setStatus(0);
-                        musicaRepertorio.setUltimaAlteracao(Calendar.getInstance());
-                        musicaRepertorio.setDataCadastro(Calendar.getInstance());
-                        musicaRepertorio.setEnviado(-1);
-
-                        int ordem = corrigeOrdemMusicas();
-
-                        musicaRepertorio.setOrdem(ordem);
-
-                        musicaRepertorioDBHelper.salvarOuAtualizar(getContext(), musicaRepertorio);
-
-                    }
-
-                }
-
-                listener.onModalAdicionaDismissed(0);
-
-                dismiss();
+                SalvarEntidade salvarEntidade = new SalvarEntidade();
+                salvarEntidade.execute();
                 break;
             case R.id.btnFechar:
                 dismiss();
@@ -202,5 +176,65 @@ public class ModalAdicionaMusicaRepertorio extends android.support.v4.app.Dialog
         }
 
         atualizaLista();
+    }
+
+    private class SalvarEntidade extends AsyncTask<Void, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Salvando alterações", "Por favor aguarde...");
+            dialogLoad.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            int tamanhoLista = musicas.size();
+
+            for(int i = 0; i < tamanhoLista; i++){
+                Musica musica = musicas.get(i);
+
+                if(musica.isChecked()){
+                    MusicaRepertorio musicaRepertorio = new MusicaRepertorio();
+                    musicaRepertorio.setMusica(musicas.get(i));
+                    musicaRepertorio.setRepertorio(repertorio);
+
+                    musicaRepertorio = musicaRepertorioDBHelper.carregarPorMusicaERepertorio(getContext(), musicaRepertorio);
+
+                    if(musicaRepertorio == null){
+                        musicaRepertorio = new MusicaRepertorio();
+                        musicaRepertorio.setMusica(musicas.get(i));
+                        musicaRepertorio.setRepertorio(repertorio);
+                    }
+
+                    musicaRepertorio.setStatus(0);
+                    musicaRepertorio.setUltimaAlteracao(Calendar.getInstance());
+                    musicaRepertorio.setDataCadastro(Calendar.getInstance());
+                    musicaRepertorio.setEnviado(-1);
+
+                    int ordem = corrigeOrdemMusicas();
+
+                    musicaRepertorio.setOrdem(ordem);
+
+                    musicaRepertorioDBHelper.salvarOuAtualizar(getContext(), musicaRepertorio);
+
+                }
+
+            }
+
+            return "";
+
+        }
+
+        @Override
+        protected void onPostExecute(String tempo) {
+            super.onPostExecute(tempo);
+            Toast.makeText(dialog.getContext(), "Cadastrado com Sucesso!", Toast.LENGTH_SHORT).show();
+            listener.onModalAdicionaDismissed(0);
+            dialog.dismiss();
+            dialogLoad.dismiss();
+
+        }
     }
 }

@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.com.vostre.repertori.RepertorioActivity"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <!--<EditText-->
@@ -58,6 +59,14 @@
         android:text=""
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Small" />
+
+    <EditText
+        android:id="@+id/editTextFiltro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Digite para filtrar..."
+        android:inputType="textPersonName" />
 
     <ListView
         android:id="@+id/listViewMusicasAtivas"

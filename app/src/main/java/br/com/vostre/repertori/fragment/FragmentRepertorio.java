@@ -9,10 +9,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,7 +49,7 @@ import br.com.vostre.repertori.utils.DialogUtils;
 /**
  * Created by Almir on 17/06/2015.
  */
-public class FragmentRepertorio extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, AdapterView.OnItemLongClickListener {
+public class FragmentRepertorio extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, AdapterView.OnItemLongClickListener, TextWatcher {
 
     private ListView listaAtiva;
     private ListView listaRepertorio;
@@ -54,6 +57,7 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
     private TextView textViewAtivas;
     private TextView textViewEspera;
     private TextView textViewAtivasObs;
+    private EditText editTextFiltro;
 
     MusicaList adapterMusicasAtivas;
     RepertorioList adapterRepertorios;
@@ -88,6 +92,9 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
         textViewAtivas = (TextView) rootView.findViewById(R.id.textViewAtivas);
         textViewEspera = (TextView) rootView.findViewById(R.id.textViewEspera);
         textViewAtivasObs = (TextView) rootView.findViewById(R.id.textViewAtivasObs);
+        editTextFiltro = (EditText) rootView.findViewById(R.id.editTextFiltro);
+
+        editTextFiltro.addTextChangedListener(this);
 
         idProjeto = getArguments().getString("projeto");
 
@@ -234,7 +241,11 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onModalCadastroDismissed(int resultado) {
-        atualizaLista();
+
+        if(resultado > -1){
+            atualizaLista();
+        }
+
     }
 
     @Override
@@ -291,6 +302,21 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
     public void onPause() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(br);
         super.onPause();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        adapterMusicasAtivas.getFilter().filter(charSequence);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 
     private class CarregarItens extends AsyncTask<Void, String, String>{

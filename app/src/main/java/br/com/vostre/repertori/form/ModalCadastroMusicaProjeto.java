@@ -1,6 +1,8 @@
 package br.com.vostre.repertori.form;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -26,6 +28,9 @@ import java.util.List;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ArtistaList;
 import br.com.vostre.repertori.adapter.EstiloList;
+import br.com.vostre.repertori.adapter.MusicaList;
+import br.com.vostre.repertori.adapter.RepertorioList;
+import br.com.vostre.repertori.fragment.FragmentRepertorio;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Estilo;
@@ -37,6 +42,7 @@ import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.EstiloDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
+import br.com.vostre.repertori.utils.DialogUtils;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 
 public class ModalCadastroMusicaProjeto extends android.support.v4.app.DialogFragment implements View.OnClickListener {
@@ -53,6 +59,10 @@ public class ModalCadastroMusicaProjeto extends android.support.v4.app.DialogFra
     Projeto projeto;
     List<StatusMusica> statusList;
     MusicaProjeto musicaProjeto;
+
+    Dialog dialog;
+    Dialog dialogLoad;
+    Context context;
 
     public int getStatus() {
         return status;
@@ -81,13 +91,11 @@ public class ModalCadastroMusicaProjeto extends android.support.v4.app.DialogFra
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        MusicaDBHelper musicaDBHelper;
-        ArtistaDBHelper artistaDBHelper;
-        EstiloDBHelper estiloDBHelper;
-
         View view = inflater.inflate(R.layout.modal_cadastro_musica_projeto, container, false);
 
         view.setMinimumWidth(700);
+
+        context = getActivity().getBaseContext();
 
         textViewNome = (TextView) view.findViewById(R.id.textViewNome);
         spinnerStatus = (Spinner) view.findViewById(R.id.spinnerStatus);
@@ -158,7 +166,7 @@ public class ModalCadastroMusicaProjeto extends android.support.v4.app.DialogFra
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog = super.onCreateDialog(savedInstanceState);
 
         // request a window without the title
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -185,30 +193,62 @@ public class ModalCadastroMusicaProjeto extends android.support.v4.app.DialogFra
                     Toast.makeText(getContext(), "Por favor informe todos os dados", Toast.LENGTH_SHORT).show();
                 } else{
 
-                    MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(getContext());
-
-                    if(musicaProjeto != null){
-                        musicaProjeto.setUltimaAlteracao(Calendar.getInstance());
-                        musicaProjeto.setEnviado(-1);
-
-                        musicaProjeto.setStatus(status.getId());
-                        
-                    }
-
-                    musicaProjetoDBHelper.salvarOuAtualizar(getContext(), musicaProjeto);
-                    SnackbarHelper.notifica(getView(), "Cadastrado com Sucesso!", Snackbar.LENGTH_LONG);
-                    listener.onModalCadastroDismissed(0);
-                    dismiss();
+                    SalvarEntidade salvarEntidade = new SalvarEntidade(status);
+                    salvarEntidade.execute();
 
                 }
 
                 break;
             case R.id.btnFechar:
-                listener.onModalCadastroDismissed(0);
+                listener.onModalCadastroDismissed(-1);
                 dismiss();
                 break;
         }
 
+    }
+
+    private class SalvarEntidade extends AsyncTask<Void, String, String> {
+
+        StatusMusica status;
+
+        public SalvarEntidade(StatusMusica status){
+            this.status = status;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Salvando dados", "Por favor aguarde...");
+            dialogLoad.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(getContext());
+
+            if(musicaProjeto != null){
+                musicaProjeto.setUltimaAlteracao(Calendar.getInstance());
+                musicaProjeto.setEnviado(-1);
+
+                musicaProjeto.setStatus(status.getId());
+
+            }
+
+            musicaProjetoDBHelper.salvarOuAtualizar(getContext(), musicaProjeto);
+
+            return "";
+
+        }
+
+        @Override
+        protected void onPostExecute(String tempo) {
+            super.onPostExecute(tempo);
+            Toast.makeText(dialog.getContext(), "Cadastrado com Sucesso!", Toast.LENGTH_SHORT).show();
+            listener.onModalCadastroDismissed(0);
+            dialog.dismiss();
+            dialogLoad.dismiss();
+
+        }
     }
 
 }

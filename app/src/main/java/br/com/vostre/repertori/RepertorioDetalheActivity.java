@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -37,9 +38,11 @@ import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Repertorio;
+import br.com.vostre.repertori.model.StatusMusica;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.RepertorioDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
@@ -61,6 +64,7 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
     RepertorioDBHelper repertorioDBHelper;
 
     MusicaRepertorio musicaRepertorio;
+    Dialog dialogLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,18 +226,43 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
         switch(i){
             case -1:
-                musicaRepertorio.setStatus(2);
-                musicaRepertorio.setEnviado(-1);
-
-                musicaRepertorioDBHelper.salvarOuAtualizar(getApplicationContext(), musicaRepertorio);
-
-                musicaRepertorioDBHelper.corrigirOrdemPorRepertorio(getApplicationContext(), repertorio);
-
-                carregaListaMusicas();
-
-                Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
+                ExcluirEntidade excluirEntidade = new ExcluirEntidade();
+                excluirEntidade.execute();
                 break;
         }
 
     }
+
+    private class ExcluirEntidade extends AsyncTask<Void, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialogLoad = DialogUtils.criarAlertaCarregando(RepertorioDetalheActivity.this, "Salvando alterações", "Por favor aguarde...");
+            dialogLoad.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            musicaRepertorio.setStatus(2);
+            musicaRepertorio.setEnviado(-1);
+
+            musicaRepertorioDBHelper.salvarOuAtualizar(getApplicationContext(), musicaRepertorio);
+
+            musicaRepertorioDBHelper.corrigirOrdemPorRepertorio(getApplicationContext(), repertorio);
+
+            return "";
+
+        }
+
+        @Override
+        protected void onPostExecute(String tempo) {
+            super.onPostExecute(tempo);
+            carregaListaMusicas();
+            Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
+            dialogLoad.dismiss();
+
+        }
+    }
+
 }

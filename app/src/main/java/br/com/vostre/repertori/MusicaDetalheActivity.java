@@ -276,16 +276,22 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
                 break;
             case R.id.btnLetra:
-                ModalLetra modalLetra = new ModalLetra();
-                modalLetra.setMusica(musica);
-
-                modalLetra.show(getSupportFragmentManager(), "modalLetra");
+//                ModalLetra modalLetra = new ModalLetra();
+//                modalLetra.setMusica(musica);
+//
+//                modalLetra.show(getSupportFragmentManager(), "modalLetra");
+                Intent i = new Intent(getBaseContext(), LetraActivity.class);
+                i.putExtra("musica", musica.getId());
+                startActivity(i);
                 break;
             case R.id.btnCifra:
-                ModalCifra modalCifra = new ModalCifra();
-                modalCifra.setMusica(musica);
-
-                modalCifra.show(getSupportFragmentManager(), "modalCifra");
+//                ModalCifra modalCifra = new ModalCifra();
+//                modalCifra.setMusica(musica);
+//
+//                modalCifra.show(getSupportFragmentManager(), "modalCifra");
+                Intent cifra = new Intent(getBaseContext(), CifraActivity.class);
+                cifra.putExtra("musica", musica.getId());
+                startActivity(cifra);
                 break;
         }
 
