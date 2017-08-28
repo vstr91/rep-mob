@@ -33,6 +33,7 @@ import br.com.vostre.repertori.RepertorioDetalheActivity;
 import br.com.vostre.repertori.adapter.RepertorioList;
 import br.com.vostre.repertori.form.ModalCadastroMusicaProjeto;
 import br.com.vostre.repertori.form.ModalCadastroRepertorio;
+import br.com.vostre.repertori.listener.ListviewComFiltroListener;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaRepertorio;
@@ -118,7 +119,7 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
 
         switch(parent.getId()){
             case R.id.listViewMusicasAtivas:
-                Musica musica = adapterMusicasAtivas.getItem(position);
+                Musica musica = musicasAtivas.get(position);
                 intent = new Intent(getContext(), MusicaDetalheActivity.class);
                 intent.putExtra("musica", musica.getId());
                 break;
@@ -319,7 +320,7 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
 
     }
 
-    private class CarregarItens extends AsyncTask<Void, String, String>{
+    private class CarregarItens extends AsyncTask<Void, String, String> implements ListviewComFiltroListener {
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -328,6 +329,7 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
 
             adapterMusicasAtivas =
                     new MusicaList(getActivity(), android.R.layout.simple_spinner_dropdown_item, musicasAtivas);
+            adapterMusicasAtivas.setListener(this);
 
             adapterMusicasAtivas.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
 
@@ -356,6 +358,13 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
             textViewAtivasObs.setText(tempo);
             dialogLoad.dismiss();
 
+        }
+
+        @Override
+        public void onListviewComFiltroDismissed(List<Musica> dados) {
+            musicasAtivas = dados;
+            adapterMusicasAtivas.notifyDataSetChanged();
+            listaAtiva.invalidate();
         }
     }
 

@@ -6,10 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -23,6 +26,7 @@ import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.MusicaList;
 import br.com.vostre.repertori.form.ModalCadastroMusica;
 import br.com.vostre.repertori.form.ModalOpcoesMusica;
+import br.com.vostre.repertori.listener.ListviewComFiltroListener;
 import br.com.vostre.repertori.listener.LoadListener;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Musica;
@@ -30,7 +34,7 @@ import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.DialogUtils;
 
-public class MusicasFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, ModalCadastroListener, AdapterView.OnItemLongClickListener {
+public class MusicasFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, ModalCadastroListener, AdapterView.OnItemLongClickListener, TextWatcher {
 
     ListView listViewMusicas;
     FloatingActionButton fabNova;
@@ -41,6 +45,8 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
     LoadListener listener;
 
     Tracker mTracker;
+
+    EditText editTextFiltro;
 
     public LoadListener getListener() {
         return listener;
@@ -73,9 +79,11 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
         View v = inflater.inflate(R.layout.fragment_musicas, container, false);
 
         listViewMusicas = (ListView) v.findViewById(R.id.listViewMusicas);
+        editTextFiltro = (EditText) v.findViewById(R.id.editTextFiltro);
 
         fabNova = (FloatingActionButton) v.findViewById(R.id.fabNova);
         fabNova.setOnClickListener(this);
+        editTextFiltro.addTextChangedListener(this);
 
         CarregarItens carregarItens = new CarregarItens();
         carregarItens.execute();
@@ -85,11 +93,16 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Musica musica = adapter.getItem(i);
 
-        Intent intent = new Intent(getContext(), MusicaDetalheActivity.class);
-        intent.putExtra("musica", musica.getId());
-        startActivity(intent);
+        if(musicas != null){
+            Musica musica = musicas.get(i);
+
+            Intent intent = new Intent(getContext(), MusicaDetalheActivity.class);
+            intent.putExtra("musica", musica.getId());
+            startActivity(intent);
+        }
+
+
     }
 
     public void atualizaLista(){
@@ -145,7 +158,22 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
 
     }
 
-    private class CarregarItens extends AsyncTask<Void, String, String> {
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        adapter.getFilter().filter(charSequence);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+
+    private class CarregarItens extends AsyncTask<Void, String, String> implements ListviewComFiltroListener {
 
         @Override
         protected void onPreExecute() {
@@ -160,6 +188,7 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
             musicas = musicaDBHelper.listarTodos(getContext());
 
             adapter = new MusicaList(getActivity(), R.layout.listview_musicas, musicas);
+            adapter.setListener(this);
 
             return null;
         }
@@ -172,6 +201,14 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
             listViewMusicas.setOnItemLongClickListener(MusicasFragment.this);
             dialogLoad.dismiss();
         }
+
+        @Override
+        public void onListviewComFiltroDismissed(List<Musica> dados) {
+            musicas = dados;
+            adapter.notifyDataSetChanged();
+            listViewMusicas.invalidate();
+        }
+
     }
 
 }

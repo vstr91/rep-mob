@@ -6,10 +6,25 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="br.com.vostre.repertori.fragment.MusicasFragment">
 
-    <ListView
-        android:id="@+id/listViewMusicas"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/editTextFiltro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Digite para filtrar..."
+            android:inputType="textPersonName" />
+
+        <ListView
+            android:id="@+id/listViewMusicas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/lista" />
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabNova"

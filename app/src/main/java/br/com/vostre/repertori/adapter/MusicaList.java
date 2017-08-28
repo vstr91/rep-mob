@@ -15,6 +15,7 @@ import java.util.List;
 
 import br.com.vostre.repertori.EventoDetalheActivity;
 import br.com.vostre.repertori.R;
+import br.com.vostre.repertori.listener.ListviewComFiltroListener;
 import br.com.vostre.repertori.model.Musica;
 
 /**
@@ -23,15 +24,25 @@ import br.com.vostre.repertori.model.Musica;
 public class MusicaList extends ArrayAdapter<Musica> {
 
     private final Activity context;
-    private final List<Musica> musicas;
+    private List<Musica> musicas;
 
     Musica musica = null;
+    private List<Musica> dadosOriginais;
+    ListviewComFiltroListener listener;
 
+    public ListviewComFiltroListener getListener() {
+        return listener;
+    }
+
+    public void setListener(ListviewComFiltroListener listener) {
+        this.listener = listener;
+    }
 
     public MusicaList(Activity context, int resource, List<Musica> objects) {
         super(context, R.layout.listview_musicas, objects);
         this.context = context;
         this.musicas = objects;
+        dadosOriginais = objects;
     }
 
     @Override
@@ -55,122 +66,67 @@ public class MusicaList extends ArrayAdapter<Musica> {
         return rowView;
     }
 
-//    @Override
-//    public Filter getFilter() {
-//        return new ListviewFilter();
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return musicas.size();
-//    }
-//
-//    private class ListviewFilter extends Filter{
-//
-//        @Override
-//        @SuppressWarnings("unchecked")
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//            FilterResults filterResults = new FilterResults();
-//
-//            switch (getTipoObjeto()){
-//                case "local":
-//                    listaFiltradaLocal = new ArrayList<Local>();
-//                    break;
-//                case "partida":
-//                    listaFiltradaBairro = new ArrayList<Bairro>();
-//                    break;
-//                case "destino":
-//                    listaFiltradaBairro = new ArrayList<Bairro>();
-//                    break;
-//            }
-//
-//            if (constraint != null && dados != null && constraint.length() > 0) {
-//
-//                constraint = constraint.toString().toLowerCase();
-//                int length = dados.size();
-//                int i = 0;
-//
-//                switch (tipoObjeto){
-//                    case "local":
-//                        while (i < length) {
-//
-//                            Local obj = (Local) dados.get(i);
-//                            String data = obj.getNome()+" "+obj.getEstado().getNome();
-//                            if (data.toLowerCase().contains(constraint.toString())) {
-//                                listaFiltradaLocal.add(obj);
-//                            }
-//
-//                            i++;
-//                        }
-//
-//                        filterResults.values = listaFiltradaLocal;
-//                        filterResults.count = listaFiltradaLocal.size();
-//
-//                        break;
-//                    case "partida":
-//                        while (i < length) {
-//
-//                            Bairro obj = (Bairro) dados.get(i);
-//                            String data = obj.getNome()+" "+obj.getLocal().getNome();
-//                            if (data.toLowerCase().contains(constraint.toString())) {
-//                                listaFiltradaBairro.add(obj);
-//                            }
-//
-//                            i++;
-//                        }
-//
-//                        filterResults.values = listaFiltradaBairro;
-//                        filterResults.count = listaFiltradaBairro.size();
-//
-//                        break;
-//                    case "destino":
-//                        while (i < length) {
-//
-//                            Bairro obj = (Bairro) dados.get(i);
-//                            String data = obj.getNome()+" "+obj.getLocal().getNome();
-//                            if (data.toLowerCase().contains(constraint.toString())) {
-//                                listaFiltradaBairro.add(obj);
-//                            }
-//
-//                            i++;
-//                        }
-//
-//                        filterResults.values = listaFiltradaBairro;
-//                        filterResults.count = listaFiltradaBairro.size();
-//                        break;
-//                }
-//
-//            } else{
-//                filterResults.values = dadosOriginais;
-//                filterResults.count = dadosOriginais.size();
-//            }
-//            return filterResults;
-//        }
-//
-//        @SuppressWarnings("unchecked")
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            //listaFiltrada = (ArrayList<Local>) results.values;
-//            if (results.count > 0) {
-//
-//                switch (getTipoObjeto()){
-//                    case "local":
-//                        dados = (List<Local>) results.values;
-//                        break;
-//                    case "partida":
-//                        dados = (List<Bairro>) results.values;
-//                        break;
-//                    case "destino":
-//                        dados = (List<Bairro>) results.values;
-//                        break;
-//                }
-//
-//
-//                notifyDataSetChanged();
-//            } else {
-//                notifyDataSetInvalidated();
-//            }
-//        }
-//    }
+    @Override
+    public Filter getFilter() {
+        return new ListviewFilter();
+    }
+
+    @Override
+    public int getCount() {
+        return musicas.size();
+    }
+
+    private class ListviewFilter extends Filter{
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+
+            List<Musica> listaFiltrada = new ArrayList<>();
+
+            if (constraint != null && musicas != null && constraint.length() > 0) {
+
+                constraint = constraint.toString().toLowerCase();
+                int length = musicas.size();
+                int i = 0;
+
+                while (i < length) {
+
+                    Musica obj = musicas.get(i);
+                    String data = obj.getNome()+" "+obj.getArtista().getNome();
+                    if (data.toLowerCase().contains(constraint.toString())) {
+                        listaFiltrada.add(obj);
+                    }
+
+                    i++;
+                }
+
+                filterResults.values = listaFiltrada;
+                filterResults.count = listaFiltrada.size();
+
+            } else{
+                filterResults.values = dadosOriginais;
+                filterResults.count = dadosOriginais.size();
+            }
+            return filterResults;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            //listaFiltrada = (ArrayList<Local>) results.values;
+            if (results.count > 0) {
+
+                musicas = (List<Musica>) results.values;
+
+                notifyDataSetChanged();
+                listener.onListviewComFiltroDismissed(musicas);
+            } else {
+                notifyDataSetInvalidated();
+                listener.onListviewComFiltroDismissed(musicas);
+            }
+        }
+    }
 
 }
