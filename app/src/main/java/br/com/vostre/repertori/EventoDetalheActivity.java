@@ -4,7 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.print.pdf.PrintedPdfDocument;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,6 +26,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.List;
 
@@ -59,6 +71,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     EditText editTextComentario;
     Button btnComentario;
     Button btnAdicionaMusica;
+    Button btnPDF;
     ComentarioList adapterComentarios;
     Evento evento;
 
@@ -92,9 +105,11 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         editTextComentario = (EditText) findViewById(R.id.editTextComentario);
         btnComentario = (Button) findViewById(R.id.btnComentario);
         btnAdicionaMusica = (Button) findViewById(R.id.btnAdicionaMusica);
+        btnPDF = (Button) findViewById(R.id.btnPDF);
 
         btnComentario.setOnClickListener(this);
         btnAdicionaMusica.setOnClickListener(this);
+        btnPDF.setOnClickListener(this);
 
         evento = new Evento();
         evento.setId(getIntent().getStringExtra("evento"));
@@ -199,6 +214,11 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
                 modalAdicionaMusica.setEvento(evento);
 
                 modalAdicionaMusica.show(getSupportFragmentManager(), "modalAdicionaMusica");
+                break;
+            case R.id.btnPDF:
+                Intent intent = new Intent(getBaseContext(), EventoDetalhePdfActivity.class);
+                intent.putExtra("evento", evento.getId());
+                startActivity(intent);
                 break;
         }
     }

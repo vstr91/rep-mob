@@ -68,12 +68,19 @@
 
             <Button
                 android:id="@+id/btnAdicionaMusica"
+                style="@style/botao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/botao"
-                android:text="Adiciona Música"
+                android:text="Adicionar Música"
                 android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnPDF"
+                style="@style/botao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gerar PDF" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -115,14 +122,14 @@
                     android:gravity="bottom|left" />
 
                 <Button
-                    android:text="Enviar"
+                    android:id="@+id/btnComentario"
+                    style="@style/botao"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:id="@+id/btnComentario"
-                    android:background="@drawable/botao"
-                    android:textColor="@color/white"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:text="Enviar"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
         </LinearLayout>

@@ -99,6 +99,11 @@
             android:name=".CifraActivity"
             android:label="@string/title_activity_cifra"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventoDetalhePdfActivity"
+            android:noHistory="true"
+            android:label="@string/title_activity_artista_detalhe"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
