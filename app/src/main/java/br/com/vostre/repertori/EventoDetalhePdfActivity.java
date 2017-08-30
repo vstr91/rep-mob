@@ -137,13 +137,13 @@ public class EventoDetalhePdfActivity extends BaseActivity {
 
         PrintedPdfDocument document = new PrintedPdfDocument(getBaseContext(), attributes);
 
-        int tamanhoLista = musicas.size() * 200;
+        int tamanhoLista = musicas.size() * 250;
 
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth(), tamanhoLista, 1).create();
 
         PdfDocument.Page page = document.startPage(pageInfo);
 
-        System.out.println("DWIDTH: "+document.getPageWidth()+" | DHEIGHT: "+tamanhoLista);
+        //System.out.println("DWIDTH: "+document.getPageWidth()+" | DHEIGHT: "+tamanhoLista);
 
         getWindow().getDecorView().measure(((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth(), tamanhoLista);
         getWindow().getDecorView().layout(0, 0, tamanhoLista, ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth());
@@ -152,8 +152,8 @@ public class EventoDetalhePdfActivity extends BaseActivity {
 
         document.finishPage(page);
 
-        File pdf = new File(getExternalFilesDir(null).getPath()+evento.getSlug()+".pdf");
-        System.out.println(pdf.getAbsolutePath());
+        File pdf = new File(getExternalFilesDir(null).getAbsolutePath()+evento.getSlug()+".pdf");
+        //System.out.println(pdf.getAbsolutePath());
 
         try {
             OutputStream outputStream = new FileOutputStream(pdf);
