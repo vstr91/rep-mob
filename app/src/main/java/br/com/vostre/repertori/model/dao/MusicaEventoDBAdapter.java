@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import br.com.vostre.repertori.model.Artista;
@@ -15,6 +17,7 @@ import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
+import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.utils.DataUtils;
 
 /**
@@ -421,6 +424,25 @@ public class MusicaEventoDBAdapter {
         database.close();
 
         return umMusicaEvento;
+    }
+
+    public Map<String, Integer> contarTodosPorEventoEEstilo(Evento umEvento, int situacao){
+        Cursor cursor = database.rawQuery("SELECT COUNT(DISTINCT id_musica), e.nome FROM musica_evento me LEFT JOIN musica m ON m._id = me.id_musica LEFT JOIN estilo e ON e._id = m.id_estilo " +
+                        "WHERE me.id_evento = ? AND me.status = ? GROUP BY e.nome ORDER BY COUNT(DISTINCT id_musica), e.nome",
+                new String[]{umEvento.getId(), String.valueOf(situacao)});
+        Map<String, Integer> musicas = new HashMap<>();
+
+        if(cursor.moveToFirst()){
+
+            do{
+                musicas.put(cursor.getString(1), cursor.getInt(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
     }
 
 }

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Map;
 
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.Estilo;
@@ -96,6 +97,11 @@ public class MusicaEventoDBHelper extends SQLiteOpenHelper {
     public MusicaEvento carregarPorMusicaEEvento(Context context, MusicaEvento musicaEvento){
         MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.carregarPorMusicaEEvento(musicaEvento);
+    }
+
+    public Map<String, Integer> contarTodosPorEventoEEstilo(Context context, Evento evento, int situacao){
+        MusicaEventoDBAdapter adapter = new MusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.contarTodosPorEventoEEstilo(evento, situacao);
     }
 
 }

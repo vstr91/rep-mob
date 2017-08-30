@@ -101,8 +101,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".EventoDetalhePdfActivity"
-            android:noHistory="true"
             android:label="@string/title_activity_artista_detalhe"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
     </application>
 

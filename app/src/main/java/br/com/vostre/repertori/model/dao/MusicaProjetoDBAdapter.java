@@ -277,6 +277,25 @@ public class MusicaProjetoDBAdapter {
         return musicas;
     }
 
+    public Map<String, Integer> contarTodosPorProjetoEArtista(Projeto umProjeto, int situacao){
+        Cursor cursor = database.rawQuery("SELECT COUNT(DISTINCT id_musica), a.nome FROM musica_projeto mp LEFT JOIN musica m ON m._id = mp.id_musica LEFT JOIN artista a ON a._id = m.id_artista " +
+                        "WHERE mp.id_projeto = ? AND mp.status = ? GROUP BY a.nome ORDER BY COUNT(DISTINCT id_musica) COLLATE NOCASE DESC",
+                new String[]{umProjeto.getId(), String.valueOf(situacao)});
+        Map<String, Integer> musicas = new HashMap<>();
+
+        if(cursor.moveToFirst()){
+
+            do{
+                musicas.put(cursor.getString(1), cursor.getInt(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
     public MusicaProjeto carregar(MusicaProjeto musicaProjeto){
         Cursor cursor = database.rawQuery("SELECT _id, id_musica, id_projeto, status, data_cadastro, " +
                         "data_recebimento, ultima_alteracao FROM musica_projeto WHERE _id = ?",

@@ -31,6 +31,25 @@
                 android:layout_height="350dp"
                 android:layout_weight="8"></com.github.mikephil.charting.charts.RadarChart>
 
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Músicas Por Artista"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chartArtista"
+                android:layout_width="match_parent"
+                android:background="@drawable/lista"
+                android:layout_height="350dp"
+                android:layout_weight="8"></com.github.mikephil.charting.charts.PieChart>
+
             <!--<ListView-->
                 <!--android:id="@+id/listViewMusicasEstilos"-->
                 <!--android:layout_width="match_parent"-->

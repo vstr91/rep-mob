@@ -75,6 +75,11 @@ public class MusicaProjetoDBHelper extends SQLiteOpenHelper {
         return adapter.contarTodosPorProjetoEEstilo(projeto, situacao);
     }
 
+    public Map<String, Integer> contarTodosPorProjetoEArtista(Context context, Projeto projeto, int situacao){
+        MusicaProjetoDBAdapter adapter = new MusicaProjetoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.contarTodosPorProjetoEArtista(projeto, situacao);
+    }
+
     public long salvarOuAtualizar(Context context, MusicaProjeto musicaEvento){
         MusicaProjetoDBAdapter adapter = new MusicaProjetoDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.salvarOuAtualizar(musicaEvento);

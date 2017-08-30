@@ -4,9 +4,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,19 +26,37 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.data.RadarEntry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import br.com.vostre.repertori.adapter.ComentarioList;
 import br.com.vostre.repertori.adapter.StableArrayAdapter;
@@ -64,10 +85,14 @@ public class EventoDetalhePdfActivity extends BaseActivity {
     Evento evento;
 
     List<Musica> musicas;
+    Map<String, Integer> musicasEstilos;
 
     MusicaEventoDBHelper musicaEventoDBHelper;
     ComentarioEventoDBHelper comentarioEventoDBHelper;
     EventoDBHelper eventoDBHelper;
+
+//    PieChart pieChart;
+//    ImageView imageViewChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,23 +103,69 @@ public class EventoDetalhePdfActivity extends BaseActivity {
         comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
         eventoDBHelper = new EventoDBHelper(getApplicationContext());
 
-        ScrollView root = (ScrollView) findViewById(R.id.root);
+        LinearLayout root = (LinearLayout) findViewById(R.id.root);
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         textViewData = (TextView) findViewById(R.id.textViewData);
         listViewMusicas = (LinearLayout) findViewById(R.id.listViewMusicas);
+//        pieChart = (PieChart) findViewById(R.id.chartPizza);
+//        imageViewChart = (ImageView) findViewById(R.id.imageViewChart);
 
         evento = new Evento();
         evento.setId(getIntent().getStringExtra("evento"));
 
+        root.getLayoutParams().width = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
+
         carregaInformacaoEvento();
 
         carregaListaMusicas();
+
+//        gerarGrafico();
 
         gerarPdf();
 
         listViewMusicas.setMinimumWidth(3000);
 
     }
+
+//    private void gerarGrafico() {
+//        musicasEstilos = musicaEventoDBHelper.contarTodosPorEventoEEstilo(getApplicationContext(), evento, 0);
+//
+//        final List<String> labels = new ArrayList<>();
+//        final List<PieEntry> entries = new ArrayList<>();
+//        Set keys = musicasEstilos.keySet();
+//
+//        for(Iterator i = keys.iterator(); i.hasNext();){
+//            String estilo = (String) i.next();
+//            PieEntry entry = new PieEntry(musicasEstilos.get(estilo), estilo);
+//            entries.add(entry);
+//            labels.add(estilo);
+//        }
+//
+//        PieDataSet dataSet = new PieDataSet(entries, evento.getNome());
+//
+//        PieData data = new PieData(dataSet);
+////        data.setValueFormatter(new IValueFormatter() {
+////            @Override
+////            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+////                return String.valueOf((int) value);
+////            }
+////        });
+//        data.setValueTextSize(10f);
+//        data.setValueTextColor(Color.parseColor("#FFDD0000"));
+//
+//        pieChart.getLegend().setEnabled(false);
+//        pieChart.getDescription().setEnabled(false);
+//        pieChart.animateXY(
+//                1400, 1400,
+//                Easing.EasingOption.EaseInOutQuad,
+//                Easing.EasingOption.EaseInOutQuad);
+//        pieChart.setPadding(0,0,0,0);
+//        pieChart.setRotationEnabled(false);
+//
+//        pieChart.setData(data);
+//        pieChart.invalidate();
+//
+//    }
 
     private void carregaListaMusicas(){
         musicas = musicaEventoDBHelper.listarTodosPorEvento(getApplicationContext(), evento);
@@ -130,23 +201,24 @@ public class EventoDetalhePdfActivity extends BaseActivity {
     private void gerarPdf(){
 
         PrintAttributes attributes = new PrintAttributes.Builder()
-                .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+                .setMediaSize(PrintAttributes.MediaSize.ISO_A4.asPortrait())
                 .setColorMode(PrintAttributes.COLOR_MODE_COLOR)
                 .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
                 .build();
 
         PrintedPdfDocument document = new PrintedPdfDocument(getBaseContext(), attributes);
 
-        int tamanhoLista = musicas.size() * 250;
+        int tamanhoLista = musicas.size() * 250 + 200;
+        int largura = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
 
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth(), tamanhoLista, 1).create();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(largura, tamanhoLista, 1).create();
 
         PdfDocument.Page page = document.startPage(pageInfo);
 
         //System.out.println("DWIDTH: "+document.getPageWidth()+" | DHEIGHT: "+tamanhoLista);
 
-        getWindow().getDecorView().measure(((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth(), tamanhoLista);
-        getWindow().getDecorView().layout(0, 0, tamanhoLista, ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth());
+        getWindow().getDecorView().measure(largura, tamanhoLista);
+        getWindow().getDecorView().layout(0, 0, tamanhoLista, largura);
 
         getWindow().getDecorView().draw(page.getCanvas());
 

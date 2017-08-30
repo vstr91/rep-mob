@@ -3,6 +3,7 @@ package br.com.vostre.repertori.fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,18 +13,27 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -35,8 +45,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import br.com.vostre.repertori.App;
@@ -53,11 +65,12 @@ import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
 import br.com.vostre.repertori.utils.AnalyticsApplication;
+import br.com.vostre.repertori.utils.SnackbarHelper;
 
 /**
  * Created by Almir on 17/06/2015.
  */
-public class FragmentRepertorioEstilo extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener {
+public class FragmentRepertorioEstilo extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, OnChartValueSelectedListener {
 
     //private ListView lista;
     private ListView listaExecucoes;
@@ -69,13 +82,18 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
     String idProjeto;
 
     Map<String, Integer> musicas;
+    Map<String, Integer> musicasArtistas;
     List<MusicaExecucao> execucoes;
 
     Projeto projeto;
 
     RadarChart chart;
+    PieChart chartArtista;
 
     Tracker mTracker;
+
+    MusicaProjetoDBHelper musicaProjetoDBHelper;
+    ProjetoDBHelper projetoDBHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,9 +111,14 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
         //lista = (ListView) rootView.findViewById(R.id.listViewMusicasEstilos);
         listaExecucoes = (ListView) rootView.findViewById(R.id.listViewMusicasExecucoes);
         chart = (RadarChart) rootView.findViewById(R.id.chart);
+        chartArtista = (PieChart) rootView.findViewById(R.id.chartArtista);
+
+        musicaProjetoDBHelper = new MusicaProjetoDBHelper(getContext());
+        projetoDBHelper = new ProjetoDBHelper(getContext());
 
         idProjeto = getArguments().getString("projeto");
         musicas = carregaMusicas();
+        geraGraficos();
 
         final List<String> labels = new ArrayList<>();
         final List<RadarEntry> entries = new ArrayList<>();
@@ -230,8 +253,6 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
     private Map<String, Integer> carregaMusicas(){
 
         if(idProjeto != null){
-            MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(getContext());
-            ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(getContext());
             projeto = new Projeto();
             projeto.setId(idProjeto);
             projeto = projetoDBHelper.carregar(getContext(), projeto);
@@ -289,9 +310,114 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
 
     }
 
+    private void geraGraficos(){
+        musicasArtistas = musicaProjetoDBHelper.contarTodosPorProjetoEArtista(getContext(), projeto, 0);
+
+        musicasArtistas = sortHashMapByValues(musicasArtistas);
+
+        final List<PieEntry> entries = new ArrayList<>();
+        Set keys = musicasArtistas.keySet();
+
+        for(Iterator i = keys.iterator(); i.hasNext();){
+            String estilo = (String) i.next();
+            PieEntry entry = new PieEntry(musicasArtistas.get(estilo), estilo);
+            entry.setLabel(estilo);
+            entries.add(entry);
+        }
+
+        int[] CORES = new int[100];
+
+        for(int i = 0; i < 100; i++){
+
+            Random r = new Random();
+            int i1 = r.nextInt(256 - 0) + 0;
+            int i2 = r.nextInt(256 - 0) + 0;
+            int i3 = r.nextInt(256 - 0) + 0;
+
+            CORES[i] = Color.rgb(i1, i2, i3);
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, projeto.getNome());
+        dataSet.setColors(CORES);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return "";//String.valueOf((int) value);
+            }
+        });
+
+        data.setValueTextSize(10f);
+        data.setValueTextColor(Color.parseColor("#FFFFFFFF"));
+
+//        chartArtista.getLegend().setEnabled(false);
+        chartArtista.getDescription().setEnabled(false);
+        chartArtista.animateXY(
+                1400, 1400,
+                Easing.EasingOption.EaseInOutQuad,
+                Easing.EasingOption.EaseInOutQuad);
+        chartArtista.setPadding(0,0,0,0);
+        chartArtista.setRotationEnabled(false);
+        chartArtista.setClickable(false);
+        chartArtista.setDrawEntryLabels(false);
+        chartArtista.setOnChartValueSelectedListener(this);
+        chartArtista.setDrawCenterText(true);
+        chartArtista.setCenterText(musicasArtistas.size()+" artista(s)");
+
+        Legend l = chartArtista.getLegend();
+
+        l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+        l.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
+        l.setWordWrapEnabled(true);
+
+        chartArtista.setData(data);
+        chartArtista.invalidate();
+    }
+
+    public LinkedHashMap<String, Integer> sortHashMapByValues(
+            Map<String, Integer> passedMap) {
+        List<String> mapKeys = new ArrayList<>(passedMap.keySet());
+        List<Integer> mapValues = new ArrayList<>(passedMap.values());
+        Collections.sort(mapValues);
+        Collections.sort(mapKeys);
+
+        LinkedHashMap<String, Integer> sortedMap =
+                new LinkedHashMap<>();
+
+        Iterator<Integer> valueIt = mapValues.iterator();
+        while (valueIt.hasNext()) {
+            Integer val = valueIt.next();
+            Iterator<String> keyIt = mapKeys.iterator();
+
+            while (keyIt.hasNext()) {
+                String key = keyIt.next();
+                Integer comp1 = passedMap.get(key);
+                Integer comp2 = val;
+
+                if (comp1.equals(comp2)) {
+                    keyIt.remove();
+                    sortedMap.put(key, val);
+                    break;
+                }
+            }
+        }
+        return sortedMap;
+    }
+
     @Override
     public void onModalCadastroDismissed(int resultado) {
         atualizaLista();
     }
 
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        PieEntry pieEntry = (PieEntry) e;
+        SnackbarHelper.notifica(this.getView(), pieEntry.getLabel()+": "+(int) e.getY()+" música(s)", Snackbar.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
 }
