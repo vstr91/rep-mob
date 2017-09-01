@@ -87,6 +87,11 @@ public class MusicaDBHelper extends SQLiteOpenHelper {
         return adapter.carregar(musica);
     }
 
+    public Musica carregarPorSlug(Context context, Musica musica){
+        MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.carregarPorSlug(musica);
+    }
+
     public boolean jaExiste(Context context, Musica musica){
         MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.jaExiste(musica);

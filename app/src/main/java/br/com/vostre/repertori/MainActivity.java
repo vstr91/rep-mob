@@ -33,8 +33,10 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +49,10 @@ import br.com.vostre.repertori.fragment.InfoFragment;
 import br.com.vostre.repertori.fragment.MusicasFragment;
 import br.com.vostre.repertori.fragment.ProjetosFragment;
 import br.com.vostre.repertori.listener.LoadListener;
+import br.com.vostre.repertori.model.Evento;
+import br.com.vostre.repertori.model.Musica;
+import br.com.vostre.repertori.model.dao.EventoDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.service.AtualizaDadosService;
 import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.Constants;
@@ -70,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int fragmentoAtual;
     ProgressDialog pd;
     Tracker mTracker;
+
+    static int RC_BARCODE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,12 +271,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-        carregaFragmentoAtual(menuItem.getItemId());
+        if(menuItem.getItemId() == R.id.qr){
+            Intent intent = new Intent(this, BarcodeCaptureActivity.class);
+            intent.putExtra(BarcodeCaptureActivity.AutoFocus,true);
+            intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
 
-        fragmentoAtual = menuItem.getItemId();
+            startActivityForResult(intent, RC_BARCODE_CAPTURE);
+        } else{
+            carregaFragmentoAtual(menuItem.getItemId());
 
-        menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
+            fragmentoAtual = menuItem.getItemId();
+
+            menuItem.setChecked(true);
+            setTitle(menuItem.getTitle());
+        }
+
         drawer.closeDrawers();
 
         return true;
@@ -306,6 +323,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+
+                    String[] valor = barcode.rawValue.split("/");
+                    String dominio = valor[0];
+
+                    if(dominio.equals("draffonso:")){
+                        String tipo = valor[2];
+
+                        String slug = valor[3];
+
+                        Intent intent;
+
+                        switch(tipo){
+                            case "musicas":
+                                MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getBaseContext());
+                                Musica musica = new Musica();
+                                musica.setSlug(slug);
+                                musica = musicaDBHelper.carregarPorSlug(getBaseContext(), musica);
+
+                                intent = new Intent(getBaseContext(), MusicaDetalheActivity.class);
+                                intent.putExtra("musica", musica.getId());
+                                intent.putExtra("qr", true);
+                                startActivity(intent);
+
+                                break;
+                            case "eventos":
+                                EventoDBHelper eventoDBHelper = new EventoDBHelper(getBaseContext());
+                                Evento evento = new Evento();
+                                evento.setSlug(slug);
+                                evento = eventoDBHelper.carregarPorSlug(getBaseContext(), evento);
+
+                                intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
+                                intent.putExtra("evento", evento.getId());
+                                intent.putExtra("qr", true);
+                                startActivity(intent);
+                                break;
+                            default:
+                                Toast.makeText(getBaseContext(), "Erro ao ler QR Code. QR Code não relativo ao aplicativo.", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+
+                    } else{
+                        Toast.makeText(getBaseContext(), "Erro ao ler QR Code. QR Code não relativo ao aplicativo.", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(getBaseContext(), "Erro ao ler QR Code. Resultado vazio.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getBaseContext(), "Erro ao ler QR Code", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }

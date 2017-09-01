@@ -88,6 +88,11 @@ public class EventoDBHelper extends SQLiteOpenHelper {
         return adapter.carregar(evento);
     }
 
+    public Evento carregarPorSlug(Context context, Evento evento){
+        EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.carregarPorSlug(evento);
+    }
+
     public boolean jaExiste(Context context, Evento evento){
         EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.jaExiste(evento);

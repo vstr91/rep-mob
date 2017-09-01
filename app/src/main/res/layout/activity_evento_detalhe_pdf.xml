@@ -5,6 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/white"
     android:orientation="vertical"
     tools:context="br.com.vostre.repertori.EventoDetalheActivity">
 
@@ -41,11 +42,6 @@
     <!--android:minHeight="142dp"-->
     <!--android:visibility="visible" />-->
 
-    <!--<ImageView-->
-    <!--android:id="@+id/imageViewChart"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="200dp" />-->
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
@@ -55,6 +51,15 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:gravity="center_horizontal"
+        android:padding="5dp"
+        android:text="Escaneie o QR Code para informações no app" />
 
     <LinearLayout
         android:id="@+id/listViewMusicas"
@@ -66,6 +71,11 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp" />
+
+    <ImageView
+        android:id="@+id/imageViewQr"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
 
     <!--</LinearLayout>-->
 

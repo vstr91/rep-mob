@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.print.PrintAttributes;
@@ -44,6 +45,9 @@ import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.google.zxing.qrcode.encoder.QRCode;
+
+import net.glxn.qrgen.core.image.ImageType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -92,7 +96,7 @@ public class EventoDetalhePdfActivity extends BaseActivity {
     EventoDBHelper eventoDBHelper;
 
 //    PieChart pieChart;
-//    ImageView imageViewChart;
+    ImageView imageViewQr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +112,7 @@ public class EventoDetalhePdfActivity extends BaseActivity {
         textViewData = (TextView) findViewById(R.id.textViewData);
         listViewMusicas = (LinearLayout) findViewById(R.id.listViewMusicas);
 //        pieChart = (PieChart) findViewById(R.id.chartPizza);
-//        imageViewChart = (ImageView) findViewById(R.id.imageViewChart);
+        imageViewQr = (ImageView) findViewById(R.id.imageViewQr);
 
         evento = new Evento();
         evento.setId(getIntent().getStringExtra("evento"));
@@ -120,6 +124,9 @@ public class EventoDetalhePdfActivity extends BaseActivity {
         carregaListaMusicas();
 
 //        gerarGrafico();
+
+        Bitmap bitmap = net.glxn.qrgen.android.QRCode.from("draffonso://eventos/"+evento.getSlug()).withSize(imageViewQr.getWidth(), imageViewQr.getHeight()).bitmap();
+        imageViewQr.setImageBitmap(bitmap);
 
         gerarPdf();
 
@@ -179,11 +186,15 @@ public class EventoDetalhePdfActivity extends BaseActivity {
             TextView textViewNome = (TextView) vi.findViewById(R.id.textViewNome);
             TextView textViewArtista = (TextView) vi.findViewById(R.id.textViewArtista);
             TextView textViewTom = (TextView) vi.findViewById(R.id.textViewTom);
+            ImageView imageViewQrMusica = (ImageView) vi.findViewById(R.id.imageViewQr);
 
             textViewCont.setText(String.valueOf(cont));
             textViewNome.setText(m.getNome());
             textViewArtista.setText(m.getArtista().getNome());
             textViewTom.setText(m.getTom().equals("null") || m.getTom().isEmpty() ? "-" : m.getTom());
+
+            Bitmap bitmap = net.glxn.qrgen.android.QRCode.from("draffonso://musicas/"+m.getSlug()).withSize(imageViewQrMusica.getWidth(), imageViewQrMusica.getHeight()).bitmap();
+            imageViewQrMusica.setImageBitmap(bitmap);
 
             cont++;
             listViewMusicas.addView(vi);
@@ -208,7 +219,7 @@ public class EventoDetalhePdfActivity extends BaseActivity {
 
         PrintedPdfDocument document = new PrintedPdfDocument(getBaseContext(), attributes);
 
-        int tamanhoLista = musicas.size() * 250 + 200;
+        int tamanhoLista = musicas.size() * 450 + 200;
         int largura = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
 
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(largura, tamanhoLista, 1).create();

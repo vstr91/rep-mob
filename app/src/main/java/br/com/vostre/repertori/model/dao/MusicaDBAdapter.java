@@ -426,6 +426,62 @@ public class MusicaDBAdapter {
         return umMusica;
     }
 
+    public Musica carregarPorSlug(Musica musica){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug, id_estilo, letra, observacoes, cifra FROM musica WHERE slug = ?", new String[]{musica.getSlug()});
+
+        Musica umMusica = null;
+
+        if(cursor.moveToFirst()){
+
+            ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(context);
+            EstiloDBHelper estiloDBHelper = new EstiloDBHelper(context);
+
+            do{
+                umMusica = new Musica();
+                umMusica.setId(cursor.getString(0));
+
+                umMusica.setNome(cursor.getString(1));
+                umMusica.setTom(cursor.getString(2));
+
+                Artista artista = new Artista();
+                artista.setId(cursor.getString(3));
+                artista = artistaDBHelper.carregar(context, artista);
+                umMusica.setArtista(artista);
+
+                umMusica.setStatus(cursor.getInt(4));
+
+                if(cursor.getString(5) != null){
+                    umMusica.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    umMusica.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                umMusica.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                umMusica.setSlug(cursor.getString(8));
+
+                if(cursor.getString(9) != null){
+                    Estilo estilo = new Estilo();
+                    estilo.setId(cursor.getString(9));
+                    estilo = estiloDBHelper.carregar(context, estilo);
+                    umMusica.setEstilo(estilo);
+                }
+
+                umMusica.setLetra(cursor.getString(10));
+                umMusica.setObservacoes(cursor.getString(11));
+                umMusica.setCifra(cursor.getString(12));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return umMusica;
+    }
+
     public boolean jaExiste(Musica musica){
         Cursor cursor = database.rawQuery("SELECT _id, nome, tom, id_artista, status, data_cadastro, data_recebimento, " +
                 "ultima_alteracao, slug FROM musica WHERE nome = ? AND id_artista = ? AND _id != ?", new String[]{musica.getNome(), musica.getArtista().getId(),

@@ -26,6 +26,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.barcode.Barcode;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -83,6 +85,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     EventoDBHelper eventoDBHelper;
 
     MusicaEvento musicaEvento;
+    boolean qrCode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,11 +113,26 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         btnComentario.setOnClickListener(this);
         btnAdicionaMusica.setOnClickListener(this);
         btnPDF.setOnClickListener(this);
-
         evento = new Evento();
-        evento.setId(getIntent().getStringExtra("evento"));
 
-        carregaInformacaoEvento();
+        Uri data = getIntent().getData();
+
+        if(data != null){
+            List<String> params = data.getPathSegments();
+            String slug = params.get(0);
+            evento.setSlug(slug);
+            carregaInformacaoEvento(true);
+            qrCode = true;
+        } else{
+            evento.setId(getIntent().getStringExtra("evento"));
+            carregaInformacaoEvento(false);
+        }
+
+        String qr = getIntent().getStringExtra("qr");
+
+        if(qr != null){
+            qrCode = true;
+        }
 
         carregaListaMusicas();
 
@@ -237,7 +255,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
     @Override
     public void onModalCadastroDismissed(int resultado) {
-        carregaInformacaoEvento();
+        carregaInformacaoEvento(false);
     }
 
     @Override
@@ -267,8 +285,13 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
     }
 
-    private void carregaInformacaoEvento() {
-        evento = eventoDBHelper.carregar(getApplicationContext(), evento);
+    private void carregaInformacaoEvento(boolean usandoSlug) {
+
+        if(usandoSlug){
+            evento = eventoDBHelper.carregarPorSlug(getApplicationContext(), evento);
+        } else{
+            evento = eventoDBHelper.carregar(getApplicationContext(), evento);
+        }
 
         textViewNome.setText(evento.getNome());
         textViewData.setText(DataUtils.toString(evento.getData(), true));
@@ -320,4 +343,18 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         }
 
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+
+        if(qrCode){
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+
+
+    }
+
 }

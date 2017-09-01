@@ -28,5 +28,8 @@
     <item
         android:id="@+id/info"
         android:title="Informações do Sistema" />
+    <item
+        android:id="@+id/qr"
+        android:title="Leitor de QR Code" />
 
 </menu>

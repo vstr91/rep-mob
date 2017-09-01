@@ -416,6 +416,56 @@ public class EventoDBAdapter {
         return umEvento;
     }
 
+    public Evento carregarPorSlug(Evento evento){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, slug, id_projeto FROM evento WHERE slug = ?", new String[]{evento.getSlug()});
+
+        Evento umEvento = null;
+
+        if(cursor.moveToFirst()){
+
+            TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
+            ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(context);
+
+            do{
+                umEvento = new Evento();
+                umEvento.setId(cursor.getString(0));
+
+                umEvento.setNome(cursor.getString(1));
+                umEvento.setData(DataUtils.bancoParaData(cursor.getString(2)));
+
+                TipoEvento tipoEvento = new TipoEvento();
+                tipoEvento.setId(cursor.getString(3));
+                tipoEvento = tipoEventoDBHelper.carregar(context, tipoEvento);
+                umEvento.setTipoEvento(tipoEvento);
+
+                umEvento.setStatus(cursor.getInt(4));
+
+                if(cursor.getString(5) != null){
+                    umEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                umEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                umEvento.setSlug(cursor.getString(8));
+
+                Projeto projeto = new Projeto();
+                projeto.setId(cursor.getString(9));
+                projeto = projetoDBHelper.carregar(context, projeto);
+                umEvento.setProjeto(projeto);
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return umEvento;
+    }
+
     public boolean jaExiste(Evento evento){
         Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
                 "ultima_alteracao, slug FROM evento WHERE nome = ? AND data = ?", new String[]{evento.getId(), DataUtils.dataParaBanco(evento.getData())});

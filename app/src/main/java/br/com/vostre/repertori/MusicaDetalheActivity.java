@@ -2,6 +2,7 @@ package br.com.vostre.repertori;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     TextView textViewObservacoes;
 
     Musica musica;
+    boolean qrCode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +104,25 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         btnCifra.setOnClickListener(this);
 
         musica = new Musica();
-        musica.setId(getIntent().getStringExtra("musica"));
-        musica = musicaDBHelper.carregar(getApplicationContext(), musica);
+
+        Uri data = getIntent().getData();
+
+        if(data != null){
+            List<String> params = data.getPathSegments();
+            String slug = params.get(0);
+            musica.setSlug(slug);
+            musica = musicaDBHelper.carregarPorSlug(getApplicationContext(), musica);
+            qrCode = true;
+        } else{
+            musica.setId(getIntent().getStringExtra("musica"));
+            musica = musicaDBHelper.carregar(getApplicationContext(), musica);
+        }
+
+        String qr = getIntent().getStringExtra("qr");
+
+        if(qr != null){
+            qrCode = true;
+        }
 
         textViewNome.setText(musica.getNome());
         textViewArtista.setText(musica.getArtista().getNome());
@@ -294,6 +313,19 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
                 startActivity(cifra);
                 break;
         }
+
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+
+        if(qrCode){
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+
 
     }
 
