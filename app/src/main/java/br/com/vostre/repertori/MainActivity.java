@@ -349,10 +349,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 musica.setSlug(slug);
                                 musica = musicaDBHelper.carregarPorSlug(getBaseContext(), musica);
 
-                                intent = new Intent(getBaseContext(), MusicaDetalheActivity.class);
-                                intent.putExtra("musica", musica.getId());
-                                intent.putExtra("qr", true);
-                                startActivity(intent);
+                                if(musica != null){
+                                    intent = new Intent(getBaseContext(), MusicaDetalheActivity.class);
+                                    intent.putExtra("musica", musica.getId());
+                                    intent.putExtra("qr", true);
+                                    startActivity(intent);
+                                } else{
+                                    Toast.makeText(getBaseContext(), "Música não encontrada. Registro pode ter sido removido ou alterado.", Toast.LENGTH_SHORT).show();
+                                }
 
                                 break;
                             case "eventos":
@@ -361,10 +365,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 evento.setSlug(slug);
                                 evento = eventoDBHelper.carregarPorSlug(getBaseContext(), evento);
 
-                                intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
-                                intent.putExtra("evento", evento.getId());
-                                intent.putExtra("qr", true);
-                                startActivity(intent);
+                                if(evento != null){
+                                    intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
+                                    intent.putExtra("evento", evento.getId());
+                                    intent.putExtra("qr", true);
+                                    startActivity(intent);
+                                } else{
+                                    Toast.makeText(getBaseContext(), "Evento não encontrado. Registro pode ter sido removido ou alterado.", Toast.LENGTH_SHORT).show();
+                                }
+
                                 break;
                             default:
                                 Toast.makeText(getBaseContext(), "Erro ao ler QR Code. QR Code não relativo ao aplicativo.", Toast.LENGTH_SHORT).show();

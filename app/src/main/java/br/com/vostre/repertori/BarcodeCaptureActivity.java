@@ -109,7 +109,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Toque na tela para ler o QR Code.",
+        Snackbar.make(mGraphicOverlay, "Toque no QR Code quando for identificado para realizar a leitura.",
                 Snackbar.LENGTH_LONG)
                 .show();
     }
@@ -296,7 +296,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Multitracker sample")
+        builder.setTitle("Leitor QR Code")
                 .setMessage("Permitir câmera?")
                 .setPositiveButton("OK", listener)
                 .show();
