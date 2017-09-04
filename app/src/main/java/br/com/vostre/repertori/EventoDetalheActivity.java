@@ -117,26 +117,36 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
         Uri data = getIntent().getData();
 
+        boolean  eventoExiste = false;
+
         if(data != null){
             List<String> params = data.getPathSegments();
             String slug = params.get(0);
             evento.setSlug(slug);
-            carregaInformacaoEvento(true);
+            eventoExiste = carregaInformacaoEvento(true);
             qrCode = true;
         } else{
             evento.setId(getIntent().getStringExtra("evento"));
-            carregaInformacaoEvento(false);
+            eventoExiste = carregaInformacaoEvento(false);
         }
 
-        String qr = getIntent().getStringExtra("qr");
+        if(eventoExiste){
+            String qr = getIntent().getStringExtra("qr");
 
-        if(qr != null){
-            qrCode = true;
+            if(qr != null){
+                qrCode = true;
+            }
+
+            carregaListaMusicas();
+
+            atualizaComentarios();
+        } else{
+            Toast.makeText(getBaseContext(), "Evento não encontrado. Registro pode ter sido removido ou alterado.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
 
-        carregaListaMusicas();
 
-        atualizaComentarios();
 
     }
 
@@ -285,7 +295,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
     }
 
-    private void carregaInformacaoEvento(boolean usandoSlug) {
+    private boolean carregaInformacaoEvento(boolean usandoSlug) {
 
         if(usandoSlug){
             evento = eventoDBHelper.carregarPorSlug(getApplicationContext(), evento);
@@ -293,8 +303,14 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
             evento = eventoDBHelper.carregar(getApplicationContext(), evento);
         }
 
-        textViewNome.setText(evento.getNome());
-        textViewData.setText(DataUtils.toString(evento.getData(), true));
+        if(evento == null){
+            return false;
+        } else{
+            textViewNome.setText(evento.getNome());
+            textViewData.setText(DataUtils.toString(evento.getData(), true));
+            return true;
+        }
+
     }
 
     @Override

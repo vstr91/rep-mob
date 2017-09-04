@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -118,137 +119,138 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             musica = musicaDBHelper.carregar(getApplicationContext(), musica);
         }
 
-        String qr = getIntent().getStringExtra("qr");
+        if(musica != null){
+            String qr = getIntent().getStringExtra("qr");
 
-        if(qr != null){
-            qrCode = true;
-        }
-
-        textViewNome.setText(musica.getNome());
-        textViewArtista.setText(musica.getArtista().getNome());
-
-        String tom = musica.getTom().equals("null") ? "-" : musica.getTom();
-
-        textViewTom.setText(tom);
-
-        eventos = musicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica);
-
-        adapterEventos =
-                new EventoList(this, android.R.layout.simple_spinner_dropdown_item, eventos);
-
-        adapterEventos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
-
-        listViewExecucoes.setAdapter(adapterEventos);
-        listViewExecucoes.setOnItemClickListener(this);
-        listViewExecucoes.setEmptyView(findViewById(R.id.textViewListaVazia));
-
-        listViewExecucoes.setOnTouchListener(new View.OnTouchListener() {
-            // Setting on Touch Listener for handling the touch inside ScrollView
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // Disallow the touch request for parent scroll on touch of child view
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
-
-        tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica, 10);
-
-        if(!musica.getObservacoes().equals("null") && !musica.getObservacoes().isEmpty()){
-            textViewObservacoes.setText(musica.getObservacoes());
-        } else{
-            textViewLabelObservacoes.setVisibility(View.GONE);
-            textViewObservacoes.setVisibility(View.GONE);
-        }
-
-        chart.setExtraOffsets(10f, 10f, 10f, 10f);
-        chart.getDescription().setEnabled(false);
-        chart.setNoDataText("Nenhum registro encontrado.");
-        chart.setNoDataTextColor(R.color.colorAccent);
-
-        if(tmes.size() > 0){
-            int cont = 0;
-            List<Entry> dados = new ArrayList<>();
-
-            //long ultimoStamp = tmes.get(0).getMusicaEvento().getEvento().getData().getTimeInMillis();
-
-            for(TempoMusicaEvento tme : tmes){
-
-                String tempo = DataUtils.toStringSomenteHoras(tme.getTempo(), 1);
-                //int dateInt =  (int) ultimoStamp - date;
-
-
-
-                dados.add(new Entry(cont, DataUtils.tempoParaSegundos(tempo)));
-                cont++;
+            if(qr != null){
+                qrCode = true;
             }
 
-            LineDataSet dataSet = new LineDataSet(dados, "Tempos");
-            dataSet.setDrawFilled(true);
-            dataSet.setFillColor(R.color.colorAccent);
+            textViewNome.setText(musica.getNome());
+            textViewArtista.setText(musica.getArtista().getNome());
 
-            dataSet.setValueFormatter(new IValueFormatter() {
+            String tom = musica.getTom().equals("null") ? "-" : musica.getTom();
+
+            textViewTom.setText(tom);
+
+            eventos = musicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica);
+
+            adapterEventos =
+                    new EventoList(this, android.R.layout.simple_spinner_dropdown_item, eventos);
+
+            adapterEventos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+            listViewExecucoes.setAdapter(adapterEventos);
+            listViewExecucoes.setOnItemClickListener(this);
+            listViewExecucoes.setEmptyView(findViewById(R.id.textViewListaVazia));
+
+            listViewExecucoes.setOnTouchListener(new View.OnTouchListener() {
+                // Setting on Touch Listener for handling the touch inside ScrollView
                 @Override
-                public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                    return DataUtils.segundosParaTempo((long) value);
+                public boolean onTouch(View v, MotionEvent event) {
+                    // Disallow the touch request for parent scroll on touch of child view
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
                 }
             });
 
-            dataSet.setColor(Color.RED);
-            dataSet.setValueTextSize(12f);
-            dataSet.setValueTextColor(Color.RED);
+            tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica, 10);
 
-            LineData lineData = new LineData(dataSet);
-            chart.setData(lineData);
+            if(!musica.getObservacoes().equals("null") && !musica.getObservacoes().isEmpty()){
+                textViewObservacoes.setText(musica.getObservacoes());
+            } else{
+                textViewLabelObservacoes.setVisibility(View.GONE);
+                textViewObservacoes.setVisibility(View.GONE);
+            }
 
-            XAxis xAxis = chart.getXAxis();
-            xAxis.setGranularity(1f);
-            xAxis.setValueFormatter(new IAxisValueFormatter() {
-                @Override
-                public String getFormattedValue(float value, AxisBase axis) {
+            chart.setExtraOffsets(10f, 10f, 10f, 10f);
+            chart.getDescription().setEnabled(false);
+            chart.setNoDataText("Nenhum registro encontrado.");
+            chart.setNoDataTextColor(R.color.colorAccent);
 
-                    TempoMusicaEvento tme = null;
+            if(tmes.size() > 0){
+                int cont = 0;
+                List<Entry> dados = new ArrayList<>();
 
-                    try{
-                        tme = tmes.get((int) value);
-                    }catch(IndexOutOfBoundsException e){
-                        return "";
-                    }
+                //long ultimoStamp = tmes.get(0).getMusicaEvento().getEvento().getData().getTimeInMillis();
 
+                for(TempoMusicaEvento tme : tmes){
 
-                    if(tme != null){
-                        return DataUtils.toString(tme.getUltimaAlteracao(), false);
-                    } else{
-                        return String.valueOf(value);
-                    }
+                    String tempo = DataUtils.toStringSomenteHoras(tme.getTempo(), 1);
+                    //int dateInt =  (int) ultimoStamp - date;
 
 
+
+                    dados.add(new Entry(cont, DataUtils.tempoParaSegundos(tempo)));
+                    cont++;
                 }
-            });
 
-            IAxisValueFormatter formatterY  = new IAxisValueFormatter() {
-                @Override
-                public String getFormattedValue(float value, AxisBase axis) {
-                    return DataUtils.segundosParaTempo((long) value);
-                }
-            };
+                LineDataSet dataSet = new LineDataSet(dados, "Tempos");
+                dataSet.setDrawFilled(true);
+                dataSet.setFillColor(R.color.colorAccent);
 
-            YAxis yAxis = chart.getAxisLeft();
-            yAxis.setValueFormatter(formatterY);
-            yAxis.setGranularity(10f);
+                dataSet.setValueFormatter(new IValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                        return DataUtils.segundosParaTempo((long) value);
+                    }
+                });
 
-            YAxis yAxisRight = chart.getAxisRight();
-            yAxisRight.setValueFormatter(formatterY);
-            yAxisRight.setGranularity(10f);
+                dataSet.setColor(Color.RED);
+                dataSet.setValueTextSize(12f);
+                dataSet.setValueTextColor(Color.RED);
 
-            chart.animateXY(
-                    400, 1000,
-                    Easing.EasingOption.EaseInSine,
-                    Easing.EasingOption.EaseInSine);
+                LineData lineData = new LineData(dataSet);
+                chart.setData(lineData);
 
-            chart.invalidate();
+                XAxis xAxis = chart.getXAxis();
+                xAxis.setGranularity(1f);
+                xAxis.setValueFormatter(new IAxisValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value, AxisBase axis) {
 
-        }
+                        TempoMusicaEvento tme = null;
+
+                        try{
+                            tme = tmes.get((int) value);
+                        }catch(IndexOutOfBoundsException e){
+                            return "";
+                        }
+
+
+                        if(tme != null){
+                            return DataUtils.toString(tme.getUltimaAlteracao(), false);
+                        } else{
+                            return String.valueOf(value);
+                        }
+
+
+                    }
+                });
+
+                IAxisValueFormatter formatterY  = new IAxisValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value, AxisBase axis) {
+                        return DataUtils.segundosParaTempo((long) value);
+                    }
+                };
+
+                YAxis yAxis = chart.getAxisLeft();
+                yAxis.setValueFormatter(formatterY);
+                yAxis.setGranularity(10f);
+
+                YAxis yAxisRight = chart.getAxisRight();
+                yAxisRight.setValueFormatter(formatterY);
+                yAxisRight.setGranularity(10f);
+
+                chart.animateXY(
+                        400, 1000,
+                        Easing.EasingOption.EaseInSine,
+                        Easing.EasingOption.EaseInSine);
+
+                chart.invalidate();
+
+            }
 
 //        adapterExecucoes =
 //                new TempoList(this, android.R.layout.simple_spinner_dropdown_item, tmes);
@@ -258,15 +260,20 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 //        listViewExecucoesCronometradas.setAdapter(adapterExecucoes);
 //        listViewExecucoesCronometradas.setEmptyView(findViewById(R.id.textViewListaVaziaCronometro));
 
-        Calendar c = musica.calcularMedia(getBaseContext());
+            Calendar c = musica.calcularMedia(getBaseContext());
 
-        if(c != null){
-            textViewMedia.setText(DataUtils.toStringSomenteHoras(c, 1));
+            if(c != null){
+                textViewMedia.setText(DataUtils.toStringSomenteHoras(c, 1));
+            } else{
+                textViewMedia.setText("N/D");
+            }
+
+            //btnLetra.setEnabled(!musica.getLetra().isEmpty());
         } else{
-            textViewMedia.setText("N/D");
+            Toast.makeText(getBaseContext(), "Música não encontrada. Registro pode ter sido removido ou alterado.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
-
-        //btnLetra.setEnabled(!musica.getLetra().isEmpty());
 
     }
 
