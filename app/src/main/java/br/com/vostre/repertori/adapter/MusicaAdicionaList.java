@@ -46,12 +46,14 @@ public class MusicaAdicionaList extends ArrayAdapter<Musica> implements Compound
 
             viewHolder.text = (TextView) convertView.findViewById(R.id.textViewNome);
             viewHolder.artista = (TextView) convertView.findViewById(R.id.textViewArtista);
+            viewHolder.tom = (TextView) convertView.findViewById(R.id.textViewTom);
             viewHolder.checkbox = (CheckBox) convertView.findViewById(R.id.checkBoxAdicionar);
             viewHolder.checkbox.setOnCheckedChangeListener(this);
 
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.textViewNome, viewHolder.text);
             convertView.setTag(R.id.textViewArtista, viewHolder.artista);
+            convertView.setTag(R.id.textViewTom, viewHolder.tom);
             convertView.setTag(R.id.checkBoxAdicionar, viewHolder.checkbox);
 
             TextView textViewNome = (TextView) convertView.findViewById(R.id.textViewNome);
@@ -71,6 +73,7 @@ public class MusicaAdicionaList extends ArrayAdapter<Musica> implements Compound
 
         viewHolder.text.setText(musicas.get(position).getNome());
         viewHolder.artista.setText(musicas.get(position).getArtista().getNome());
+        viewHolder.tom.setText(musicas.get(position).getTom().equals("null") || musicas.get(position).getTom().isEmpty() ? "-" : musicas.get(position).getTom());
         viewHolder.checkbox.setChecked(musicas.get(position).isChecked());
 
         return convertView;
@@ -85,6 +88,7 @@ public class MusicaAdicionaList extends ArrayAdapter<Musica> implements Compound
     static class ViewHolder {
         protected TextView text;
         protected TextView artista;
+        protected TextView tom;
         protected CheckBox checkbox;
     }
 
