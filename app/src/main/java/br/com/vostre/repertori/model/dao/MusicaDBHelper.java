@@ -97,4 +97,11 @@ public class MusicaDBHelper extends SQLiteOpenHelper {
         return adapter.jaExiste(musica);
     }
 
+    public List<Musica> listarRelacionadasPorTom(Context context, Musica musica){
+        MusicaDBAdapter adapter = new MusicaDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarRelacionadasPorTom(musica);
+    }
+
+
+
 }

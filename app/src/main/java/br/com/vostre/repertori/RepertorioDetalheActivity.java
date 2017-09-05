@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
     MusicaRepertorio musicaRepertorio;
     Dialog dialogLoad;
-
+    TextView textViewTempo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +83,7 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         listViewMusicas = (DynamicListView) findViewById(R.id.listViewMusicas);
         btnAdicionaMusica = (Button) findViewById(R.id.btnAdicionaMusica);
+        textViewTempo = (TextView) findViewById(R.id.textViewTempo);
 
         btnAdicionaMusica.setOnClickListener(this);
 
@@ -91,6 +93,10 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
         carregaInformacaoRepertorio();
 
         carregaListaMusicas();
+
+        String tempo = calcularTempoTotalRepertorio();
+
+        textViewTempo.setText(tempo);
 
     }
 
@@ -233,6 +239,30 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
     }
 
+    private String calcularTempoTotalRepertorio(){
+        long tempoMedio = 0;
+        int cont = 0;
+        BigInteger total = BigInteger.ZERO;
+
+        for(Musica musica : musicas){
+
+            Calendar c = musica.calcularMedia(getBaseContext());
+
+            if(c != null){
+                //System.out.println(musica.getNome()+" | "+DataUtils.toStringSomenteHoras(c, 0)+" | "+DataUtils.tempoParaSegundos(DataUtils.toStringSomenteHoras(c, 1)));
+                total = total.add(BigInteger.valueOf(c.getTimeInMillis()));
+                tempoMedio += DataUtils.tempoParaSegundos(DataUtils.toStringSomenteHoras(c, 1));
+                cont++;
+            }
+
+        }
+
+        Calendar tempoMedioAtivo = Calendar.getInstance();
+        tempoMedioAtivo.setTimeInMillis(total.longValue());
+        //System.out.println("Tempo Médio: "+DataUtils.segundosParaTempo(tempoMedio));
+        return "Tempo Total: "+DataUtils.segundosParaTempo(tempoMedio)+" ("+cont+" música(s) considerada(s))";
+    }
+
     private class ExcluirEntidade extends AsyncTask<Void, String, String> {
 
         @Override
@@ -250,16 +280,17 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
             musicaRepertorioDBHelper.salvarOuAtualizar(getApplicationContext(), musicaRepertorio);
 
             musicaRepertorioDBHelper.corrigirOrdemPorRepertorio(getApplicationContext(), repertorio);
+            String tempo = calcularTempoTotalRepertorio();
 
-            return "";
+            return tempo;
 
         }
 
         @Override
         protected void onPostExecute(String tempo) {
             super.onPostExecute(tempo);
-            carregaListaMusicas();
             Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
+            carregaListaMusicas();
             dialogLoad.dismiss();
 
         }

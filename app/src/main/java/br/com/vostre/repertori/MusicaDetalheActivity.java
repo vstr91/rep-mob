@@ -54,9 +54,9 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     TextView textViewArtista;
     TextView textViewTom;
     ListView listViewExecucoes;
-//    ListView listViewExecucoesCronometradas;
+    ListView listViewMesmoTom;
     EventoList adapterEventos;
-//    TempoList adapterExecucoes;
+    MusicaList adapterMusicas;
     Button btnBuscaVideo;
     TextView textViewMedia;
     Button btnLetra;
@@ -74,6 +74,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_musica_detalhe);
 
+        List<Musica> musicasMesmoTom;
         List<Evento> eventos;
         MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
 
@@ -91,7 +92,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         textViewArtista = (TextView) findViewById(R.id.textViewArtista);
         textViewTom = (TextView) findViewById(R.id.textViewTom);
         listViewExecucoes = (ListView) findViewById(R.id.listViewExecucoes);
-//        listViewExecucoesCronometradas = (ListView) findViewById(R.id.listViewExecucoesCronometradas);
+        listViewMesmoTom = (ListView) findViewById(R.id.listViewMesmoTom);
         btnBuscaVideo = (Button) findViewById(R.id.btnBuscaVideo);
         textViewMedia = (TextView) findViewById(R.id.textViewMedia);
         btnLetra = (Button) findViewById(R.id.btnLetra);
@@ -145,6 +146,27 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             listViewExecucoes.setEmptyView(findViewById(R.id.textViewListaVazia));
 
             listViewExecucoes.setOnTouchListener(new View.OnTouchListener() {
+                // Setting on Touch Listener for handling the touch inside ScrollView
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // Disallow the touch request for parent scroll on touch of child view
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            musicasMesmoTom = musicaDBHelper.listarRelacionadasPorTom(getApplicationContext(), musica);
+
+            adapterMusicas =
+                    new MusicaList(this, android.R.layout.simple_spinner_dropdown_item, musicasMesmoTom);
+
+            adapterMusicas.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+            listViewMesmoTom.setAdapter(adapterMusicas);
+            listViewMesmoTom.setOnItemClickListener(this);
+            listViewMesmoTom.setEmptyView(findViewById(R.id.textViewListaTomVazia));
+
+            listViewMesmoTom.setOnTouchListener(new View.OnTouchListener() {
                 // Setting on Touch Listener for handling the touch inside ScrollView
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -279,11 +301,27 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Evento evento = adapterEventos.getItem(position);
 
-        Intent intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
-        intent.putExtra("evento", evento.getId());
-        startActivity(intent);
+        Intent intent;
+
+        switch(parent.getId()){
+            case R.id.listViewMesmoTom:
+                Musica musica = adapterMusicas.getItem(position);
+
+                intent = new Intent(getBaseContext(), MusicaDetalheActivity.class);
+                intent.putExtra("musica", musica.getId());
+                startActivity(intent);
+                break;
+            case R.id.listViewExecucoes:
+                Evento evento = adapterEventos.getItem(position);
+
+                intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
+                intent.putExtra("evento", evento.getId());
+                startActivity(intent);
+                break;
+        }
+
+
 
     }
 
