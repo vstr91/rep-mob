@@ -10,10 +10,13 @@ import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -40,6 +43,7 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
 
     List<Musica> musicasTom;
     List<Musica> musicasEstilos;
+    List<Musica> musicas;
 
     MusicaProjetoDBHelper musicaProjetoDBHelper;
     ProjetoDBHelper projetoDBHelper;
@@ -49,6 +53,8 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
     Projeto projeto;
 
     List<View> dadosEstilos;
+    List<View> dadosTom;
+    List<View> dadosMusicas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,11 +136,13 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
     private void carregaListasMusicas(){
         musicasTom = musicaProjetoDBHelper.listarTodosPorProjetoETom(getApplicationContext(), projeto, 0);
         musicasEstilos = musicaProjetoDBHelper.listarTodosPorProjetoEEstilo(getApplicationContext(), projeto, 0);
+        musicas = musicaProjetoDBHelper.listarTodosPorProjeto(getApplicationContext(), projeto, 0);
 
         textViewObs.setText(musicasEstilos.size()+" música(s)");
 
         int cont = 1;
         String tom = "";
+        dadosTom = new ArrayList<>();
 
         for(Musica m : musicasTom){
             View vi = getLayoutInflater().inflate(R.layout.listview_musicas_tom_pdf, null);
@@ -169,7 +177,8 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             textViewEstilo.setText(m.getEstilo().getNome());
 
             cont++;
-            listViewMusicasTom.addView(vi);
+            dadosTom.add(vi);
+//            listViewMusicasTom.addView(vi);
         }
 
         // ESTILOS
@@ -214,6 +223,45 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             //listViewMusicasEstilos.addView(vi);
         }
 
+        // LISTA ALFABETICA
+
+        cont = 1;
+        dadosMusicas = new ArrayList<>();
+
+        for(Musica m : musicas){
+            View vi = getLayoutInflater().inflate(R.layout.listview_musicas_pdf, null);
+
+            TextView textViewCont = (TextView) vi.findViewById(R.id.textViewCont);
+            TextView textViewNome = (TextView) vi.findViewById(R.id.textViewNome);
+            TextView textViewArtista = (TextView) vi.findViewById(R.id.textViewArtista);
+            TextView textViewTempoMedio = (TextView) vi.findViewById(R.id.textViewTempoMedio);
+            TextView textViewEstilo = (TextView) vi.findViewById(R.id.textViewEstilo);
+
+            if(!estilo.equals(m.getEstilo().getNome())){
+                estilo = m.getEstilo().getNome();
+                textViewEstilo.setText(estilo);
+                cont = 1;
+            } else{
+                textViewEstilo.setVisibility(View.GONE);
+            }
+
+            textViewCont.setText(String.valueOf(cont));
+            textViewNome.setText(m.getNome());
+            textViewArtista.setText(m.getArtista().getNome());
+
+            Calendar calendar = m.calcularMedia(getBaseContext());
+
+            if(calendar != null){
+                textViewTempoMedio.setText(DataUtils.toStringSomenteHoras(calendar, 1));
+            } else{
+                textViewTempoMedio.setText("-");
+            }
+
+            cont++;
+            dadosMusicas.add(vi);
+            //listViewMusicasEstilos.addView(vi);
+        }
+
     }
 
     private void carregaInformacaoProjeto() {
@@ -232,23 +280,16 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
 
         PrintedPdfDocument document = new PrintedPdfDocument(getBaseContext(), attributes);
 
-        int tamanhoLista = (musicasEstilos.size() * 230 + 200) + (musicasTom.size() * 230 + 200);
-        int largura = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
-
         int cont = 1;
         int contOld = 1;
         int tamanhoAcumuladoPagina = 0;
         int contTotal = 1;
-        int tamanhoDados = dadosEstilos.size();
+        int tamanhoDadosEstilos = dadosEstilos.size();
+        int contPaginas = 1;
 
         LinearLayout linearLayout = new LinearLayout(getBaseContext());
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(document.getPageWidth(), PrintAttributes.MediaSize.ISO_A4.getHeightMils()));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-
-//        linearLayout.measure(document.getPageWidth(), document.getPageHeight());
-//        linearLayout.layout(0, 0, document.getPageWidth(), document.getPageHeight());
-
-        linearLayout.setBackgroundColor(Color.BLUE);
 
         PdfDocument.Page page = null;
 
@@ -273,6 +314,24 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             if(tamanhoAcumuladoPagina + view.getMeasuredHeight() <= document.getPageHeight()){
                 view.offsetTopAndBottom(tamanhoAcumuladoPagina);
             } else{
+                // PAGINA
+                TextView tv = new TextView(getBaseContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.RIGHT;
+                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
+                tv.setLayoutParams(layoutParams);
+                tv.setVisibility(View.VISIBLE);
+
+                tv.measure(document.getPageWidth(), document.getPageHeight());
+                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
+                tv.setTextColor(Color.BLACK);
+                tv.setTextSize(10);
+
+                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+                linearLayout.addView(tv);
+                // FIM PAGINA
+
                 linearLayout.draw(page.getCanvas());
                 document.finishPage(page);
                 page = null;
@@ -283,7 +342,26 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
 
             linearLayout.addView(view);
 
-            if(contTotal >= tamanhoDados){
+            if(contTotal >= tamanhoDadosEstilos){
+
+                // PAGINA
+                TextView tv = new TextView(getBaseContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.RIGHT;
+                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
+                tv.setLayoutParams(layoutParams);
+                tv.setVisibility(View.VISIBLE);
+
+                tv.measure(document.getPageWidth(), document.getPageHeight());
+                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
+                tv.setTextColor(Color.BLACK);
+                tv.setTextSize(10);
+
+                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+                linearLayout.addView(tv);
+                // FIM PAGINA
+
                 linearLayout.draw(page.getCanvas());
                 document.finishPage(page);
             }
@@ -292,63 +370,180 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
 
             contTotal++;
 
+        }
 
-            // ANTIGO ////////////////////////////////////////////////////////////
-/*
-            tamanhoAcumuladoPagina = tamanhoAcumuladoPagina + view.getMeasuredHeight();
+        // TOM
+        cont = 1;
+        contOld = 1;
+        tamanhoAcumuladoPagina = 0;
+        contTotal = 1;
+        int tamanhoDadosTom = dadosTom.size();
 
-            if(tamanhoAcumuladoPagina >= document.getPageHeight() || contTotal == 1 || contTotal >= tamanhoDados){
-                System.out.println("CONT >>>>>>>>> "+cont);
+        for(View view : dadosTom){
 
-                if(page != null){
+            view.measure(document.getPageWidth(), 200);
+            view.layout(0, 0, document.getPageWidth(), 200);
 
-                    linearLayout.draw(page.getCanvas());
-                    document.finishPage(page);
+            TextView t1 = (TextView) view.findViewById(R.id.textViewNome);
 
-                    int c = linearLayout.getChildCount();
+            System.out.println("OFFSET >>>>>>>>> "+tamanhoAcumuladoPagina+" | "+t1.getText());
 
-                    System.out.println("PAGINA "+page.getInfo().getPageNumber());
+            if(tamanhoAcumuladoPagina == 0 || cont != contOld){
+                contOld = cont;
+                System.out.println("NOVA PAGINA: "+cont);
 
-                    for(int i = 0; i < c; i++){
-                        TextView t = (TextView) linearLayout.getChildAt(i).findViewById(R.id.textViewNome);
-                        System.out.println("   ===="+t.getText().toString());
-                    }
-
-                    page = null;
-                    linearLayout.removeAllViews();
-                }
-
-                if(contTotal < tamanhoDados){
-                    PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo
-                            .Builder(document.getPageWidth(), document.getPageHeight(), cont).create();
-
-
-                    page = document.startPage(pageInfo);
-                }
-
-                cont++;
-
-                if(contTotal > 1 || tamanhoAcumuladoPagina >= document.getPageHeight()){
-                    tamanhoAcumuladoPagina = 0;
-                    view.offsetTopAndBottom(tamanhoAcumuladoPagina);
-                }
-
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo
+                        .Builder(document.getPageWidth(), document.getPageHeight(), cont).create();
+                page = document.startPage(pageInfo);
             }
 
-            view.offsetTopAndBottom(tamanhoAcumuladoPagina);
+            if(tamanhoAcumuladoPagina + view.getMeasuredHeight() <= document.getPageHeight()){
+                view.offsetTopAndBottom(tamanhoAcumuladoPagina);
+            } else{
+
+                // PAGINA
+                TextView tv = new TextView(getBaseContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.RIGHT;
+                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
+                tv.setLayoutParams(layoutParams);
+                tv.setVisibility(View.VISIBLE);
+
+                tv.measure(document.getPageWidth(), document.getPageHeight());
+                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
+                tv.setTextColor(Color.BLACK);
+                tv.setTextSize(10);
+
+                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+                linearLayout.addView(tv);
+                // FIM PAGINA
+
+                linearLayout.draw(page.getCanvas());
+                document.finishPage(page);
+                page = null;
+                linearLayout.removeAllViews();
+                tamanhoAcumuladoPagina = 0;
+                cont++;
+            }
+
             linearLayout.addView(view);
 
-//            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo
-//                    .Builder(document.getPageWidth(), document.getPageHeight(), cont).create();
-//
-//
-//            page = document.startPage(pageInfo);
-//
-//            linearLayout.draw(page.getCanvas());
-//            document.finishPage(page);
+            if(contTotal >= tamanhoDadosTom){
+
+                // PAGINA
+                TextView tv = new TextView(getBaseContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.RIGHT;
+                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
+                tv.setLayoutParams(layoutParams);
+                tv.setVisibility(View.VISIBLE);
+
+                tv.measure(document.getPageWidth(), document.getPageHeight());
+                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
+                tv.setTextColor(Color.BLACK);
+                tv.setTextSize(10);
+
+                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+                linearLayout.addView(tv);
+                // FIM PAGINA
+
+                linearLayout.draw(page.getCanvas());
+                document.finishPage(page);
+            }
+
+            tamanhoAcumuladoPagina = tamanhoAcumuladoPagina + view.getMeasuredHeight();
 
             contTotal++;
-*/
+
+        }
+
+        // MUSICAS
+        cont = 1;
+        contOld = 1;
+        tamanhoAcumuladoPagina = 0;
+        contTotal = 1;
+        int tamanhoDadosMusicas = dadosMusicas.size();
+
+        for(View view : dadosMusicas){
+
+            view.measure(document.getPageWidth(), 200);
+            view.layout(0, 0, document.getPageWidth(), 200);
+
+            TextView t1 = (TextView) view.findViewById(R.id.textViewNome);
+
+            System.out.println("OFFSET >>>>>>>>> "+tamanhoAcumuladoPagina+" | "+t1.getText());
+
+            if(tamanhoAcumuladoPagina == 0 || cont != contOld){
+                contOld = cont;
+                System.out.println("NOVA PAGINA: "+cont);
+
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo
+                        .Builder(document.getPageWidth(), document.getPageHeight(), cont).create();
+                page = document.startPage(pageInfo);
+            }
+
+            if(tamanhoAcumuladoPagina + view.getMeasuredHeight() <= document.getPageHeight()){
+                view.offsetTopAndBottom(tamanhoAcumuladoPagina);
+            } else{
+
+                // PAGINA
+                TextView tv = new TextView(getBaseContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.RIGHT;
+                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
+                tv.setLayoutParams(layoutParams);
+                tv.setVisibility(View.VISIBLE);
+
+                tv.measure(document.getPageWidth(), document.getPageHeight());
+                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
+                tv.setTextColor(Color.BLACK);
+                tv.setTextSize(10);
+
+                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+                linearLayout.addView(tv);
+                // FIM PAGINA
+
+                linearLayout.draw(page.getCanvas());
+                document.finishPage(page);
+                page = null;
+                linearLayout.removeAllViews();
+                tamanhoAcumuladoPagina = 0;
+                cont++;
+            }
+
+            linearLayout.addView(view);
+
+            if(contTotal >= tamanhoDadosMusicas){
+
+                // PAGINA
+                TextView tv = new TextView(getBaseContext());
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.RIGHT;
+                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
+                tv.setLayoutParams(layoutParams);
+                tv.setVisibility(View.VISIBLE);
+
+                tv.measure(document.getPageWidth(), document.getPageHeight());
+                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
+                tv.setTextColor(Color.BLACK);
+                tv.setTextSize(10);
+
+                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+                linearLayout.addView(tv);
+                // FIM PAGINA
+
+                linearLayout.draw(page.getCanvas());
+                document.finishPage(page);
+            }
+
+            tamanhoAcumuladoPagina = tamanhoAcumuladoPagina + view.getMeasuredHeight();
+
+            contTotal++;
+
         }
 
 
