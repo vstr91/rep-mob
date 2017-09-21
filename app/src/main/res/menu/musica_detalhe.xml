@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="br.com.vostre.repertori.MusicaDetalheActivity" >
+
+    <item android:id="@+id/icon_edit"
+        android:icon="@drawable/ic_mode_edit_white_24dp"
+        android:title="@string/action_edit"
+        app:showAsAction="always" />
+
+</menu>

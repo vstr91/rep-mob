@@ -7,8 +7,8 @@ android {
         applicationId "br.com.vostre.repertori"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 3
-        versionName "0.1.2-b"
+        versionCode 4
+        versionName "0.1.3-b"
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

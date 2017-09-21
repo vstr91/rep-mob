@@ -12,6 +12,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <Button
+                android:id="@+id/btnRelatorio"
+                style="@style/botao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Gerar Resumo PDF" />
+
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="match_parent"

@@ -7,6 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,9 +37,12 @@ import java.util.List;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.MusicaList;
 import br.com.vostre.repertori.adapter.TempoList;
+import br.com.vostre.repertori.form.ModalCadastroEvento;
+import br.com.vostre.repertori.form.ModalCadastroMusica;
 import br.com.vostre.repertori.form.ModalCifra;
 import br.com.vostre.repertori.form.ModalEditaLetra;
 import br.com.vostre.repertori.form.ModalLetra;
+import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
@@ -48,7 +53,7 @@ import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 
-public class MusicaDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class MusicaDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener, ModalCadastroListener {
 
     TextView textViewNome;
     TextView textViewArtista;
@@ -69,6 +74,8 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     Musica musica;
     boolean qrCode = false;
 
+    MusicaDBHelper musicaDBHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +93,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
+        musicaDBHelper = new MusicaDBHelper(getApplicationContext());
 
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         textViewArtista = (TextView) findViewById(R.id.textViewArtista);
@@ -127,12 +134,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
                 qrCode = true;
             }
 
-            textViewNome.setText(musica.getNome());
-            textViewArtista.setText(musica.getArtista().getNome());
-
-            String tom = musica.getTom().equals("null") ? "-" : musica.getTom();
-
-            textViewTom.setText(tom);
+            carregarDadosMusica();
 
             eventos = musicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica);
 
@@ -177,13 +179,6 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             });
 
             tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica, 10);
-
-            if(!musica.getObservacoes().equals("null") && !musica.getObservacoes().isEmpty()){
-                textViewObservacoes.setText(musica.getObservacoes());
-            } else{
-                textViewLabelObservacoes.setVisibility(View.GONE);
-                textViewObservacoes.setVisibility(View.GONE);
-            }
 
             chart.setExtraOffsets(10f, 10f, 10f, 10f);
             chart.getDescription().setEnabled(false);
@@ -300,6 +295,42 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.musica_detalhe, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        Intent intent;
+
+        switch (id){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.icon_edit:
+
+                ModalCadastroMusica modalCadastroMusica = new ModalCadastroMusica();
+                modalCadastroMusica.setListener(this);
+                modalCadastroMusica.setMusica(musica);
+
+                modalCadastroMusica.show(getSupportFragmentManager(), "modalMusica");
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         Intent intent;
@@ -374,4 +405,26 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
     }
 
+    @Override
+    public void onModalCadastroDismissed(int resultado) {
+        musica = musicaDBHelper.carregar(getBaseContext(), musica);
+        carregarDadosMusica();
+    }
+
+    private void carregarDadosMusica(){
+        textViewNome.setText(musica.getNome());
+        textViewArtista.setText(musica.getArtista().getNome());
+
+        String tom = musica.getTom().equals("null") ? "-" : musica.getTom();
+
+        textViewTom.setText(tom);
+
+        if(!musica.getObservacoes().equals("null") && !musica.getObservacoes().isEmpty()){
+            textViewObservacoes.setText(musica.getObservacoes());
+        } else{
+            textViewLabelObservacoes.setVisibility(View.GONE);
+            textViewObservacoes.setVisibility(View.GONE);
+        }
+
+    }
 }

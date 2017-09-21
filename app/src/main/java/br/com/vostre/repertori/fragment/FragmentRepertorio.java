@@ -312,7 +312,11 @@ public class FragmentRepertorio extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        adapterMusicasAtivas.getFilter().filter(charSequence);
+
+        if(adapterMusicasAtivas != null){
+            adapterMusicasAtivas.getFilter().filter(charSequence);
+        }
+
     }
 
     @Override

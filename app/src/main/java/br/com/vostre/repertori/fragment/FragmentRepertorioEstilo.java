@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,7 +53,9 @@ import java.util.Random;
 import java.util.Set;
 
 import br.com.vostre.repertori.App;
+import br.com.vostre.repertori.EventoDetalhePdfActivity;
 import br.com.vostre.repertori.MusicaDetalheActivity;
+import br.com.vostre.repertori.ProjetoDetalhePdfActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.MusicaEstiloList;
 import br.com.vostre.repertori.adapter.MusicaExecucaoList;
@@ -70,10 +73,11 @@ import br.com.vostre.repertori.utils.SnackbarHelper;
 /**
  * Created by Almir on 17/06/2015.
  */
-public class FragmentRepertorioEstilo extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, OnChartValueSelectedListener {
+public class FragmentRepertorioEstilo extends Fragment implements AdapterView.OnItemClickListener, ModalCadastroListener, OnChartValueSelectedListener, View.OnClickListener {
 
     //private ListView lista;
     private ListView listaExecucoes;
+    private Button btnRelatorio;
 
     MusicaEstiloList adapterMusicasEstilos;
     MusicaExecucaoList adapterMusicasExecucoes;
@@ -112,6 +116,7 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
         listaExecucoes = (ListView) rootView.findViewById(R.id.listViewMusicasExecucoes);
         chart = (RadarChart) rootView.findViewById(R.id.chart);
         chartArtista = (PieChart) rootView.findViewById(R.id.chartArtista);
+        btnRelatorio = (Button) rootView.findViewById(R.id.btnRelatorio);
 
         musicaProjetoDBHelper = new MusicaProjetoDBHelper(getContext());
         projetoDBHelper = new ProjetoDBHelper(getContext());
@@ -220,6 +225,8 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
                 return false;
             }
         });
+
+        btnRelatorio.setOnClickListener(this);
 
         return rootView;
     }
@@ -419,5 +426,19 @@ public class FragmentRepertorioEstilo extends Fragment implements AdapterView.On
     @Override
     public void onNothingSelected() {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        Toast.makeText(getContext(), "Gerando relatório... por favor aguarde!", Toast.LENGTH_LONG).show();
+
+        switch(v.getId()){
+            case R.id.btnRelatorio:
+                Intent intent = new Intent(getContext(), ProjetoDetalhePdfActivity.class);
+                intent.putExtra("projeto", projeto.getId());
+                startActivity(intent);
+                break;
+        }
     }
 }

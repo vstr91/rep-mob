@@ -232,7 +232,7 @@ public class MusicaProjetoDBAdapter {
 
     public List<Musica> listarTodosPorProjetoEEstilo(Projeto umProjeto, int situacao){
         Cursor cursor = database.rawQuery("SELECT id_musica FROM musica_projeto mp LEFT JOIN musica m ON m._id = mp.id_musica LEFT JOIN estilo e ON e._id = m.id_estilo " +
-                        "WHERE mp.id_projeto = ? AND mp.status = ? ORDER BY e.nome, m.nome",
+                        "WHERE mp.id_projeto = ? AND mp.status = ? ORDER BY e.nome, m.nome COLLATE LOCALIZED",
                 new String[]{umProjeto.getId(), String.valueOf(situacao)});
         List<Musica> musicas = new ArrayList<Musica>();
 
@@ -268,6 +268,34 @@ public class MusicaProjetoDBAdapter {
 
             do{
                 musicas.put(cursor.getString(1), cursor.getInt(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
+    public List<Musica> listarTodosPorProjetoETom(Projeto umProjeto, int situacao){
+        Cursor cursor = database.rawQuery("SELECT id_musica FROM musica_projeto mp LEFT JOIN musica m ON m._id = mp.id_musica " +
+                        "WHERE mp.id_projeto = ? AND mp.status = ? ORDER BY m.tom, m.nome",
+                new String[]{umProjeto.getId(), String.valueOf(situacao)});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+
+            do{
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(0));
+                musica = musicaDBHelper.carregar(context, musica);
+
+                musica.setNome(musica.getNome());
+
+                musicas.add(musica);
             } while (cursor.moveToNext());
         }
 
@@ -437,7 +465,7 @@ public class MusicaProjetoDBAdapter {
     public List<Musica> listarTodosAusentesProjeto(Projeto projeto){
         Cursor cursor = database.rawQuery("SELECT _id, nome " +
                         "FROM musica WHERE _id NOT IN (SELECT id_musica " +
-                        "FROM musica_projeto WHERE id_projeto = ? AND status != 2) AND status != 2 ORDER BY nome COLLATE LOCALIZED",
+                        "FROM musica_projeto WHERE id_projeto = ? AND status == 0) AND status != 2 ORDER BY nome COLLATE LOCALIZED",
                 new String[]{projeto.getId()});
         List<Musica> musicas = new ArrayList<Musica>();
 
