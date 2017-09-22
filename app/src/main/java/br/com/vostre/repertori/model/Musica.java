@@ -159,9 +159,10 @@ public class Musica extends EntidadeBase {
         String estilo = this.getEstilo() == null ? "null" : this.getEstilo().getId();
 
         resultado = "{\"id\": \""+this.getId()+"\", \"nome\": \""+this.getNome()+"\", \"tom\": \""+this.getTom()+"\", " +
-                "\"artista\": \""+this.getArtista().getId()+"\",  \"status\": "+this.getStatus()+", \"estilo\": \""+estilo+"\", \"letra\": \""+this.getLetra()+"\", " +
-                "\"cifra\": \"" + this.getCifra() + "\", " +
-                "\"observacoes\": \"" + this.getObservacoes() + "\"}";
+                "\"artista\": \""+this.getArtista().getId()+"\",  \"status\": "+this.getStatus()+", \"estilo\": \""+estilo+"\", \"letra\": \""
+                +this.getLetra().replaceAll("(\\r|\\n|\\r\\n)+", "\\\\r\\\\n").replaceAll("\"", "\'")+"\", " +
+                "\"cifra\": \"" + this.getCifra().replaceAll("(\\r|\\n|\\r\\n)+", "\\\\r\\\\n").replaceAll("\"", "\'") + "\", " +
+                "\"observacoes\": \"" + this.getObservacoes().replaceAll("(\\r|\\n|\\r\\n)+", "\\\\r\\\\n").replaceAll("\"", "\'")+ "\"}";
 
 
         return resultado;

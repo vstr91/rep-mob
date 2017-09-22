@@ -213,6 +213,8 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
 
         eventos = eventoDBHelper.listarTodos(getContext());
 
+        caldroidFragment.getBackgroundForDateTimeMap().clear();
+
         for(Evento evento : eventos){
             Drawable dr = ResourcesCompat.getDrawable(getResources(), R.drawable.fundo_evento, null);
             int cor = Color.parseColor("#66"+evento.getTipoEvento().getCor().replace("#", ""));
@@ -269,7 +271,11 @@ public class EventosFragment extends Fragment implements AdapterView.OnItemClick
         mTracker.setScreenName("Tela Eventos");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
+        atualizaCalendario();
+        caldroidFragment.refreshView();
+
         super.onResume();
+
     }
 
     @Override

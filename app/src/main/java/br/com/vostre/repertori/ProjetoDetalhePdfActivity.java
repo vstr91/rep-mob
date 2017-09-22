@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
+import android.widget.Space;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -236,14 +237,14 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             TextView textViewArtista = (TextView) vi.findViewById(R.id.textViewArtista);
             TextView textViewTempoMedio = (TextView) vi.findViewById(R.id.textViewTempoMedio);
             TextView textViewEstilo = (TextView) vi.findViewById(R.id.textViewEstilo);
+            Space space = (Space) vi.findViewById(R.id.space);
 
-            if(!estilo.equals(m.getEstilo().getNome())){
-                estilo = m.getEstilo().getNome();
-                textViewEstilo.setText(estilo);
-                cont = 1;
-            } else{
-                textViewEstilo.setVisibility(View.GONE);
+            if(cont > 1){
+                space.setVisibility(View.GONE);
             }
+
+            estilo = m.getEstilo().getNome();
+            textViewEstilo.setText(estilo);
 
             textViewCont.setText(String.valueOf(cont));
             textViewNome.setText(m.getNome());
@@ -285,7 +286,6 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
         int tamanhoAcumuladoPagina = 0;
         int contTotal = 1;
         int tamanhoDadosEstilos = dadosEstilos.size();
-        int contPaginas = 1;
 
         LinearLayout linearLayout = new LinearLayout(getBaseContext());
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(document.getPageWidth(), PrintAttributes.MediaSize.ISO_A4.getHeightMils()));
@@ -315,22 +315,12 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
                 view.offsetTopAndBottom(tamanhoAcumuladoPagina);
             } else{
                 // PAGINA
-                TextView tv = new TextView(getBaseContext());
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.gravity = Gravity.RIGHT;
-                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                tv.setLayoutParams(layoutParams);
-                tv.setVisibility(View.VISIBLE);
-
-                tv.measure(document.getPageWidth(), document.getPageHeight());
-                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
-                tv.setTextColor(Color.BLACK);
-                tv.setTextSize(10);
-
-                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
-                linearLayout.addView(tv);
+                geraPaginacao(document, linearLayout, page);
                 // FIM PAGINA
+
+                if(page.getInfo().getPageNumber() == 1){
+                    geraTitulo(document, linearLayout, "Músicas por Estilo");
+                }
 
                 linearLayout.draw(page.getCanvas());
                 document.finishPage(page);
@@ -345,21 +335,7 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             if(contTotal >= tamanhoDadosEstilos){
 
                 // PAGINA
-                TextView tv = new TextView(getBaseContext());
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.gravity = Gravity.RIGHT;
-                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                tv.setLayoutParams(layoutParams);
-                tv.setVisibility(View.VISIBLE);
-
-                tv.measure(document.getPageWidth(), document.getPageHeight());
-                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
-                tv.setTextColor(Color.BLACK);
-                tv.setTextSize(10);
-
-                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
-                linearLayout.addView(tv);
+                geraPaginacao(document, linearLayout, page);
                 // FIM PAGINA
 
                 linearLayout.draw(page.getCanvas());
@@ -402,22 +378,12 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             } else{
 
                 // PAGINA
-                TextView tv = new TextView(getBaseContext());
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.gravity = Gravity.RIGHT;
-                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                tv.setLayoutParams(layoutParams);
-                tv.setVisibility(View.VISIBLE);
-
-                tv.measure(document.getPageWidth(), document.getPageHeight());
-                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
-                tv.setTextColor(Color.BLACK);
-                tv.setTextSize(10);
-
-                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
-                linearLayout.addView(tv);
+                geraPaginacao(document, linearLayout, page);
                 // FIM PAGINA
+
+                if(page.getInfo().getPageNumber() == 1){
+                    geraTitulo(document, linearLayout, "Músicas por Tom");
+                }
 
                 linearLayout.draw(page.getCanvas());
                 document.finishPage(page);
@@ -432,21 +398,7 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             if(contTotal >= tamanhoDadosTom){
 
                 // PAGINA
-                TextView tv = new TextView(getBaseContext());
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.gravity = Gravity.RIGHT;
-                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                tv.setLayoutParams(layoutParams);
-                tv.setVisibility(View.VISIBLE);
-
-                tv.measure(document.getPageWidth(), document.getPageHeight());
-                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
-                tv.setTextColor(Color.BLACK);
-                tv.setTextSize(10);
-
-                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
-                linearLayout.addView(tv);
+                geraPaginacao(document, linearLayout, page);
                 // FIM PAGINA
 
                 linearLayout.draw(page.getCanvas());
@@ -489,22 +441,12 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             } else{
 
                 // PAGINA
-                TextView tv = new TextView(getBaseContext());
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.gravity = Gravity.RIGHT;
-                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                tv.setLayoutParams(layoutParams);
-                tv.setVisibility(View.VISIBLE);
-
-                tv.measure(document.getPageWidth(), document.getPageHeight());
-                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
-                tv.setTextColor(Color.BLACK);
-                tv.setTextSize(10);
-
-                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
-                linearLayout.addView(tv);
+                geraPaginacao(document, linearLayout, page);
                 // FIM PAGINA
+
+                if(page.getInfo().getPageNumber() == 1){
+                    geraTitulo(document, linearLayout, "Todas as Músicas");
+                }
 
                 linearLayout.draw(page.getCanvas());
                 document.finishPage(page);
@@ -519,21 +461,7 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
             if(contTotal >= tamanhoDadosMusicas){
 
                 // PAGINA
-                TextView tv = new TextView(getBaseContext());
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.gravity = Gravity.RIGHT;
-                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                tv.setLayoutParams(layoutParams);
-                tv.setVisibility(View.VISIBLE);
-
-                tv.measure(document.getPageWidth(), document.getPageHeight());
-                tv.layout(document.getPageWidth() - 50, document.getPageHeight() - 50, document.getPageWidth(), document.getPageHeight());
-                tv.setTextColor(Color.BLACK);
-                tv.setTextSize(10);
-
-                tv.setText(String.valueOf(page.getInfo().getPageNumber()));
-                linearLayout.addView(tv);
+                geraPaginacao(document, linearLayout, page);
                 // FIM PAGINA
 
                 linearLayout.draw(page.getCanvas());
@@ -556,7 +484,7 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
 //
 //        getWindow().getDecorView().draw(page.getCanvas());
 
-        File pdf = new File(getExternalFilesDir(null).getAbsolutePath()+projeto.getSlug()+".pdf");
+        File pdf = new File(getExternalFilesDir(null).getAbsolutePath()+File.separator+"resumo-"+projeto.getSlug()+".pdf");
         //System.out.println(pdf.getAbsolutePath());
 
         try {
@@ -582,4 +510,42 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
 
         document.close();
     }
+
+    private void geraPaginacao(PrintedPdfDocument document, LinearLayout linearLayout, PdfDocument.Page page) {
+        TextView tv = new TextView(getBaseContext());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.RIGHT;
+        layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
+        tv.setLayoutParams(layoutParams);
+        tv.setVisibility(View.VISIBLE);
+
+        tv.measure(document.getPageWidth(), document.getPageHeight());
+        tv.layout(20, document.getPageHeight() - 40, document.getPageWidth(), document.getPageHeight());
+        tv.setTextColor(Color.GRAY);
+        tv.setTextSize(4);
+
+        tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+        linearLayout.addView(tv);
+    }
+
+    private void geraTitulo(PrintedPdfDocument document, LinearLayout linearLayout, String titulo) {
+        TextView tv = new TextView(getBaseContext());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
+        tv.setLayoutParams(layoutParams);
+        tv.setVisibility(View.VISIBLE);
+        tv.setGravity(Gravity.CENTER);
+
+        tv.measure(document.getPageWidth(), document.getPageHeight());
+        tv.layout(0, 0, document.getPageWidth(), document.getPageHeight());
+        tv.setTextColor(Color.BLACK);
+        tv.setTextSize(8);
+
+        tv.setText(titulo);
+        linearLayout.addView(tv);
+    }
+
 }

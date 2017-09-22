@@ -177,6 +177,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
 
         outState.putInt("fragmento", fragmentoAtual);

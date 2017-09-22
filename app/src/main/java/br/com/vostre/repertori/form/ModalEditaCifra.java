@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import br.com.vostre.repertori.R;
+import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 
@@ -27,6 +28,7 @@ public class ModalEditaCifra extends android.support.v4.app.DialogFragment imple
     EditText editTextCifra;
     TextView textViewMusica;
     Musica musica;
+    ModalCadastroListener listener;
 
     public Musica getMusica() {
         return musica;
@@ -34,6 +36,14 @@ public class ModalEditaCifra extends android.support.v4.app.DialogFragment imple
 
     public void setMusica(Musica musica) {
         this.musica = musica;
+    }
+
+    public ModalCadastroListener getListener() {
+        return listener;
+    }
+
+    public void setListener(ModalCadastroListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -83,6 +93,7 @@ public class ModalEditaCifra extends android.support.v4.app.DialogFragment imple
                 MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getContext());
                 musicaDBHelper.salvarOuAtualizar(getContext(), musica);
                 Toast.makeText(getContext(), "Cifra Cadastrada!", Toast.LENGTH_SHORT).show();
+                listener.onModalCadastroDismissed(0);
                 dismiss();
                 break;
             case R.id.btnFechar:
