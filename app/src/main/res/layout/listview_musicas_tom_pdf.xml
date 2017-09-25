@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textColor="@color/colorAccent"
-        android:textSize="8sp"
+        android:textSize="5sp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -48,8 +48,9 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Medium Text"
+                android:textColor="@color/black"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="6sp" />
+                android:textSize="4sp" />
 
             <TextView
                 android:id="@+id/textViewArtista"
@@ -59,8 +60,9 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="TextView"
-                android:textColor="@color/grey500"
-                android:textSize="5sp" />
+
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="3sp" />
 
         </LinearLayout>
 
@@ -77,7 +79,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Estilo"
-                android:textSize="6sp" />
+                android:textColor="@color/black"
+                android:textSize="4sp" />
 
             <TextView
                 android:id="@+id/textViewEstilo"
@@ -86,7 +89,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textSize="6sp" />
+                android:textColor="@color/black"
+                android:textSize="4sp" />
 
         </LinearLayout>
 
@@ -103,7 +107,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Tempo"
-                android:textSize="6sp" />
+                android:textColor="@color/black"
+                android:textSize="4sp" />
 
             <TextView
                 android:id="@+id/textViewTempoMedio"
@@ -112,7 +117,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textSize="6sp" />
+                android:textColor="@color/black"
+                android:textSize="4sp" />
 
         </LinearLayout>
 

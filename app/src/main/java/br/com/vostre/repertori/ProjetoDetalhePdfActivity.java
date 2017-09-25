@@ -397,12 +397,22 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
 
             if(contTotal >= tamanhoDadosTom){
 
+                if(page == null){
+                    PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo
+                            .Builder(document.getPageWidth(), document.getPageHeight(), cont).create();
+                    page = document.startPage(pageInfo);
+                }
+
                 // PAGINA
                 geraPaginacao(document, linearLayout, page);
                 // FIM PAGINA
 
-                linearLayout.draw(page.getCanvas());
-                document.finishPage(page);
+                //if(page != null){
+                    linearLayout.draw(page.getCanvas());
+                    document.finishPage(page);
+                //}
+
+
             }
 
             tamanhoAcumuladoPagina = tamanhoAcumuladoPagina + view.getMeasuredHeight();
@@ -525,7 +535,13 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
         tv.setTextColor(Color.GRAY);
         tv.setTextSize(4);
 
-        tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+        if(page != null){
+            tv.setText(String.valueOf(page.getInfo().getPageNumber()));
+        } else{
+            tv.setText("-");
+        }
+
+
         linearLayout.addView(tv);
     }
 
@@ -542,7 +558,7 @@ public class ProjetoDetalhePdfActivity extends BaseActivity {
         tv.measure(document.getPageWidth(), document.getPageHeight());
         tv.layout(0, 0, document.getPageWidth(), document.getPageHeight());
         tv.setTextColor(Color.BLACK);
-        tv.setTextSize(8);
+        tv.setTextSize(5);
 
         tv.setText(titulo);
         linearLayout.addView(tv);

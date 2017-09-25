@@ -44,8 +44,9 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Medium Text"
+                android:textColor="@color/black"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="6sp" />
+                android:textSize="4sp" />
 
             <TextView
                 android:id="@+id/textViewArtista"
@@ -55,8 +56,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="TextView"
-                android:textColor="@color/grey500"
-                android:textSize="5sp" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="3sp" />
 
         </LinearLayout>
 
@@ -73,7 +74,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Estilo"
-                android:textSize="6sp" />
+                android:textColor="@color/black"
+                android:textSize="4sp" />
 
             <TextView
                 android:id="@+id/textViewEstilo"
@@ -82,7 +84,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textSize="6sp" />
+                android:textColor="@color/black"
+                android:textSize="4sp" />
 
         </LinearLayout>
 
@@ -99,7 +102,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Tempo"
-                android:textSize="6sp" />
+                android:textColor="@color/black"
+                android:textSize="4sp" />
 
             <TextView
                 android:id="@+id/textViewTempoMedio"
@@ -108,13 +112,14 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TextView"
-                android:textSize="6sp" />
+                android:textColor="@color/black"
+                android:textSize="4sp" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="30px"
+            android:layout_width="20px"
             android:layout_height="match_parent"
             android:layout_weight="3.5"
             android:background="@drawable/botao_lista_pdf" />
