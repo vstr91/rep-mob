@@ -7,8 +7,11 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -37,8 +40,14 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import br.com.vostre.repertori.fragment.ArtistasFragment;
@@ -56,6 +65,7 @@ import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.service.AtualizaDadosService;
 import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.Constants;
+import br.com.vostre.repertori.utils.CsvUtils;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
 import br.com.vostre.repertori.utils.ParametrosUtils;
@@ -92,6 +102,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         conteudo = (FrameLayout) findViewById(R.id.conteudo);
 
         navView.setNavigationItemSelectedListener(this);
+
+//        MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getBaseContext());
+//        List<Musica> musicas = musicaDBHelper.listarTodos(getBaseContext());
+//        File csv = new File(getFilesDir().getAbsolutePath()+ File.separator+"musicas.csv");
+//        CsvUtils.dadoParaCsv(getBaseContext(), csv.getAbsolutePath(), musicas);
+//
+//        //EXPORT TESTE CSV
+//
+//            try {
+//                File sd = Environment.getExternalStorageDirectory();
+//                File data = Environment.getDataDirectory();
+//
+//                String state = Environment.getExternalStorageState();
+//
+//                if (Environment.MEDIA_MOUNTED.equals(state)) {
+//                    String currentDBPath = csv.getPath();
+//                    String backupDBPath = "teste.csv";
+//                    File currentDB = new File(data, currentDBPath);
+//                    File backupDB = new File(sd, backupDBPath);
+//
+//                    if (currentDB.exists()) {
+//                        FileChannel src = new FileInputStream(currentDB).getChannel();
+//                        FileChannel dst = new FileOutputStream(backupDB).getChannel();
+//                        dst.transferFrom(src, 0, src.size());
+//                        src.close();
+//                        dst.close();
+//                        Toast.makeText(getBaseContext(), "Arquivo exportado!", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                Toast.makeText(getBaseContext(), "Problemas ao exportar arquivo! "+e.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//
+//        // FIM EXPORT
 
         if(savedInstanceState != null && savedInstanceState.getInt("fragmento") > 0) {
             fragmentoAtual = savedInstanceState.getInt("fragmento");

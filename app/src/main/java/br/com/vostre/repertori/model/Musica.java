@@ -204,6 +204,19 @@ public class Musica extends EntidadeBase {
 
     }
 
+    public String toCsv(Context context){
+
+        Calendar tempo = this.calcularMedia(context);
+        String hora = "-";
+
+        if(tempo != null){
+            hora = DataUtils.toStringSomenteHoras(tempo, 1);
+        }
+
+
+        return this.getNome()+";"+this.getArtista().getNome()+";"+this.getTom()+";"+this.getEstilo().getNome()+";"+hora;
+    }
+
     @Override
     public boolean equals(Object o) {
 
