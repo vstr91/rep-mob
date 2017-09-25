@@ -50,6 +50,8 @@ import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
 import br.com.vostre.repertori.utils.DynamicListView;
 
+import static java.security.AccessController.getContext;
+
 public class RepertorioDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener,
         ModalCadastroListener, ModalAdicionaListener, ButtonClickListener, DialogInterface.OnClickListener {
 
@@ -57,6 +59,7 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
     DynamicListView listViewMusicas;
     static MusicaRepertorioAdapter adapterMusicas;
     Button btnAdicionaMusica;
+    Button btnRelatorio;
     Repertorio repertorio;
 
     List<Musica> musicas;
@@ -83,9 +86,11 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         listViewMusicas = (DynamicListView) findViewById(R.id.listViewMusicas);
         btnAdicionaMusica = (Button) findViewById(R.id.btnAdicionaMusica);
+        btnRelatorio = (Button) findViewById(R.id.btnRelatorio);
         textViewTempo = (TextView) findViewById(R.id.textViewTempo);
 
         btnAdicionaMusica.setOnClickListener(this);
+        btnRelatorio.setOnClickListener(this);
 
         repertorio = new Repertorio();
         repertorio.setId(getIntent().getStringExtra("repertorio"));
@@ -166,6 +171,11 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
                 modalAdicionaMusicaRepertorio.show(getSupportFragmentManager(), "modalAdicionaMusicaRepertorio");
                 break;
+            case R.id.btnRelatorio:
+                Intent intent = new Intent(getBaseContext(), RepertorioDetalhePdfActivity.class);
+                intent.putExtra("repertorio", repertorio.getId());
+                startActivity(intent);
+                break;
         }
     }
 
@@ -180,7 +190,7 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
     }
 
     private void carregaListaMusicas(){
-        musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio);
+        musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
 
         adapterMusicas =
                 new MusicaRepertorioAdapter(this, R.id.listViewMusicas, musicas);

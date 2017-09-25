@@ -89,7 +89,9 @@ public class LetraFragment extends Fragment implements CustomScrollView.OnScroll
         textViewNome.setText(musica.getNome());
         textViewArtista.setText(musica.getArtista().getNome());
 
-        if(!musica.getLetra().equals("null") && !musica.getLetra().isEmpty()){
+        String j = musica.toJson();
+
+        if(musica.getLetra() != null && !musica.getLetra().equals("null") && !musica.getLetra().isEmpty()){
             textViewLetra.setText(musica.getLetra());
         } else{
             textViewLetra.setText("Letra não cadastrada.");

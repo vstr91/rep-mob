@@ -76,7 +76,7 @@ public class CifraFragment extends Fragment implements CustomScrollView.OnScroll
         textViewNome.setText(musica.getNome());
         textViewArtista.setText(musica.getArtista().getNome());
 
-        if(!musica.getCifra().equals("null") && !musica.getCifra().isEmpty()){
+        if(musica.getCifra() != null && !musica.getCifra().equals("null") && !musica.getCifra().isEmpty()){
             textViewCifra.setText(musica.getCifra());
         } else{
             textViewCifra.setText("Cifra não cadastrada.");

@@ -76,6 +76,13 @@
                 android:layout_height="wrap_content"
                 android:text="Adicionar Música" />
 
+            <Button
+                android:id="@+id/btnRelatorio"
+                style="@style/botao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Gerar Resumo PDF" />
+
         </LinearLayout>
     </LinearLayout>
 

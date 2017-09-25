@@ -58,9 +58,19 @@ public class MusicaRepertorioDBHelper extends SQLiteOpenHelper {
         return adapter.listarTodosPorMusica(musica);
     }
 
-    public List<Musica> listarTodosPorRepertorio(Context context, Repertorio repertorio){
+    public List<Musica> listarTodosPorRepertorio(Context context, Repertorio repertorio, int situacao){
         MusicaRepertorioDBAdapter adapter = new MusicaRepertorioDBAdapter(context, repDBHelper.getReadableDatabase());
-        return adapter.listarTodosPorRepertorio(repertorio);
+        return adapter.listarTodosPorRepertorio(repertorio, situacao);
+    }
+
+    public List<Musica> listarTodosPorRepertorioEEstilo(Context context, Repertorio repertorio, int situacao){
+        MusicaRepertorioDBAdapter adapter = new MusicaRepertorioDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorRepertorioEEstilo(repertorio, situacao);
+    }
+
+    public List<Musica> listarTodosPorRepertorioETom(Context context, Repertorio repertorio, int situacao){
+        MusicaRepertorioDBAdapter adapter = new MusicaRepertorioDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorRepertorioETom(repertorio, situacao);
     }
 
     public List<MusicaRepertorio> corrigirOrdemPorRepertorio(Context context, Repertorio repertorio){

@@ -117,7 +117,7 @@ public class CifraMusicaRepertorioActivity extends BaseActivity implements View.
     }
 
     private void carregaListaMusicas(){
-        musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio);
+        musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
     }
 
     private void carregaInformacaoRepertorio() {

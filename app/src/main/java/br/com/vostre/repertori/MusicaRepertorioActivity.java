@@ -113,7 +113,7 @@ public class MusicaRepertorioActivity extends BaseActivity implements View.OnCli
     }
 
     private void carregaListaMusicas(){
-        musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio);
+        musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
     }
 
     private void carregaInformacaoRepertorio() {

@@ -93,6 +93,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".MusicaRepertorioActivity"
+            android:label="@string/title_activity_musica_repertorio"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MusicaEventoActivity"
@@ -129,6 +130,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ProjetoDetalhePdfActivity"
+            android:label="@string/title_activity_artista_detalhe"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RepertorioDetalhePdfActivity"
             android:label="@string/title_activity_artista_detalhe"
             android:noHistory="true"
             android:screenOrientation="portrait" />

@@ -195,9 +195,65 @@ public class MusicaRepertorioDBAdapter {
         return repertorios;
     }
 
-    public List<Musica> listarTodosPorRepertorio(Repertorio umRepertorio){
-        Cursor cursor = database.rawQuery("SELECT id_musica, ordem FROM musica_repertorio WHERE id_repertorio = ? AND status != 2 " +
-                "ORDER BY ordem ASC", new String[]{umRepertorio.getId()});
+    public List<Musica> listarTodosPorRepertorio(Repertorio umRepertorio, int situacao){
+        Cursor cursor = database.rawQuery("SELECT id_musica, ordem FROM musica_repertorio WHERE id_repertorio = ? AND status = ? " +
+                "ORDER BY ordem ASC", new String[]{umRepertorio.getId(), String.valueOf(situacao)});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+
+            do{
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(0));
+                musica = musicaDBHelper.carregar(context, musica);
+
+                musica.setNome(musica.getNome());
+
+                musicas.add(musica);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
+    public List<Musica> listarTodosPorRepertorioEEstilo(Repertorio umRepertorio, int situacao){
+        Cursor cursor = database.rawQuery("SELECT mr.id_musica, mr.ordem FROM musica_repertorio mr LEFT JOIN " +
+                "musica m ON m._id = mr.id_musica LEFT JOIN estilo e ON e._id = m.id_estilo WHERE mr.id_repertorio = ? AND mr.status = ? " +
+                "ORDER BY e.nome, m.nome COLLATE LOCALIZED", new String[]{umRepertorio.getId(), String.valueOf(situacao)});
+        List<Musica> musicas = new ArrayList<Musica>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+
+            do{
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(0));
+                musica = musicaDBHelper.carregar(context, musica);
+
+                musica.setNome(musica.getNome());
+
+                musicas.add(musica);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return musicas;
+    }
+
+    public List<Musica> listarTodosPorRepertorioETom(Repertorio umRepertorio, int situacao){
+        Cursor cursor = database.rawQuery("SELECT mr.id_musica, mr.ordem FROM musica_repertorio mr LEFT JOIN " +
+                "musica m ON m._id = mr.id_musica LEFT JOIN estilo e ON e._id = m.id_estilo WHERE mr.id_repertorio = ? AND mr.status = ? " +
+                "ORDER BY m.tom, m.nome", new String[]{umRepertorio.getId(), String.valueOf(situacao)});
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){
