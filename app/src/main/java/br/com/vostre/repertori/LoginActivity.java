@@ -99,7 +99,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             Map<String, String> map = new HashMap<>();
             map.put("idToken", acct.getIdToken());
 
-            TarefaAssincrona tarefaToken = new TarefaAssincrona(Constants.URLTOKENGOOGLE, "POST", LoginActivity.this, map, true);
+            TarefaAssincrona tarefaToken = new TarefaAssincrona(Constants.URLTOKENGOOGLE, "POST", LoginActivity.this, map, true, 0);
 
             tarefaToken.setOnResultListener(this);
             tarefaToken.execute();
@@ -112,7 +112,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     }
 
     @Override
-    public void onTarefaAssincronaResultSucceeded(Map<String, Object> map) {
+    public void onTarefaAssincronaResultSucceeded(Map<String, Object> map, int acao) {
 
         if(map == null || map.size() == 0){
             android.app.AlertDialog alertDialog = DialogUtils.criarAlerta(this, "Erro ao Fazer Login",

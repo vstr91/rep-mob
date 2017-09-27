@@ -37,14 +37,16 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
     ProgressDialog progressDialog;
     TarefaAssincronaListener listener;
     boolean isBackground;
+    int acao;
 
-    public TarefaAssincrona(String url, String method, Context context, Map<String, String> params, boolean isBackground) {
+    public TarefaAssincrona(String url, String method, Context context, Map<String, String> params, boolean isBackground, int acao) {
 
         this.umaURL = url;
         this.parametrosPost = params;
         this.method = method;
         this.context = context;
         this.isBackground = isBackground;
+        this.acao = acao;
 
     }
 
@@ -74,7 +76,7 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
             progressDialog = null;
         }
 
-        listener.onTarefaAssincronaResultSucceeded(resultado);
+        listener.onTarefaAssincronaResultSucceeded(resultado, acao);
 
     }
 

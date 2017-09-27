@@ -7,6 +7,6 @@ import java.util.Map;
  */
 public interface TarefaAssincronaListener {
 
-    public void onTarefaAssincronaResultSucceeded(Map<String, Object> result);
+    public void onTarefaAssincronaResultSucceeded(Map<String, Object> result, int acao);
 
 }

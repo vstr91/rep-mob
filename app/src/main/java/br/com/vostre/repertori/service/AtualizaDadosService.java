@@ -470,14 +470,14 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 map.put("dados", json);
                 map.put("total", String.valueOf(totalRegistros));
 
-                TarefaAssincrona utEnvio = new TarefaAssincrona(urlEnvio, "POST", AtualizaDadosService.this, map, true);
+                TarefaAssincrona utEnvio = new TarefaAssincrona(urlEnvio, "POST", AtualizaDadosService.this, map, true, 0);
 
                 utEnvio.setOnResultListener(this);
                 utEnvio.execute();
 
             }else{
                 String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
-                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
+                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true, 0);
                 ut.setOnResultListener(this);
                 ut.execute();
             }
@@ -492,60 +492,61 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     }
 
     @Override
-    public void onTarefaAssincronaResultSucceeded(Map<String, Object> map) {
+    public void onTarefaAssincronaResultSucceeded(Map<String, Object> map, int acao) {
 
-        if(map == null || map.size() == 0){
-            Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
-            this.stopSelf();
-            System.out.println("TERMINOU ERRO 2");
-            return;
-        }
-
-        if(map.get("metodo").equals("GET")){
-            JSONObject jObj = (JSONObject) map.get("json");
-            dataUltimoAcesso = (String) map.get("dataUltimoAcesso");
-
-            int status = 0;
-
-            if(jObj != null){
-                try {
-                    JSONArray metadados = jObj.getJSONArray("meta");
-                    JSONObject objMetadados = metadados.getJSONObject(0);
-
-                    registros = objMetadados.getInt("registros");
-                    status = objMetadados.getInt("status");
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
+        if(acao == 0){
+            if(map == null || map.size() == 0){
                 Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
                 this.stopSelf();
-                System.out.println("TERMINOU ERRO 3");
+                System.out.println("TERMINOU ERRO 2");
+                return;
             }
 
-            if(registros > 0){
-                UpdateTask updateTask = new UpdateTask(jObj, getApplicationContext());
-                updateTask.setOnResultsListener(this);
-                updateTask.execute();
-            } else{
+            if(map.get("metodo").equals("GET")){
+                JSONObject jObj = (JSONObject) map.get("json");
+                dataUltimoAcesso = (String) map.get("dataUltimoAcesso");
 
-                if(dataUltimoAcesso != null){
-                    ParametrosUtils.setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
+                int status = 0;
+
+                if(jObj != null){
+                    try {
+                        JSONArray metadados = jObj.getJSONArray("meta");
+                        JSONObject objMetadados = metadados.getJSONObject(0);
+
+                        registros = objMetadados.getInt("registros");
+                        status = objMetadados.getInt("status");
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+                    this.stopSelf();
+                    System.out.println("TERMINOU ERRO 3");
                 }
 
-                Toast.makeText(this, "Seu sistema já está atualizado.", Toast.LENGTH_SHORT).show();
-                enviaBroadcast();
-                this.stopSelf();
-                System.out.println("TERMINOU SEM REGISTROS");
-            }
-        } else{
+                if(registros > 0){
+                    UpdateTask updateTask = new UpdateTask(jObj, getApplicationContext());
+                    updateTask.setOnResultsListener(this);
+                    updateTask.execute();
+                } else{
 
-            String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
+                    if(dataUltimoAcesso != null){
+                        ParametrosUtils.setDataUltimoAcesso(getBaseContext(), dataUltimoAcesso);
+                    }
 
-            TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true);
-            ut.setOnResultListener(this);
-            ut.execute();
+                    Toast.makeText(this, "Seu sistema já está atualizado.", Toast.LENGTH_SHORT).show();
+                    enviaBroadcast();
+                    this.stopSelf();
+                    System.out.println("TERMINOU SEM REGISTROS");
+                }
+            } else{
+
+                String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
+
+                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true, 0);
+                ut.setOnResultListener(this);
+                ut.execute();
 
 //            JSONObject jObj = (JSONObject) map.get("json");
 //
@@ -577,6 +578,9 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 //
 //            }
 
+            }
+        } else{
+            System.out.println(map.size());
         }
 
     }
@@ -589,8 +593,31 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
             enviaBroadcast();
             Toast.makeText(this, "Atualização finalizada com sucesso.", Toast.LENGTH_LONG).show();
+
+            // enviando audios
+            TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getBaseContext());
+
+            List<TempoMusicaEvento> tmes = tempoMusicaEventoDBHelper.listarTodosAEnviar(getBaseContext());
+
+            for(TempoMusicaEvento tme : tmes){
+
+                if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
+                    String url = Constants.URLSERVIDORENVIOAUDIO+tokenCriptografado+"/"+tme.getAudio();
+                    TarefaAssincrona ut = new TarefaAssincrona(url, "POST", AtualizaDadosService.this, null, true, 1);
+                    ut.setOnResultListener(this);
+                    ut.execute();
+                }
+
+
+            }
+
+
+
+            // fim envio audios
+
             this.stopSelf();
             System.out.println("TERMINOU");
+
         }
 
     }

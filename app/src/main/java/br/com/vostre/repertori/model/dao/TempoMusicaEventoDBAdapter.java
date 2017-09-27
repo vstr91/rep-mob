@@ -44,6 +44,7 @@ public class TempoMusicaEventoDBAdapter {
         cv.put("id_musica_evento", tme.getMusicaEvento().getId());
         cv.put("status", tme.getStatus());
         cv.put("enviado", tme.getEnviado());
+        cv.put("audio", tme.getAudio());
 
         if(tme.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(tme.getDataCadastro()));
@@ -74,7 +75,7 @@ public class TempoMusicaEventoDBAdapter {
 
     public List<TempoMusicaEvento> listarTodosPorMusica(Musica musica, int limite){
         Cursor cursor = database.rawQuery("SELECT tme._id, tme.tempo, tme.id_musica_evento, tme.status, tme.data_cadastro, tme.data_recebimento, " +
-                "tme.ultima_alteracao FROM tempo_musica_evento tme INNER JOIN musica_evento me ON me._id = tme.id_musica_evento WHERE me.id_musica = ? AND tme.status = 0 " +
+                "tme.ultima_alteracao, tme.audio FROM tempo_musica_evento tme INNER JOIN musica_evento me ON me._id = tme.id_musica_evento WHERE me.id_musica = ? AND tme.status = 0 " +
                 "ORDER BY tme.ultima_alteracao LIMIT "+limite, new String[]{musica.getId()});
         List<TempoMusicaEvento> tmes = new ArrayList<TempoMusicaEvento>();
 
@@ -107,6 +108,8 @@ public class TempoMusicaEventoDBAdapter {
                     tme.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(6)));
                 }
 
+                tme.setAudio(cursor.getString(7));
+
                 tmes.add(tme);
             } while (cursor.moveToNext());
         }
@@ -119,7 +122,7 @@ public class TempoMusicaEventoDBAdapter {
 
     public List<TempoMusicaEvento> listarTodosAEnviar(){
         Cursor cursor = database.rawQuery("SELECT _id, tempo, id_musica_evento, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao FROM tempo_musica_evento WHERE enviado = -1 ORDER BY data_cadastro DESC", null);
+                "ultima_alteracao, audio FROM tempo_musica_evento WHERE enviado = -1 ORDER BY data_cadastro DESC", null);
         List<TempoMusicaEvento> tmes = new ArrayList<TempoMusicaEvento>();
 
         if(cursor.moveToFirst()){
@@ -150,6 +153,8 @@ public class TempoMusicaEventoDBAdapter {
                 if(cursor.getString(6) != null){
                     tme.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(6)));
                 }
+
+                tme.setAudio(cursor.getString(7));
 
                 tmes.add(tme);
             } while (cursor.moveToNext());

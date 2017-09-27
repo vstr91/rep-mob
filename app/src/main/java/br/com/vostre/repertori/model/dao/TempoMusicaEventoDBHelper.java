@@ -22,7 +22,7 @@ public class TempoMusicaEventoDBHelper extends SQLiteOpenHelper {
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE tempo_musica_evento (_id text primary key, tempo text NOT NULL, " +
             "id_musica_evento integer NOT NULL, status integer NOT NULL, data_cadastro text, " +
-            "data_recebimento text, ultima_alteracao text, enviado integer NOT NULL);";
+            "data_recebimento text, ultima_alteracao text, enviado integer NOT NULL, audio text);";
     RepDBHelper repDBHelper;
 
     public TempoMusicaEventoDBHelper(Context context){

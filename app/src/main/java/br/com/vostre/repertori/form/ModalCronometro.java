@@ -1,12 +1,22 @@
 package br.com.vostre.repertori.form;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +28,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import br.com.vostre.repertori.EventoDetalheActivity;
 import br.com.vostre.repertori.R;
@@ -34,7 +47,9 @@ import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
 
-public class ModalCronometro extends android.support.v4.app.DialogFragment implements View.OnClickListener, DialogInterface.OnClickListener, AdapterView.OnItemLongClickListener {
+import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
+
+public class ModalCronometro extends android.support.v4.app.DialogFragment implements View.OnClickListener, DialogInterface.OnClickListener, AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
 
     Button btnFechar;
     Button btnIniciar;
@@ -50,6 +65,12 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
     List<TempoMusicaEvento> tmes;
     TempoMusicaEventoDBHelper tmeDBHelper;
 
+    private MediaRecorder mRecorder = null;
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private static String arquivoAudio = null;
+    String nomeArquivo;
+    private static final String CAMINHO_PADRAO_AUDIO = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Doutor Affonso/Audios";
+
     public MusicaEvento getMusicaEvento() {
         return musicaEvento;
     }
@@ -58,10 +79,34 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
         this.musicaEvento = musicaEvento;
     }
 
+    // Requesting permission to RECORD_AUDIO
+    private boolean permissionToRecordAccepted = false;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode){
+            case REQUEST_RECORD_AUDIO_PERMISSION:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.modal_cronometro, container, false);
+
+        int permissionAudio = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO);
+        int permissionStorage = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionAudio == PackageManager.PERMISSION_GRANTED && permissionStorage == PackageManager.PERMISSION_GRANTED) {
+            permissionToRecordAccepted = true;
+        } else {
+            requestGravacao();
+        }
 
         view.setMinimumWidth(700);
         tmeDBHelper = new TempoMusicaEventoDBHelper(getContext());
@@ -79,6 +124,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
 
         listViewTempos.setAdapter(adapter);
         listViewTempos.setOnItemLongClickListener(this);
+        listViewTempos.setOnItemClickListener(this);
 
         btnFechar.setOnClickListener(this);
         btnIniciar.setOnClickListener(this);
@@ -114,6 +160,10 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                     tempo = chronometer.getText().toString();
                     chronometer.setBase(SystemClock.elapsedRealtime());
 
+                    if(permissionToRecordAccepted){
+                        pararGravacao();
+                    }
+
                     Dialog dialog = DialogUtils.criarAlertaConfirmacao(getContext(), "Cronometragem Encerrada", "Deseja salvar o tempo cronometrado ("+tempo+")?", this);
                     dialog.show();
 
@@ -122,11 +172,29 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                     chronometer.start();
                     btnIniciar.setText("Parar");
                     isRunning = true;
+
+                    arquivoAudio = CAMINHO_PADRAO_AUDIO+"/";//getActivity().getExternalFilesDir(null).getAbsolutePath()+ File.separator;
+                    nomeArquivo = musicaEvento.getMusica().getSlug()+"-"+ UUID.randomUUID()+".3gp";
+                    arquivoAudio += nomeArquivo;
+
+                    System.out.println("ARQUIVO: "+arquivoAudio);
+
+                    if(permissionToRecordAccepted){
+                        iniciarGravacao();
+                    }
+
+
+
                 }
 
                 break;
             case R.id.btnFechar:
                 dismiss();
+
+                if(permissionToRecordAccepted){
+                    iniciarGravacao();
+                }
+
                 break;
         }
 
@@ -144,6 +212,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                 tme.setEnviado(-1);
                 tme.setDataCadastro(Calendar.getInstance());
                 tme.setUltimaAlteracao(Calendar.getInstance());
+                tme.setAudio(nomeArquivo);
 
                 TempoMusicaEventoDBHelper tmeDBHelper = new TempoMusicaEventoDBHelper(getContext());
                 tmeDBHelper.salvarOuAtualizar(getContext(), tme);
@@ -153,7 +222,12 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                 //dismiss();
                 break;
             case -2:
-                // nada ainda
+                File f = new File(arquivoAudio);
+
+                if(f.exists()){
+                    f.delete();
+                }
+
                 break;
         }
 
@@ -218,5 +292,79 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                 }).show();
 
         return true;
+    }
+
+    private void iniciarGravacao() {
+
+        File pastaAudio = new File(CAMINHO_PADRAO_AUDIO);
+
+        if(!pastaAudio.exists()){
+            //System.out.println("NAO EXISTE!!!!!!!!!!!!!!!!!!!!! "+pastaAudio.getAbsolutePath());
+            boolean b = pastaAudio.mkdirs();
+            //System.out.println("CRIOU????? "+Environment.getExternalStorageDirectory());
+        }
+
+        //System.out.println("CAMINHO >>>>>>>>>>> "+arquivoAudio);
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(arquivoAudio);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+
+        mRecorder.start();
+    }
+
+    private void pararGravacao() {
+        mRecorder.stop();
+        System.out.println("EXISTE? >>>> "+new File(arquivoAudio).exists());
+        mRecorder.release();
+        mRecorder = null;
+    }
+
+    private void requestGravacao() {
+        Log.w("Gravacao", "Gravacao nao autorizada. Requesting permission");
+
+        final String[] permissions = new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (!shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) && !shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            requestPermissions(permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+            return;
+        }
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        final TempoMusicaEvento tme = tmes.get(i);
+
+        if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
+
+            File f  = new File(CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
+
+            if(f.exists()){
+                MediaPlayer mediaPlayer = new MediaPlayer();
+
+                try {
+                    mediaPlayer.setDataSource(f.getAbsolutePath());
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else{
+                Toast.makeText(getContext(), "Áudio não encontrado. Ele pode ter sido movido ou excluído", Toast.LENGTH_SHORT).show();
+            }
+
+        } else{
+            Toast.makeText(getContext(), "Não existe áudio disponível para esta gravação", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
