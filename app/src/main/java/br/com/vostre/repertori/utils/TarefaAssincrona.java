@@ -3,6 +3,7 @@ package br.com.vostre.repertori.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,7 +96,15 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
             if (method.equals("POST")) {
 
                 try {
-                    HttpURLConnection conn = HttpUtils.sendPostRequest(umaURL, parametrosPost);
+
+                    HttpURLConnection conn;
+
+                    if(acao == 1){
+                        conn = HttpUtils.sendMultipartPostRequest(umaURL, parametrosPost);
+                    } else{
+                        conn = HttpUtils.sendPostRequest(umaURL, parametrosPost);
+                    }
+
                     String[] resposta = HttpUtils.readMultipleLinesRespone();
 
                     HttpUtils.disconnect();
@@ -114,7 +123,15 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
 
             } else if (method == "GET") {
 
-                HttpURLConnection conn = HttpUtils.sendGetRequest(umaURL);
+                HttpURLConnection conn;
+
+                if(acao == 2){
+                    conn = HttpUtils.sendGetRequest(umaURL);
+                } else{
+                    conn = HttpUtils.sendGetRequest(umaURL);
+                }
+
+
 
                 String[] resposta = HttpUtils.readMultipleLinesRespone();
 
@@ -134,7 +151,7 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
             // return JSONObject (this is a class variable and null is returned if something went bad)
 
         } catch (Exception e){
-
+            Log.e("error-file", e.getLocalizedMessage());
         }
 //        } catch (MalformedURLException e) {
 //            e.printStackTrace();

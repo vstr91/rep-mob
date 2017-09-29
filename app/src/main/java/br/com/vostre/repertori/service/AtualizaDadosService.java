@@ -3,15 +3,19 @@ package br.com.vostre.repertori.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +28,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import br.com.vostre.repertori.App;
 import br.com.vostre.repertori.listener.ServerUtilsListener;
 import br.com.vostre.repertori.listener.TarefaAssincronaListener;
 import br.com.vostre.repertori.listener.TokenTaskListener;
@@ -77,6 +82,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     int registrosResposta = 0;
 
     String tokenCriptografado;
+    List<TempoMusicaEvento> tmes;
+    List<TempoMusicaEvento> tmesRecebeAudio;
 
     @Nullable
     @Override
@@ -122,7 +129,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
             String urlToken = Constants.URLTOKEN;
 
-            TokenTask tokenTask = new TokenTask(urlToken, AtualizaDadosService.this, true, "1");
+            TokenTask tokenTask = new TokenTask(urlToken, AtualizaDadosService.this, true, 1);
             tokenTask.setOnTokenTaskResultsListener(this);
             tokenTask.execute();
 
@@ -135,359 +142,415 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     }
 
     @Override
-    public void onTokenTaskResultsSucceeded(String token) {
+    public void onTokenTaskResultsSucceeded(String token, int tipo) {
 
         Crypt crypt = new Crypt();
 
         tokenCriptografado = null;
-        List<ComentarioEvento> comentarios;
-        List<Musica> musicas;
-        List<Artista> artistas;
-        List<Evento> eventos;
-        List<MusicaEvento> musicasEventos;
 
-        List<Projeto> projetos;
-        List<Estilo> estilos;
-        List<MusicaProjeto> musicasProjetos;
-        List<TipoEvento> tiposEventos;
-        List<TempoMusicaEvento> temposMusicasEventos;
+        switch(tipo){
+            case 1:
+                List<ComentarioEvento> comentarios;
+                List<Musica> musicas;
+                List<Artista> artistas;
+                List<Evento> eventos;
+                List<MusicaEvento> musicasEventos;
 
-        List<Repertorio> repertorios;
-        List<MusicaRepertorio> musicasRepertorios;
+                List<Projeto> projetos;
+                List<Estilo> estilos;
+                List<MusicaProjeto> musicasProjetos;
+                List<TipoEvento> tiposEventos;
+                List<TempoMusicaEvento> temposMusicasEventos;
 
-        ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
-        MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
-        ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(getApplicationContext());
-        EventoDBHelper eventoDBHelper = new EventoDBHelper(getApplicationContext());
-        MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
-        TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(getApplicationContext());
+                List<Repertorio> repertorios;
+                List<MusicaRepertorio> musicasRepertorios;
 
-        ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(getApplicationContext());
-        EstiloDBHelper estiloDBHelper = new EstiloDBHelper(getApplicationContext());
-        MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(getApplicationContext());
-        TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getApplicationContext());
-        RepertorioDBHelper repertorioDBHelper = new RepertorioDBHelper(getApplicationContext());
-        MusicaRepertorioDBHelper musicaRepertorioDBHelper = new MusicaRepertorioDBHelper(getApplicationContext());
+                ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
+                MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
+                ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(getApplicationContext());
+                EventoDBHelper eventoDBHelper = new EventoDBHelper(getApplicationContext());
+                MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
+                TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(getApplicationContext());
 
-        try {
-            tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
+                ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(getApplicationContext());
+                EstiloDBHelper estiloDBHelper = new EstiloDBHelper(getApplicationContext());
+                MusicaProjetoDBHelper musicaProjetoDBHelper = new MusicaProjetoDBHelper(getApplicationContext());
+                TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getApplicationContext());
+                RepertorioDBHelper repertorioDBHelper = new RepertorioDBHelper(getApplicationContext());
+                MusicaRepertorioDBHelper musicaRepertorioDBHelper = new MusicaRepertorioDBHelper(getApplicationContext());
 
-            dataUltimoAcesso = ParametrosUtils.getDataUltimoAcesso(this.getBaseContext());
-            dataUltimoAcesso = dataUltimoAcesso.equals("") ? "-" : dataUltimoAcesso;
+                try {
+                    tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
 
-            String urlEnvio = Constants.URLSERVIDORENVIO+tokenCriptografado+"/"+dataUltimoAcesso;
+                    dataUltimoAcesso = ParametrosUtils.getDataUltimoAcesso(this.getBaseContext());
+                    dataUltimoAcesso = dataUltimoAcesso.equals("") ? "-" : dataUltimoAcesso;
+
+                    String urlEnvio = Constants.URLSERVIDORENVIO+tokenCriptografado+"/"+dataUltimoAcesso;
 //            String url = Constants.URLSERVIDORMSG+tokenCriptografado+"/-";
 
-            comentarios = comentarioEventoDBHelper.listarTodosAEnviar(getApplicationContext());
-            musicas = musicaDBHelper.listarTodosAEnviar(getApplicationContext());
-            artistas = artistaDBHelper.listarTodosAEnviar(getApplicationContext());
-            eventos = eventoDBHelper.listarTodosAEnviar(getApplicationContext());
-            musicasEventos = musicaEventoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    comentarios = comentarioEventoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    musicas = musicaDBHelper.listarTodosAEnviar(getApplicationContext());
+                    artistas = artistaDBHelper.listarTodosAEnviar(getApplicationContext());
+                    eventos = eventoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    musicasEventos = musicaEventoDBHelper.listarTodosAEnviar(getApplicationContext());
 
-            projetos = projetoDBHelper.listarTodosAEnviar(getApplicationContext());
-            estilos = estiloDBHelper.listarTodosAEnviar(getApplicationContext());
-            musicasProjetos = musicaProjetoDBHelper.listarTodosAEnviar(getApplicationContext());
-            tiposEventos = tipoEventoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    projetos = projetoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    estilos = estiloDBHelper.listarTodosAEnviar(getApplicationContext());
+                    musicasProjetos = musicaProjetoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    tiposEventos = tipoEventoDBHelper.listarTodosAEnviar(getApplicationContext());
 
-            temposMusicasEventos = tempoMusicaEventoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    temposMusicasEventos = tempoMusicaEventoDBHelper.listarTodosAEnviar(getApplicationContext());
 
-            repertorios = repertorioDBHelper.listarTodosAEnviar(getApplicationContext());
-            musicasRepertorios = musicaRepertorioDBHelper.listarTodosAEnviar(getApplicationContext());
+                    repertorios = repertorioDBHelper.listarTodosAEnviar(getApplicationContext());
+                    musicasRepertorios = musicaRepertorioDBHelper.listarTodosAEnviar(getApplicationContext());
 
-            // COMENTARIOS
-            int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size()
-                    + musicasEventos.size() + projetos.size() + estilos.size() + musicasProjetos.size() + tiposEventos.size() + temposMusicasEventos.size()
-                    + repertorios.size() + musicasRepertorios.size();
+                    // COMENTARIOS
+                    int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size()
+                            + musicasEventos.size() + projetos.size() + estilos.size() + musicasProjetos.size() + tiposEventos.size() + temposMusicasEventos.size()
+                            + repertorios.size() + musicasRepertorios.size();
 
-            if(totalRegistros > 0){
-                String json = "{";
+                    if(totalRegistros > 0){
+                        String json = "{";
 
-                json = json.concat("\"comentarios\":[");
-                int cont = 1;
-                int qtdComentarios = comentarios.size();
+                        json = json.concat("\"comentarios\":[");
+                        int cont = 1;
+                        int qtdComentarios = comentarios.size();
 
-                if(qtdComentarios > 0) {
-                    for (ComentarioEvento umComentario : comentarios) {
+                        if(qtdComentarios > 0) {
+                            for (ComentarioEvento umComentario : comentarios) {
 
-                        if (cont < qtdComentarios) {
-                            json = json.concat(umComentario.toJson() + ",");
-                        } else {
-                            json = json.concat(umComentario.toJson());
+                                if (cont < qtdComentarios) {
+                                    json = json.concat(umComentario.toJson() + ",");
+                                } else {
+                                    json = json.concat(umComentario.toJson());
+                                }
+
+                                cont++;
+
+                            }
                         }
 
-                        cont++;
+                        // TIPOS EVENTOS
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // TIPOS EVENTOS
+                        json = json.concat("\"tipos_eventos\":[");
+                        cont = 1;
+                        int qtdTiposEventos = tiposEventos.size();
 
-                json = json.concat("],");
+                        if(qtdTiposEventos > 0) {
+                            for (TipoEvento umTipoEvento : tiposEventos) {
 
-                json = json.concat("\"tipos_eventos\":[");
-                cont = 1;
-                int qtdTiposEventos = tiposEventos.size();
+                                if (cont < qtdTiposEventos) {
+                                    json = json.concat(umTipoEvento.toJson() + ",");
+                                } else {
+                                    json = json.concat(umTipoEvento.toJson());
+                                }
 
-                if(qtdTiposEventos > 0) {
-                    for (TipoEvento umTipoEvento : tiposEventos) {
+                                cont++;
 
-                        if (cont < qtdTiposEventos) {
-                            json = json.concat(umTipoEvento.toJson() + ",");
-                        } else {
-                            json = json.concat(umTipoEvento.toJson());
+                            }
                         }
 
-                        cont++;
+                        // ESTILOS
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // ESTILOS
+                        json = json.concat("\"estilos\":[");
+                        cont = 1;
+                        int qtdEstilos = estilos.size();
 
-                json = json.concat("],");
+                        if(qtdEstilos > 0) {
+                            for (Estilo umEstilo : estilos) {
 
-                json = json.concat("\"estilos\":[");
-                cont = 1;
-                int qtdEstilos = estilos.size();
+                                if (cont < qtdEstilos) {
+                                    json = json.concat(umEstilo.toJson() + ",");
+                                } else {
+                                    json = json.concat(umEstilo.toJson());
+                                }
 
-                if(qtdEstilos > 0) {
-                    for (Estilo umEstilo : estilos) {
+                                cont++;
 
-                        if (cont < qtdEstilos) {
-                            json = json.concat(umEstilo.toJson() + ",");
-                        } else {
-                            json = json.concat(umEstilo.toJson());
+                            }
                         }
 
-                        cont++;
+                        // PROJETOS
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // PROJETOS
+                        json = json.concat("\"projetos\":[");
+                        cont = 1;
+                        int qtdProjetos = projetos.size();
 
-                json = json.concat("],");
+                        if(qtdProjetos > 0) {
+                            for (Projeto umProjeto : projetos) {
 
-                json = json.concat("\"projetos\":[");
-                cont = 1;
-                int qtdProjetos = projetos.size();
+                                if (cont < qtdProjetos) {
+                                    json = json.concat(umProjeto.toJson() + ",");
+                                } else {
+                                    json = json.concat(umProjeto.toJson());
+                                }
 
-                if(qtdProjetos > 0) {
-                    for (Projeto umProjeto : projetos) {
+                                cont++;
 
-                        if (cont < qtdProjetos) {
-                            json = json.concat(umProjeto.toJson() + ",");
-                        } else {
-                            json = json.concat(umProjeto.toJson());
+                            }
                         }
 
-                        cont++;
+                        // ARTISTAS
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // ARTISTAS
+                        json = json.concat("\"artistas\":[");
+                        cont = 1;
+                        int qtdArtistas = artistas.size();
 
-                json = json.concat("],");
+                        if(qtdArtistas > 0) {
+                            for (Artista umArtista : artistas) {
 
-                json = json.concat("\"artistas\":[");
-                cont = 1;
-                int qtdArtistas = artistas.size();
+                                if (cont < qtdArtistas) {
+                                    json = json.concat(umArtista.toJson() + ",");
+                                } else {
+                                    json = json.concat(umArtista.toJson());
+                                }
 
-                if(qtdArtistas > 0) {
-                    for (Artista umArtista : artistas) {
+                                cont++;
 
-                        if (cont < qtdArtistas) {
-                            json = json.concat(umArtista.toJson() + ",");
-                        } else {
-                            json = json.concat(umArtista.toJson());
+                            }
                         }
 
-                        cont++;
+                        // MUSICAS
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // MUSICAS
+                        json = json.concat("\"musicas\":[");
+                        cont = 1;
+                        int qtdMusicas = musicas.size();
 
-                json = json.concat("],");
+                        if(qtdMusicas > 0) {
+                            for (Musica umMusica : musicas) {
 
-                json = json.concat("\"musicas\":[");
-                cont = 1;
-                int qtdMusicas = musicas.size();
+                                if (cont < qtdMusicas) {
+                                    json = json.concat(umMusica.toJson() + ",");
+                                } else {
+                                    json = json.concat(umMusica.toJson());
+                                }
 
-                if(qtdMusicas > 0) {
-                    for (Musica umMusica : musicas) {
+                                cont++;
 
-                        if (cont < qtdMusicas) {
-                            json = json.concat(umMusica.toJson() + ",");
-                        } else {
-                            json = json.concat(umMusica.toJson());
+                            }
                         }
 
-                        cont++;
+                        // EVENTOS
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // EVENTOS
+                        json = json.concat("\"eventos\":[");
+                        cont = 1;
+                        int qtdEventos = eventos.size();
 
-                json = json.concat("],");
+                        if(qtdEventos > 0) {
+                            for (Evento umEvento : eventos) {
 
-                json = json.concat("\"eventos\":[");
-                cont = 1;
-                int qtdEventos = eventos.size();
+                                if (cont < qtdEventos) {
+                                    json = json.concat(umEvento.toJson() + ",");
+                                } else {
+                                    json = json.concat(umEvento.toJson());
+                                }
 
-                if(qtdEventos > 0) {
-                    for (Evento umEvento : eventos) {
+                                cont++;
 
-                        if (cont < qtdEventos) {
-                            json = json.concat(umEvento.toJson() + ",");
-                        } else {
-                            json = json.concat(umEvento.toJson());
+                            }
                         }
 
-                        cont++;
+                        // REPERTORIOS
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // REPERTORIOS
+                        json = json.concat("\"repertorios\":[");
+                        cont = 1;
+                        int qtdRepertorios = repertorios.size();
 
-                json = json.concat("],");
+                        if(qtdRepertorios > 0) {
+                            for (Repertorio umRepertorio : repertorios) {
 
-                json = json.concat("\"repertorios\":[");
-                cont = 1;
-                int qtdRepertorios = repertorios.size();
+                                if (cont < qtdRepertorios) {
+                                    json = json.concat(umRepertorio.toJson() + ",");
+                                } else {
+                                    json = json.concat(umRepertorio.toJson());
+                                }
 
-                if(qtdRepertorios > 0) {
-                    for (Repertorio umRepertorio : repertorios) {
+                                cont++;
 
-                        if (cont < qtdRepertorios) {
-                            json = json.concat(umRepertorio.toJson() + ",");
-                        } else {
-                            json = json.concat(umRepertorio.toJson());
+                            }
                         }
 
-                        cont++;
+                        // MUSICA EVENTO
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // MUSICA EVENTO
+                        json = json.concat("\"musicas_eventos\":[");
+                        cont = 1;
+                        int qtdMusicasEventos = musicasEventos.size();
 
-                json = json.concat("],");
+                        if(qtdMusicasEventos > 0) {
+                            for (MusicaEvento umaMusicaEvento : musicasEventos) {
 
-                json = json.concat("\"musicas_eventos\":[");
-                cont = 1;
-                int qtdMusicasEventos = musicasEventos.size();
+                                if (cont < qtdMusicasEventos) {
+                                    json = json.concat(umaMusicaEvento.toJson() + ",");
+                                } else {
+                                    json = json.concat(umaMusicaEvento.toJson());
+                                }
 
-                if(qtdMusicasEventos > 0) {
-                    for (MusicaEvento umaMusicaEvento : musicasEventos) {
+                                cont++;
 
-                        if (cont < qtdMusicasEventos) {
-                            json = json.concat(umaMusicaEvento.toJson() + ",");
-                        } else {
-                            json = json.concat(umaMusicaEvento.toJson());
+                            }
                         }
 
-                        cont++;
+                        // TEMPOS MUSICA EVENTO
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // TEMPOS MUSICA EVENTO
+                        json = json.concat("\"tempos_musicas_eventos\":[");
+                        cont = 1;
+                        int qtdTemposMusicasEventos = temposMusicasEventos.size();
 
-                json = json.concat("],");
+                        if(qtdTemposMusicasEventos > 0) {
+                            for (TempoMusicaEvento umTempoMusicaEvento : temposMusicasEventos) {
 
-                json = json.concat("\"tempos_musicas_eventos\":[");
-                cont = 1;
-                int qtdTemposMusicasEventos = temposMusicasEventos.size();
+                                if (cont < qtdTemposMusicasEventos) {
+                                    json = json.concat(umTempoMusicaEvento.toJson() + ",");
+                                } else {
+                                    json = json.concat(umTempoMusicaEvento.toJson());
+                                }
 
-                if(qtdTemposMusicasEventos > 0) {
-                    for (TempoMusicaEvento umTempoMusicaEvento : temposMusicasEventos) {
+                                cont++;
 
-                        if (cont < qtdTemposMusicasEventos) {
-                            json = json.concat(umTempoMusicaEvento.toJson() + ",");
-                        } else {
-                            json = json.concat(umTempoMusicaEvento.toJson());
+                            }
                         }
 
-                        cont++;
+                        // MUSICA REPERTORIO
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // MUSICA REPERTORIO
+                        json = json.concat("\"musicas_repertorios\":[");
+                        cont = 1;
+                        int qtdMusicasRepertorios = musicasRepertorios.size();
 
-                json = json.concat("],");
+                        if(qtdMusicasRepertorios > 0) {
+                            for (MusicaRepertorio umMusicaRepertorio : musicasRepertorios) {
 
-                json = json.concat("\"musicas_repertorios\":[");
-                cont = 1;
-                int qtdMusicasRepertorios = musicasRepertorios.size();
+                                if (cont < qtdMusicasRepertorios) {
+                                    json = json.concat(umMusicaRepertorio.toJson() + ",");
+                                } else {
+                                    json = json.concat(umMusicaRepertorio.toJson());
+                                }
 
-                if(qtdMusicasRepertorios > 0) {
-                    for (MusicaRepertorio umMusicaRepertorio : musicasRepertorios) {
+                                cont++;
 
-                        if (cont < qtdMusicasRepertorios) {
-                            json = json.concat(umMusicaRepertorio.toJson() + ",");
-                        } else {
-                            json = json.concat(umMusicaRepertorio.toJson());
+                            }
                         }
 
-                        cont++;
+                        // MUSICA PROJETO
 
-                    }
-                }
+                        json = json.concat("],");
 
-                // MUSICA PROJETO
+                        json = json.concat("\"musicas_projetos\":[");
+                        cont = 1;
+                        int qtdMusicasProjetos = musicasProjetos.size();
 
-                json = json.concat("],");
+                        if(qtdMusicasProjetos > 0) {
+                            for (MusicaProjeto umaMusicaProjeto : musicasProjetos) {
 
-                json = json.concat("\"musicas_projetos\":[");
-                cont = 1;
-                int qtdMusicasProjetos = musicasProjetos.size();
+                                if (cont < qtdMusicasProjetos) {
+                                    json = json.concat(umaMusicaProjeto.toJson() + ",");
+                                } else {
+                                    json = json.concat(umaMusicaProjeto.toJson());
+                                }
 
-                if(qtdMusicasProjetos > 0) {
-                    for (MusicaProjeto umaMusicaProjeto : musicasProjetos) {
+                                cont++;
 
-                        if (cont < qtdMusicasProjetos) {
-                            json = json.concat(umaMusicaProjeto.toJson() + ",");
-                        } else {
-                            json = json.concat(umaMusicaProjeto.toJson());
+                            }
                         }
 
-                        cont++;
+                        json = json.concat("]");
+
+                        json = json.concat("}");
+
+                        Map<String, String> map = new HashMap<>();
+                        map.put("dados", json);
+                        map.put("total", String.valueOf(totalRegistros));
+
+                        TarefaAssincrona utEnvio = new TarefaAssincrona(urlEnvio, "POST", AtualizaDadosService.this, map, true, 0);
+
+                        utEnvio.setOnResultListener(this);
+                        utEnvio.execute();
+
+                    }else{
+                        String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
+                        TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true, 0);
+                        ut.setOnResultListener(this);
+                        ut.execute();
+                    }
+
+                } catch (Exception e) {
+                    this.stopSelf();
+                    System.out.println("TERMINOU ERRO 1");
+                    Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+                break;
+            case 2:
+                try {
+                    tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
+
+                    for(TempoMusicaEvento tme : tmes){
+
+                        if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
+                            String url = Constants.URLSERVIDORENVIOAUDIO+tokenCriptografado+"/"+tme.getAudio().replace(".", "_");
+                            Map<String, String> params = new HashMap<>();
+                            params.put("audio", tme.getAudio());
+                            TarefaAssincrona ut = new TarefaAssincrona(url, "POST", AtualizaDadosService.this, params, true, 1);
+                            ut.setOnResultListener(this);
+                            ut.execute();
+                        }
 
                     }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                break;
+            case 3:
+                // processa recebimento
+                try {
+                    tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
 
-                json = json.concat("]");
+                    for(TempoMusicaEvento tme : tmesRecebeAudio){
 
-                json = json.concat("}");
+                        if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
 
-                Map<String, String> map = new HashMap<>();
-                map.put("dados", json);
-                map.put("total", String.valueOf(totalRegistros));
+                            File f  = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
 
-                TarefaAssincrona utEnvio = new TarefaAssincrona(urlEnvio, "POST", AtualizaDadosService.this, map, true, 0);
+                            if(!f.exists()){
+                                String url = Constants.URLSERVIDORAUDIO+tokenCriptografado+"/"+tme.getAudio();
+                                Map<String, String> params = new HashMap<>();
+                                params.put("audio", tme.getAudio());
+                                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, params, true, 2);
+                                ut.setOnResultListener(this);
+                                ut.execute();
+                            }
 
-                utEnvio.setOnResultListener(this);
-                utEnvio.execute();
 
-            }else{
-                String url = Constants.URLSERVIDOR+tokenCriptografado+"/"+dataUltimoAcesso;
-                TarefaAssincrona ut = new TarefaAssincrona(url, "GET", AtualizaDadosService.this, null, true, 0);
-                ut.setOnResultListener(this);
-                ut.execute();
-            }
+                        }
 
-        } catch (Exception e) {
-            this.stopSelf();
-            System.out.println("TERMINOU ERRO 1");
-            Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
+
 
     }
 
@@ -537,6 +600,10 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
                     Toast.makeText(this, "Seu sistema já está atualizado.", Toast.LENGTH_SHORT).show();
                     enviaBroadcast();
+
+                    enviaAudios();
+                    recebeAudios();
+
                     this.stopSelf();
                     System.out.println("TERMINOU SEM REGISTROS");
                 }
@@ -579,8 +646,24 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 //            }
 
             }
-        } else{
+        } else if(acao == 1){
             System.out.println(map.size());
+            JSONObject jObj = (JSONObject) map.get("json");
+
+            if(jObj != null){
+                try {
+                    String audio = jObj.getString("audio");
+                    System.out.println(audio);
+                    TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getBaseContext());
+                    tempoMusicaEventoDBHelper.sinalizaEnvioAudio(getBaseContext(), audio);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        } else{
+            // processa recebimento
         }
 
     }
@@ -595,30 +678,52 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
             Toast.makeText(this, "Atualização finalizada com sucesso.", Toast.LENGTH_LONG).show();
 
             // enviando audios
-            TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getBaseContext());
-
-            List<TempoMusicaEvento> tmes = tempoMusicaEventoDBHelper.listarTodosAEnviar(getBaseContext());
-
-            for(TempoMusicaEvento tme : tmes){
-
-                if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
-                    String url = Constants.URLSERVIDORENVIOAUDIO+tokenCriptografado+"/"+tme.getAudio();
-                    TarefaAssincrona ut = new TarefaAssincrona(url, "POST", AtualizaDadosService.this, null, true, 1);
-                    ut.setOnResultListener(this);
-                    ut.execute();
-                }
-
-
-            }
-
-
-
+            enviaAudios();
             // fim envio audios
+
+            //recebeAudios();
 
             this.stopSelf();
             System.out.println("TERMINOU");
 
         }
+
+    }
+
+    private void enviaAudios() {
+
+        TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getBaseContext());
+
+        tmes = tempoMusicaEventoDBHelper.listarTodosAEnviarAudio(getBaseContext());
+
+        if(tmes.size() > 0){
+            String urlToken = Constants.URLTOKEN;
+
+            TokenTask tokenTask = new TokenTask(urlToken, AtualizaDadosService.this, true, 2);
+            tokenTask.setOnTokenTaskResultsListener(this);
+            tokenTask.execute();
+        }
+
+
+    }
+
+    private void recebeAudios() {
+
+        TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getBaseContext());
+
+
+        tmesRecebeAudio = tempoMusicaEventoDBHelper.listarTodosAReceberAudio(getBaseContext());
+
+        if(tmesRecebeAudio.size() > 0){
+            String urlToken = Constants.URLTOKEN;
+
+            TokenTask tokenTask = new TokenTask(urlToken, AtualizaDadosService.this, true, 3);
+            tokenTask.setOnTokenTaskResultsListener(this);
+            tokenTask.execute();
+        } else{
+            enviaAudios();
+        }
+
 
     }
 

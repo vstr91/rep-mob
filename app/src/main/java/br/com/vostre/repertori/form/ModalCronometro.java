@@ -44,6 +44,7 @@ import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
+import br.com.vostre.repertori.utils.Constants;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
 
@@ -69,7 +70,6 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String arquivoAudio = null;
     String nomeArquivo;
-    private static final String CAMINHO_PADRAO_AUDIO = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Doutor Affonso/Audios";
 
     public MusicaEvento getMusicaEvento() {
         return musicaEvento;
@@ -173,7 +173,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                     btnIniciar.setText("Parar");
                     isRunning = true;
 
-                    arquivoAudio = CAMINHO_PADRAO_AUDIO+"/";//getActivity().getExternalFilesDir(null).getAbsolutePath()+ File.separator;
+                    arquivoAudio = Constants.CAMINHO_PADRAO_AUDIO+"/";//getActivity().getExternalFilesDir(null).getAbsolutePath()+ File.separator;
                     nomeArquivo = musicaEvento.getMusica().getSlug()+"-"+ UUID.randomUUID()+".3gp";
                     arquivoAudio += nomeArquivo;
 
@@ -213,6 +213,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                 tme.setDataCadastro(Calendar.getInstance());
                 tme.setUltimaAlteracao(Calendar.getInstance());
                 tme.setAudio(nomeArquivo);
+                tme.setAudioEnviado(-1);
 
                 TempoMusicaEventoDBHelper tmeDBHelper = new TempoMusicaEventoDBHelper(getContext());
                 tmeDBHelper.salvarOuAtualizar(getContext(), tme);
@@ -296,7 +297,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
 
     private void iniciarGravacao() {
 
-        File pastaAudio = new File(CAMINHO_PADRAO_AUDIO);
+        File pastaAudio = new File(Constants.CAMINHO_PADRAO_AUDIO);
 
         if(!pastaAudio.exists()){
             //System.out.println("NAO EXISTE!!!!!!!!!!!!!!!!!!!!! "+pastaAudio.getAbsolutePath());
@@ -345,7 +346,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
 
         if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
 
-            File f  = new File(CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
+            File f  = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
 
             if(f.exists()){
                 MediaPlayer mediaPlayer = new MediaPlayer();

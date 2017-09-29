@@ -45,6 +45,8 @@ public class TempoMusicaEventoDBAdapter {
         cv.put("status", tme.getStatus());
         cv.put("enviado", tme.getEnviado());
         cv.put("audio", tme.getAudio());
+        cv.put("audio_enviado", tme.getAudioEnviado());
+        cv.put("audio_recebido", tme.getAudioRecebido());
 
         if(tme.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(tme.getDataCadastro()));
@@ -164,6 +166,116 @@ public class TempoMusicaEventoDBAdapter {
         database.close();
 
         return tmes;
+    }
+
+    public List<TempoMusicaEvento> listarTodosAEnviarAudio(){
+        Cursor cursor = database.rawQuery("SELECT _id, tempo, id_musica_evento, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, audio FROM tempo_musica_evento WHERE audio_enviado = -1 ORDER BY data_cadastro DESC", null);
+        List<TempoMusicaEvento> tmes = new ArrayList<TempoMusicaEvento>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(context);
+
+            do{
+                TempoMusicaEvento tme = new TempoMusicaEvento();
+                tme.setId(cursor.getString(0));
+
+                tme.setTempo(DataUtils.bancoParaData(cursor.getString(1)));
+
+                MusicaEvento musicaEvento = new MusicaEvento();
+                musicaEvento.setId(cursor.getString(2));
+                musicaEvento = musicaEventoDBHelper.carregar(context, musicaEvento);
+                tme.setMusicaEvento(musicaEvento);
+
+                tme.setStatus(cursor.getInt(3));
+
+                if(cursor.getString(4) != null){
+                    tme.setDataCadastro(DataUtils.bancoParaData(cursor.getString(4)));
+                }
+
+                if(cursor.getString(5) != null){
+                    tme.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    tme.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                tme.setAudio(cursor.getString(7));
+
+                tmes.add(tme);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return tmes;
+    }
+
+    public List<TempoMusicaEvento> listarTodosAReceberAudio(){
+        Cursor cursor = database.rawQuery("SELECT _id, tempo, id_musica_evento, status, data_cadastro, data_recebimento, " +
+                "ultima_alteracao, audio FROM tempo_musica_evento WHERE audio_recebido = -1 ORDER BY data_cadastro DESC", null);
+        List<TempoMusicaEvento> tmes = new ArrayList<TempoMusicaEvento>();
+
+        if(cursor.moveToFirst()){
+
+            MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(context);
+
+            do{
+                TempoMusicaEvento tme = new TempoMusicaEvento();
+                tme.setId(cursor.getString(0));
+
+                tme.setTempo(DataUtils.bancoParaData(cursor.getString(1)));
+
+                MusicaEvento musicaEvento = new MusicaEvento();
+                musicaEvento.setId(cursor.getString(2));
+                musicaEvento = musicaEventoDBHelper.carregar(context, musicaEvento);
+                tme.setMusicaEvento(musicaEvento);
+
+                tme.setStatus(cursor.getInt(3));
+
+                if(cursor.getString(4) != null){
+                    tme.setDataCadastro(DataUtils.bancoParaData(cursor.getString(4)));
+                }
+
+                if(cursor.getString(5) != null){
+                    tme.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    tme.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                tme.setAudio(cursor.getString(7));
+
+                tmes.add(tme);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return tmes;
+    }
+
+    public int sinalizaEnvioAudio(String audio){
+        ContentValues cv = new ContentValues();
+        cv.put("audio_enviado", 0);
+
+        int retorno = database.update("tempo_musica_evento", cv, "audio = \""+audio+"\"", null);
+        database.close();
+        return retorno;
+    }
+
+    public int sinalizaRecebimentoAudio(String audio){
+        ContentValues cv = new ContentValues();
+        cv.put("audio_recebido", 0);
+
+        int retorno = database.update("tempo_musica_evento", cv, "audio = \""+audio+"\"", null);
+        database.close();
+        return retorno;
     }
 
 }

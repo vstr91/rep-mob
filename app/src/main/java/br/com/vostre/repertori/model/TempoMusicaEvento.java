@@ -25,6 +25,8 @@ public class TempoMusicaEvento extends EntidadeBase {
     private Calendar tempo;
     private MusicaEvento musicaEvento;
     private String audio;
+    private Integer audioEnviado;
+    private Integer audioRecebido;
 
     public Calendar getTempo() {
         return tempo;
@@ -50,6 +52,22 @@ public class TempoMusicaEvento extends EntidadeBase {
         this.audio = audio;
     }
 
+    public Integer getAudioEnviado() {
+        return audioEnviado;
+    }
+
+    public void setAudioEnviado(Integer audioEnviado) {
+        this.audioEnviado = audioEnviado;
+    }
+
+    public Integer getAudioRecebido() {
+        return audioRecebido;
+    }
+
+    public void setAudioRecebido(Integer audioRecebido) {
+        this.audioRecebido = audioRecebido;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         TempoMusicaEventoDBHelper tmeDBHelper = new TempoMusicaEventoDBHelper(context);
@@ -71,6 +89,8 @@ public class TempoMusicaEvento extends EntidadeBase {
             umTme.setMusicaEvento(umMusicaEvento);
             umTme.setEnviado(0);
             umTme.setAudio(object.getString("audio"));
+            umTme.setAudioEnviado(-1);
+            umTme.setAudioRecebido(-1);
 
             umTme.setStatus(object.getInt("status"));
             umTme.setDataRecebimento(Calendar.getInstance());

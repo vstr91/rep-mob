@@ -22,14 +22,16 @@ public class TokenTask extends AsyncTask<String, String, String> {
     TokenTaskListener listener;
     boolean isBackground;
     String json = null;
+    int tipo = -1;
 
-    public TokenTask(String url, Context context, boolean isBackground, String tipo){
+    public TokenTask(String url, Context context, boolean isBackground, int tipo){
 
         Crypt crypt = new Crypt();
 
         this.url = url;
         this.context = context;
         this.isBackground = isBackground;
+        this.tipo = tipo;
     }
 
     public void setOnTokenTaskResultsListener(TokenTaskListener listener){
@@ -59,7 +61,7 @@ public class TokenTask extends AsyncTask<String, String, String> {
             }
         }
 
-        listener.onTokenTaskResultsSucceeded(response);
+        listener.onTokenTaskResultsSucceeded(response, tipo);
 
     }
 

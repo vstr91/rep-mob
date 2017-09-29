@@ -5,6 +5,6 @@ package br.com.vostre.repertori.listener;
  */
 public interface TokenTaskListener {
 
-    public void onTokenTaskResultsSucceeded(String result);
+    public void onTokenTaskResultsSucceeded(String result, int tipo);
 
 }

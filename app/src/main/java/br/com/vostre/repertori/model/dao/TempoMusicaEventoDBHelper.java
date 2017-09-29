@@ -22,7 +22,7 @@ public class TempoMusicaEventoDBHelper extends SQLiteOpenHelper {
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE tempo_musica_evento (_id text primary key, tempo text NOT NULL, " +
             "id_musica_evento integer NOT NULL, status integer NOT NULL, data_cadastro text, " +
-            "data_recebimento text, ultima_alteracao text, enviado integer NOT NULL, audio text);";
+            "data_recebimento text, ultima_alteracao text, enviado integer NOT NULL, audio text, audio_enviado integer NOT NULL, audio_recebido integer NOT NULL);";
     RepDBHelper repDBHelper;
 
     public TempoMusicaEventoDBHelper(Context context){
@@ -53,6 +53,16 @@ public class TempoMusicaEventoDBHelper extends SQLiteOpenHelper {
         return adapter.listarTodosAEnviar();
     }
 
+    public List<TempoMusicaEvento> listarTodosAEnviarAudio(Context context){
+        TempoMusicaEventoDBAdapter adapter = new TempoMusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAEnviarAudio();
+    }
+
+    public List<TempoMusicaEvento> listarTodosAReceberAudio(Context context){
+        TempoMusicaEventoDBAdapter adapter = new TempoMusicaEventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosAReceberAudio();
+    }
+
     public long salvarOuAtualizar(Context context, TempoMusicaEvento tme){
         TempoMusicaEventoDBAdapter adapter = new TempoMusicaEventoDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.salvarOuAtualizar(tme);
@@ -61,6 +71,11 @@ public class TempoMusicaEventoDBHelper extends SQLiteOpenHelper {
     public long deletarInativos(Context context){
         TempoMusicaEventoDBAdapter adapter = new TempoMusicaEventoDBAdapter(context, repDBHelper.getWritableDatabase());
         return adapter.deletarInativos();
+    }
+
+    public long sinalizaEnvioAudio(Context context, String audio){
+        TempoMusicaEventoDBAdapter adapter = new TempoMusicaEventoDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.sinalizaEnvioAudio(audio);
     }
 
 }

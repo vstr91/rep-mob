@@ -1,5 +1,7 @@
 package br.com.vostre.repertori.utils;
 
+import android.os.Environment;
+
 /**
  * Created by Almir on 03/03/2016.
  */
@@ -23,7 +25,7 @@ public class Constants {
     public static final String URLSERVIDOR = SERVIDOR+"/api/recebe-dados/";
     public static final String URLSERVIDORENVIO = SERVIDOR+"/api/envia-dados/";
 
-    public static final String URLSERVIDORAUDIO = SERVIDOR+"/api/recebe-dados/audios/";
+    public static final String URLSERVIDORAUDIO = SERVIDOR+"/api/audios/";
     public static final String URLSERVIDORENVIOAUDIO = SERVIDOR+"/api/envia-dados/audios/";
 
     public static final String SERVIDOR_TESTE = "vostre.com.br";
@@ -32,5 +34,6 @@ public class Constants {
     public static final String URLTOKENGOOGLE = SERVIDOR+"/api/valida-token";
 
     public static final int TEMPO_ATUALIZACAO = 60;
+    public static final String CAMINHO_PADRAO_AUDIO = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Doutor Affonso/Audios";
 
 }
