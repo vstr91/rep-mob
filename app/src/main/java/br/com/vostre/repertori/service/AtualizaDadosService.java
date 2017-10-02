@@ -602,7 +602,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     enviaBroadcast();
 
                     enviaAudios();
-                    recebeAudios();
+                    //recebeAudios();
 
                     this.stopSelf();
                     System.out.println("TERMINOU SEM REGISTROS");

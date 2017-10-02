@@ -38,19 +38,24 @@ import br.com.vostre.repertori.EventoDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.TempoList;
+import br.com.vostre.repertori.listener.GetAudioTaskListener;
 import br.com.vostre.repertori.listener.ModalEventoListener;
+import br.com.vostre.repertori.listener.TokenTaskListener;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.Constants;
+import br.com.vostre.repertori.utils.Crypt;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
+import br.com.vostre.repertori.utils.GetAudioTask;
+import br.com.vostre.repertori.utils.TokenTask;
 
 import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
 
-public class ModalCronometro extends android.support.v4.app.DialogFragment implements View.OnClickListener, DialogInterface.OnClickListener, AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+public class ModalCronometro extends android.support.v4.app.DialogFragment implements View.OnClickListener, DialogInterface.OnClickListener, AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, GetAudioTaskListener, TokenTaskListener {
 
     Button btnFechar;
     Button btnIniciar;
@@ -70,6 +75,9 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String arquivoAudio = null;
     String nomeArquivo;
+
+    MediaPlayer mediaPlayer;
+    TempoMusicaEvento tme;
 
     public MusicaEvento getMusicaEvento() {
         return musicaEvento;
@@ -189,11 +197,16 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
 
                 break;
             case R.id.btnFechar:
-                dismiss();
 
-                if(permissionToRecordAccepted){
-                    iniciarGravacao();
+                if(permissionToRecordAccepted && isRunning){
+                    pararGravacao();
                 }
+
+                if(mediaPlayer != null && mediaPlayer.isPlaying()){
+                    mediaPlayer.stop();
+                }
+
+                dismiss();
 
                 break;
         }
@@ -283,6 +296,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                         tme.setEnviado(-1);
                         tmeDBHelper.salvarOuAtualizar(getContext(), tme);
                         Toast.makeText(getContext(), "Registro removido!", Toast.LENGTH_SHORT).show();
+                        excluiArquivo(tme);
                         atualizaLista();
                     }
                 })
@@ -329,7 +343,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
     }
 
     private void requestGravacao() {
-        Log.w("Gravacao", "Gravacao nao autorizada. Requesting permission");
+        Log.w("Gravacao", "Gravacao nao autorizada. Solicitando permissão...");
 
         final String[] permissions = new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -340,31 +354,81 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
 
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        final TempoMusicaEvento tme = tmes.get(i);
+    private boolean excluiArquivo(TempoMusicaEvento tme){
 
         if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
 
             File f  = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
 
             if(f.exists()){
-                MediaPlayer mediaPlayer = new MediaPlayer();
+                return f.delete();
+            }
 
-                try {
-                    mediaPlayer.setDataSource(f.getAbsolutePath());
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        }
 
+        return false;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        tme = tmes.get(i);
+
+        if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
+
+            File f = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
+
+            if(f.exists()){
+                ModalPlayer modalPlayer = new ModalPlayer();
+                modalPlayer.setTme(tme);
+                modalPlayer.setCancelable(false);
+                modalPlayer.show(getFragmentManager(), "modalPlayer");
             } else{
-                Toast.makeText(getContext(), "Áudio não encontrado. Ele pode ter sido movido ou excluído", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Áudio não encontrado no dispositivo. Tentando recuperar do servidor...", Toast.LENGTH_SHORT).show();
+
+                TokenTask tokenTask = new TokenTask(Constants.URLTOKEN, getContext(), false, 0);
+                tokenTask.setOnTokenTaskResultsListener(this);
+                tokenTask.execute();
             }
 
         } else{
             Toast.makeText(getContext(), "Não existe áudio disponível para esta gravação", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onGetAudioTaskResultSucceeded(File result) {
+
+        if(result != null && result.exists()){
+
+            TempoMusicaEvento tme = new TempoMusicaEvento();
+            tme.setAudio(result.getName());
+
+            ModalPlayer modalPlayer = new ModalPlayer();
+            modalPlayer.setTme(tme);
+            modalPlayer.setCancelable(false);
+            modalPlayer.show(getFragmentManager(), "modalPlayer");
+
+        } else{
+            Toast.makeText(getContext(), "Áudio não encontrado no servidor", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onTokenTaskResultsSucceeded(String token, int tipo) {
+
+        Crypt crypt = new Crypt();
+
+        try {
+            String  tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
+            String url = Constants.URLSERVIDORAUDIO+tokenCriptografado+"/"+tme.getAudio();
+
+            GetAudioTask getAudioTask = new GetAudioTask(url, getContext(), tme.getAudio(), false);
+            getAudioTask.setListener(this);
+            getAudioTask.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

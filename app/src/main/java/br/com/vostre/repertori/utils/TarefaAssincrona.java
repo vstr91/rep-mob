@@ -9,13 +9,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import br.com.vostre.repertori.listener.TarefaAssincronaListener;
@@ -87,6 +91,7 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
 
         JSONObject jsonObj = null;
         StringBuilder resultado = new StringBuilder();
+        String[] resposta = new String[0];
 
         // Making HTTP request
         try {
@@ -100,12 +105,29 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
                     HttpURLConnection conn;
 
                     if(acao == 1){
-                        conn = HttpUtils.sendMultipartPostRequest(umaURL, parametrosPost);
+                        InputStream inputStream = HttpUtils.sendMultipartPostRequest(umaURL, parametrosPost);
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                inputStream));
+                        List<String> response = new ArrayList<String>();
+
+                        String line = "";
+                        while ((line = reader.readLine()) != null) {
+                            response.add(line);
+                        }
+
+                        reader.close();
+
+                        resposta = response.toArray(new String[0]);
+
                     } else{
                         conn = HttpUtils.sendPostRequest(umaURL, parametrosPost);
                     }
 
-                    String[] resposta = HttpUtils.readMultipleLinesRespone();
+                    if(acao != 1){
+                        resposta = HttpUtils.readMultipleLinesRespone();
+                    }
+
 
                     HttpUtils.disconnect();
 
@@ -133,7 +155,7 @@ public class TarefaAssincrona extends AsyncTask<Object, Integer, Map<String, Obj
 
 
 
-                String[] resposta = HttpUtils.readMultipleLinesRespone();
+                resposta = HttpUtils.readMultipleLinesRespone();
 
                 HttpUtils.disconnect();
 

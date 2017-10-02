@@ -25,7 +25,7 @@ public class Constants {
     public static final String URLSERVIDOR = SERVIDOR+"/api/recebe-dados/";
     public static final String URLSERVIDORENVIO = SERVIDOR+"/api/envia-dados/";
 
-    public static final String URLSERVIDORAUDIO = SERVIDOR+"/api/audios/";
+    public static final String URLSERVIDORAUDIO = SERVIDOR+"/audios/";
     public static final String URLSERVIDORENVIOAUDIO = SERVIDOR+"/api/envia-dados/audios/";
 
     public static final String SERVIDOR_TESTE = "vostre.com.br";

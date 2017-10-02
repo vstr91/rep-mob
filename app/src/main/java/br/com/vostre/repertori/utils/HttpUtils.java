@@ -119,7 +119,7 @@ public class HttpUtils {
      * @throws IOException
      *             thrown if any I/O error occurred
      */
-    public static HttpURLConnection sendMultipartPostRequest(String requestURL,
+    public static InputStream sendMultipartPostRequest(String requestURL,
                                                     Map<String, String> params) throws IOException {
 
         String lineEnd = "\r\n";
@@ -205,7 +205,7 @@ public class HttpUtils {
 //            writer.flush();
 //        }
 
-        return httpConn;
+        return httpConn.getInputStream();
     }
 
     /**
