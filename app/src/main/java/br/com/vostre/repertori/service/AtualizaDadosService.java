@@ -506,12 +506,19 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     for(TempoMusicaEvento tme : tmes){
 
                         if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
-                            String url = Constants.URLSERVIDORENVIOAUDIO+tokenCriptografado+"/"+tme.getAudio().replace(".", "_");
-                            Map<String, String> params = new HashMap<>();
-                            params.put("audio", tme.getAudio());
-                            TarefaAssincrona ut = new TarefaAssincrona(url, "POST", AtualizaDadosService.this, params, true, 1);
-                            ut.setOnResultListener(this);
-                            ut.execute();
+
+                            File arquivo = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
+
+                            if(arquivo.exists() && arquivo.canRead()){
+                                String url = Constants.URLSERVIDORENVIOAUDIO+tokenCriptografado+"/"+tme.getAudio().replace(".", "_");
+                                Map<String, String> params = new HashMap<>();
+                                params.put("audio", tme.getAudio());
+                                TarefaAssincrona ut = new TarefaAssincrona(url, "POST", AtualizaDadosService.this, params, true, 1);
+                                ut.setOnResultListener(this);
+                                ut.execute();
+                            }
+
+
                         }
 
                     }
@@ -647,7 +654,6 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
             }
         } else if(acao == 1){
-            System.out.println(map.size());
             JSONObject jObj = (JSONObject) map.get("json");
 
             if(jObj != null){

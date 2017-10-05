@@ -30,6 +30,7 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -42,7 +43,10 @@ import br.com.vostre.repertori.form.ModalCadastroMusica;
 import br.com.vostre.repertori.form.ModalCifra;
 import br.com.vostre.repertori.form.ModalEditaLetra;
 import br.com.vostre.repertori.form.ModalLetra;
+import br.com.vostre.repertori.form.ModalPlayer;
+import br.com.vostre.repertori.listener.GetAudioTaskListener;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
+import br.com.vostre.repertori.listener.TokenTaskListener;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaEvento;
@@ -50,16 +54,21 @@ import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
+import br.com.vostre.repertori.utils.Constants;
+import br.com.vostre.repertori.utils.Crypt;
 import br.com.vostre.repertori.utils.DataUtils;
+import br.com.vostre.repertori.utils.GetAudioTask;
 import br.com.vostre.repertori.utils.SnackbarHelper;
+import br.com.vostre.repertori.utils.TokenTask;
 
-public class MusicaDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener, ModalCadastroListener {
+public class MusicaDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener, ModalCadastroListener, TokenTaskListener, GetAudioTaskListener {
 
     TextView textViewNome;
     TextView textViewArtista;
     TextView textViewTom;
     ListView listViewExecucoes;
     ListView listViewMesmoTom;
+    ListView listViewTempos;
     EventoList adapterEventos;
     MusicaList adapterMusicas;
     Button btnBuscaVideo;
@@ -76,6 +85,11 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
     MusicaDBHelper musicaDBHelper;
 
+    TempoList tempoAdapter;
+    List<TempoMusicaEvento> tmes;
+    TempoMusicaEventoDBHelper tmeDBHelper;
+    TempoMusicaEvento tme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,9 +98,6 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         List<Musica> musicasMesmoTom;
         List<Evento> eventos;
         MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getApplicationContext());
-
-        final List<TempoMusicaEvento> tmes;
-        TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,6 +118,8 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         chart = (LineChart) findViewById(R.id.chart);
         textViewObservacoes = (TextView) findViewById(R.id.textViewObservacoes);
         textViewLabelObservacoes = (TextView) findViewById(R.id.textViewLabelObservacoes);
+
+        listViewTempos = (ListView) findViewById(R.id.listViewTempos);
 
         btnBuscaVideo.setOnClickListener(this);
         btnLetra.setOnClickListener(this);
@@ -135,6 +148,15 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             }
 
             carregarDadosMusica();
+
+            tmeDBHelper = new TempoMusicaEventoDBHelper(getBaseContext());
+            tmes = tmeDBHelper.listarTodosPorMusica(getBaseContext(), musica, 10);
+
+            tempoAdapter = new TempoList(this, R.id.listViewTempos, tmes);
+            tempoAdapter.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+            listViewTempos.setAdapter(tempoAdapter);
+            listViewTempos.setOnItemClickListener(this);
 
             eventos = musicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica);
 
@@ -177,8 +199,6 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
                     return false;
                 }
             });
-
-            tmes = tempoMusicaEventoDBHelper.listarTodosPorMusica(getApplicationContext(), musica, 10);
 
             chart.setExtraOffsets(10f, 10f, 10f, 10f);
             chart.getDescription().setEnabled(false);
@@ -236,7 +256,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
 
 
                         if(tme != null){
-                            return DataUtils.toString(tme.getUltimaAlteracao(), false);
+                            return DataUtils.toString(tme.getMusicaEvento().getEvento().getData(), false);
                         } else{
                             return String.valueOf(value);
                         }
@@ -350,6 +370,30 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
                 intent.putExtra("evento", evento.getId());
                 startActivity(intent);
                 break;
+            case R.id.listViewTempos:
+                tme = tmes.get(position);
+
+                if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
+
+                    File f = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
+
+                    if(f.exists()){
+                        ModalPlayer modalPlayer = new ModalPlayer();
+                        modalPlayer.setTme(tme);
+                        modalPlayer.setCancelable(false);
+                        modalPlayer.show(getSupportFragmentManager(), "modalPlayer");
+                    } else{
+                        Toast.makeText(getBaseContext(), "Áudio não encontrado no dispositivo. Tentando recuperar do servidor...", Toast.LENGTH_SHORT).show();
+
+                        TokenTask tokenTask = new TokenTask(Constants.URLTOKEN, MusicaDetalheActivity.this, false, 0);
+                        tokenTask.setOnTokenTaskResultsListener(this);
+                        tokenTask.execute();
+                    }
+
+                } else{
+                    Toast.makeText(getBaseContext(), "Não existe áudio disponível para esta gravação", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
 
 
@@ -424,6 +468,42 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
         } else{
             textViewLabelObservacoes.setVisibility(View.GONE);
             textViewObservacoes.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public void onGetAudioTaskResultSucceeded(File result) {
+
+        if(result != null && result.exists()){
+
+            TempoMusicaEvento tme = tmeDBHelper.carregarPorAudio(getBaseContext(), result.getName());
+
+            ModalPlayer modalPlayer = new ModalPlayer();
+            modalPlayer.setTme(tme);
+            modalPlayer.setCancelable(false);
+            modalPlayer.show(getSupportFragmentManager(), "modalPlayer");
+
+        } else{
+            Toast.makeText(getBaseContext(), "Áudio não encontrado no servidor", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onTokenTaskResultsSucceeded(String token, int tipo) {
+
+        Crypt crypt = new Crypt();
+
+        try {
+            String  tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
+            String url = Constants.URLSERVIDORAUDIO+tokenCriptografado+"/"+tme.getAudio();
+
+            GetAudioTask getAudioTask = new GetAudioTask(url, MusicaDetalheActivity.this, tme.getAudio(), false);
+            getAudioTask.setListener(this);
+            getAudioTask.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

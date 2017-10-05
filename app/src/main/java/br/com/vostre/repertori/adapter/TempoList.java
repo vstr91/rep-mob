@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -35,11 +36,16 @@ public class TempoList extends ArrayAdapter<TempoMusicaEvento> {
         View rowView = inflater.inflate(R.layout.listview_tempos, null, true);
         TextView textViewTempo = (TextView) rowView.findViewById(R.id.textViewTempo);
         TextView textViewData = (TextView) rowView.findViewById(R.id.textViewData);
+        ImageView imageViewPlay = (ImageView) rowView.findViewById(R.id.imageViewPlay);
 
         TempoMusicaEvento tme = tmes.get(position);
 
         textViewTempo.setText(DataUtils.toStringSomenteHoras(tme.getTempo(), 1));
-        textViewData.setText(DataUtils.toString(tme.getUltimaAlteracao(), false));
+        textViewData.setText(DataUtils.toString(tme.getMusicaEvento().getEvento().getData(), false));
+
+        if(tme.getAudio().isEmpty() || tme.getAudio().equals("null")){
+            imageViewPlay.setVisibility(View.INVISIBLE);
+        }
 
         return rowView;
     }

@@ -78,4 +78,9 @@ public class TempoMusicaEventoDBHelper extends SQLiteOpenHelper {
         return adapter.sinalizaEnvioAudio(audio);
     }
 
+    public TempoMusicaEvento carregarPorAudio(Context context, String audio){
+        TempoMusicaEventoDBAdapter adapter = new TempoMusicaEventoDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.carregarPorAudio(audio);
+    }
+
 }

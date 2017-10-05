@@ -77,7 +77,7 @@ public class TempoMusicaEventoDBAdapter {
 
     public List<TempoMusicaEvento> listarTodosPorMusica(Musica musica, int limite){
         Cursor cursor = database.rawQuery("SELECT tme._id, tme.tempo, tme.id_musica_evento, tme.status, tme.data_cadastro, tme.data_recebimento, " +
-                "tme.ultima_alteracao, tme.audio FROM tempo_musica_evento tme INNER JOIN musica_evento me ON me._id = tme.id_musica_evento WHERE me.id_musica = ? AND tme.status = 0 " +
+                "tme.ultima_alteracao, tme.audio, tme.audio_enviado, tme.audio_recebido FROM tempo_musica_evento tme INNER JOIN musica_evento me ON me._id = tme.id_musica_evento WHERE me.id_musica = ? AND tme.status = 0 " +
                 "ORDER BY tme.ultima_alteracao LIMIT "+limite, new String[]{musica.getId()});
         List<TempoMusicaEvento> tmes = new ArrayList<TempoMusicaEvento>();
 
@@ -111,6 +111,9 @@ public class TempoMusicaEventoDBAdapter {
                 }
 
                 tme.setAudio(cursor.getString(7));
+
+                tme.setAudioEnviado(cursor.getInt(8));
+                tme.setAudioRecebido(cursor.getInt(9));
 
                 tmes.add(tme);
             } while (cursor.moveToNext());
@@ -170,7 +173,7 @@ public class TempoMusicaEventoDBAdapter {
 
     public List<TempoMusicaEvento> listarTodosAEnviarAudio(){
         Cursor cursor = database.rawQuery("SELECT _id, tempo, id_musica_evento, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, audio FROM tempo_musica_evento WHERE audio_enviado = -1 ORDER BY data_cadastro DESC", null);
+                "ultima_alteracao, audio FROM tempo_musica_evento WHERE audio_enviado = -1 AND status = 0 ORDER BY data_cadastro DESC", null);
         List<TempoMusicaEvento> tmes = new ArrayList<TempoMusicaEvento>();
 
         if(cursor.moveToFirst()){
@@ -276,6 +279,53 @@ public class TempoMusicaEventoDBAdapter {
         int retorno = database.update("tempo_musica_evento", cv, "audio = \""+audio+"\"", null);
         database.close();
         return retorno;
+    }
+
+    public TempoMusicaEvento carregarPorAudio(String audio){
+        Cursor cursor = database.rawQuery("SELECT tme._id, tme.tempo, tme.id_musica_evento, tme.status, tme.data_cadastro, tme.data_recebimento, " +
+                "tme.ultima_alteracao, tme.audio FROM tempo_musica_evento tme INNER JOIN musica_evento me ON me._id = tme.id_musica_evento WHERE tme.audio = ? " +
+                "ORDER BY tme.ultima_alteracao ", new String[]{audio});
+
+        TempoMusicaEvento tme = null;
+
+        if(cursor.moveToFirst()){
+
+            MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(context);
+
+            do{
+                tme = new TempoMusicaEvento();
+                tme.setId(cursor.getString(0));
+
+                tme.setTempo(DataUtils.bancoParaData(cursor.getString(1)));
+
+                MusicaEvento musicaEvento = new MusicaEvento();
+                musicaEvento.setId(cursor.getString(2));
+                musicaEvento = musicaEventoDBHelper.carregar(context, musicaEvento);
+                tme.setMusicaEvento(musicaEvento);
+
+                tme.setStatus(cursor.getInt(3));
+
+                if(cursor.getString(4) != null){
+                    tme.setDataCadastro(DataUtils.bancoParaData(cursor.getString(4)));
+                }
+
+                if(cursor.getString(5) != null){
+                    tme.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    tme.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                tme.setAudio(cursor.getString(7));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return tme;
     }
 
 }

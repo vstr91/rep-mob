@@ -208,6 +208,12 @@
                         android:background="@drawable/lista"
                         android:visibility="visible" />
 
+                    <ListView
+                        android:id="@+id/listViewTempos"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:background="@drawable/lista" />
+
                     <!--<ListView-->
                     <!--android:id="@+id/listViewExecucoesCronometradas"-->
                     <!--android:layout_width="match_parent"-->

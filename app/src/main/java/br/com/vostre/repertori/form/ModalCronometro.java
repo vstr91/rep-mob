@@ -227,6 +227,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
                 tme.setUltimaAlteracao(Calendar.getInstance());
                 tme.setAudio(nomeArquivo);
                 tme.setAudioEnviado(-1);
+                tme.setAudioRecebido(0);
 
                 TempoMusicaEventoDBHelper tmeDBHelper = new TempoMusicaEventoDBHelper(getContext());
                 tmeDBHelper.salvarOuAtualizar(getContext(), tme);
@@ -401,8 +402,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
 
         if(result != null && result.exists()){
 
-            TempoMusicaEvento tme = new TempoMusicaEvento();
-            tme.setAudio(result.getName());
+            TempoMusicaEvento tme = tmeDBHelper.carregarPorAudio(getContext(), result.getName());
 
             ModalPlayer modalPlayer = new ModalPlayer();
             modalPlayer.setTme(tme);
