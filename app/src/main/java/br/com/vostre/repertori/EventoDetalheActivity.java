@@ -43,6 +43,7 @@ import br.com.vostre.repertori.adapter.StableArrayAdapter;
 import br.com.vostre.repertori.form.ModalAdicionaMusica;
 import br.com.vostre.repertori.form.ModalCadastroEvento;
 import br.com.vostre.repertori.form.ModalCronometro;
+import br.com.vostre.repertori.form.ModalListaRepertorio;
 import br.com.vostre.repertori.listener.ButtonClickListener;
 import br.com.vostre.repertori.listener.ModalAdicionaListener;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
@@ -73,6 +74,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     EditText editTextComentario;
     Button btnComentario;
     Button btnAdicionaMusica;
+    Button btnAdicionaBlocoMusica;
     Button btnPDF;
     ComentarioList adapterComentarios;
     Evento evento;
@@ -108,10 +110,12 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         editTextComentario = (EditText) findViewById(R.id.editTextComentario);
         btnComentario = (Button) findViewById(R.id.btnComentario);
         btnAdicionaMusica = (Button) findViewById(R.id.btnAdicionaMusica);
+        btnAdicionaBlocoMusica = (Button) findViewById(R.id.btnAdicionaBlocoMusica);
         btnPDF = (Button) findViewById(R.id.btnPDF);
 
         btnComentario.setOnClickListener(this);
         btnAdicionaMusica.setOnClickListener(this);
+        btnAdicionaBlocoMusica.setOnClickListener(this);
         btnPDF.setOnClickListener(this);
         evento = new Evento();
 
@@ -247,6 +251,13 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
                 Intent intent = new Intent(getBaseContext(), EventoDetalhePdfActivity.class);
                 intent.putExtra("evento", evento.getId());
                 startActivity(intent);
+                break;
+            case R.id.btnAdicionaBlocoMusica:
+                ModalListaRepertorio modalListaRepertorio = new ModalListaRepertorio();
+                modalListaRepertorio.setListener(this);
+                modalListaRepertorio.setEvento(evento);
+
+                modalListaRepertorio.show(getSupportFragmentManager(), "modalListaRepertorio");
                 break;
         }
     }

@@ -14,6 +14,7 @@ import br.com.vostre.repertori.model.BlocoRepertorio;
 import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.MusicaBloco;
+import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Repertorio;
 import br.com.vostre.repertori.utils.DataUtils;
 
@@ -200,7 +201,7 @@ public class MusicaBlocoDBAdapter {
     }
 
     public List<MusicaBloco> corrigirOrdemPorBloco(BlocoRepertorio umBlocoRepertorio){
-        Cursor cursor = database.rawQuery("SELECT _id, id_musica, ordem FROM bloco_repertorio WHERE id_bloco_repertorio = ? AND status != 2 " +
+        Cursor cursor = database.rawQuery("SELECT _id, id_musica, ordem FROM musica_bloco WHERE id_bloco_repertorio = ? AND status != 2 " +
                 "ORDER BY ordem ASC", new String[]{umBlocoRepertorio.getId()});
         List<MusicaBloco> musicas = new ArrayList<MusicaBloco>();
 
@@ -226,11 +227,12 @@ public class MusicaBlocoDBAdapter {
     }
 
     public List<Musica> listarTodosAusentesBloco(BlocoRepertorio umBlocoRepertorio){
-        Cursor cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_bloco mp ON mp.id_musica = m._id " +
-                        "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
-                        "SELECT id_musica FROM musica_bloco me1 WHERE me1.id_bloco = ? AND me1.status != 2" +
-                        ") AND mp.status IN (0,1) ORDER BY m.nome COLLATE LOCALIZED ASC",
-                new String[]{umBlocoRepertorio.getRepertorio().getProjeto().getId(), umBlocoRepertorio.getId()});
+        Cursor cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_repertorio mr ON mr.id_musica = m._id LEFT JOIN " +
+                        "repertorio r ON r._id = mr.id_repertorio " +
+                        "WHERE r._id = ? AND m._id NOT IN (" +
+                        "SELECT id_musica FROM musica_bloco me1 INNER JOIN bloco_repertorio br ON br._id = me1.id_bloco_repertorio WHERE br.id_repertorio = ? AND me1.status != 2" +
+                        ") AND mr.status = 0 ORDER BY m.nome COLLATE LOCALIZED ASC",
+                new String[]{umBlocoRepertorio.getRepertorio().getId(), umBlocoRepertorio.getRepertorio().getId()});
         List<Musica> musicas = new ArrayList<Musica>();
 
         if(cursor.moveToFirst()){
@@ -258,23 +260,31 @@ public class MusicaBlocoDBAdapter {
         Cursor cursor;
 
         if(estilo.getSlug() != null && artista.getSlug() != null){
-            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_bloco mp ON mp.id_musica = m._id " +
-                            "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
-                            "SELECT id_musica FROM musica_bloco me1 WHERE me1.id_bloco_repertorio = ? AND me1.status != 2" +
-                            ") AND mp.status IN (0,1) AND m.id_estilo = ? AND m.id_artista = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
-                    new String[]{umBlocoRepertorio.getRepertorio().getProjeto().getId(), umBlocoRepertorio.getId(), estilo.getId(), artista.getId()});
+//            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_bloco mp ON mp.id_musica = m._id " +
+//                            "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
+//                            "SELECT id_musica FROM musica_bloco me1 WHERE me1.id_bloco_repertorio = ? AND me1.status != 2" +
+//                            ") AND mp.status IN (0,1) AND m.id_estilo = ? AND m.id_artista = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
+//                    new String[]{umBlocoRepertorio.getRepertorio().getProjeto().getId(), umBlocoRepertorio.getId(), estilo.getId(), artista.getId()});
+            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_repertorio mr ON mr.id_musica = m._id LEFT JOIN " +
+                            "repertorio r ON r._id = mr.id_repertorio " +
+                            "WHERE r._id = ? AND m._id NOT IN (" +
+                            "SELECT id_musica FROM musica_bloco me1 INNER JOIN bloco_repertorio br ON br._id = me1.id_bloco_repertorio WHERE br.id_repertorio = ? AND me1.status != 2" +
+                            ") AND mr.status IN (0,1) AND m.id_estilo = ? AND m.id_artista = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
+                    new String[]{umBlocoRepertorio.getRepertorio().getId(), umBlocoRepertorio.getRepertorio().getId(), estilo.getId(), artista.getId()});
         } else if(estilo.getSlug() != null && artista.getSlug() == null){
-            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_bloco mp ON mp.id_musica = m._id " +
-                            "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
-                            "SELECT id_musica FROM musica_bloco me1 WHERE me1.id_bloco_repertorio = ? AND me1.status != 2" +
-                            ") AND mp.status IN (0,1) AND m.id_estilo = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
-                    new String[]{umBlocoRepertorio.getRepertorio().getProjeto().getId(), umBlocoRepertorio.getId(), estilo.getId()});
+            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_repertorio mr ON mr.id_musica = m._id LEFT JOIN " +
+                            "repertorio r ON r._id = mr.id_repertorio " +
+                            "WHERE r._id = ? AND m._id NOT IN (" +
+                            "SELECT id_musica FROM musica_bloco me1 INNER JOIN bloco_repertorio br ON br._id = me1.id_bloco_repertorio WHERE br.id_repertorio = ? AND me1.status != 2" +
+                            ") AND mr.status IN (0,1) AND m.id_estilo = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
+                    new String[]{umBlocoRepertorio.getRepertorio().getId(), umBlocoRepertorio.getRepertorio().getId(), estilo.getId()});
         } else{
-            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_bloco mp ON mp.id_musica = m._id " +
-                            "WHERE mp.id_projeto = ? AND m._id NOT IN (" +
-                            "SELECT id_musica FROM musica_bloco me1 WHERE me1.id_bloco_repertorio = ? AND me1.status != 2" +
-                            ") AND mp.status IN (0,1) AND m.id_artista = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
-                    new String[]{umBlocoRepertorio.getRepertorio().getProjeto().getId(), umBlocoRepertorio.getId(), artista.getId()});
+            cursor = database.rawQuery("SELECT DISTINCT m._id FROM musica m LEFT JOIN musica_repertorio mr ON mr.id_musica = m._id LEFT JOIN " +
+                            "repertorio r ON r._id = mr.id_repertorio " +
+                            "WHERE r._id = ? AND m._id NOT IN (" +
+                            "SELECT id_musica FROM musica_bloco me1 INNER JOIN bloco_repertorio br ON br._id = me1.id_bloco_repertorio WHERE br.id_repertorio = ? AND me1.status != 2" +
+                            ") AND mr.status IN (0,1) AND m.id_artista = ? ORDER BY m.nome COLLATE LOCALIZED ASC",
+                    new String[]{umBlocoRepertorio.getRepertorio().getId(), umBlocoRepertorio.getRepertorio().getId(), artista.getId()});
         }
 
         List<Musica> musicas = new ArrayList<Musica>();
@@ -303,6 +313,56 @@ public class MusicaBlocoDBAdapter {
         Cursor cursor = database.rawQuery("SELECT _id, observacao, ordem, id_musica, id_bloco_repertorio, status, data_cadastro, " +
                 "data_recebimento, ultima_alteracao FROM musica_bloco WHERE _id = ?",
                 new String[]{musicaBloco.getId()});
+
+        MusicaBloco umMusicaBloco = null;
+
+        if(cursor.moveToFirst()){
+
+            MusicaDBHelper musicaDBHelper = new MusicaDBHelper(context);
+            BlocoRepertorioDBHelper blocoRepertorioDBHelper = new BlocoRepertorioDBHelper(context);
+
+            do{
+                umMusicaBloco = new MusicaBloco();
+                umMusicaBloco.setId(cursor.getString(0));
+
+                umMusicaBloco.setObservacao(cursor.getString(1));
+                umMusicaBloco.setOrdem(cursor.getInt(2));
+
+                Musica musica = new Musica();
+                musica.setId(cursor.getString(3));
+                musica = musicaDBHelper.carregar(context, musica);
+                umMusicaBloco.setMusica(musica);
+
+                BlocoRepertorio blocoRepertorio = new BlocoRepertorio();
+                blocoRepertorio.setId(cursor.getString(4));
+                blocoRepertorio = blocoRepertorioDBHelper.carregar(context, blocoRepertorio);
+                umMusicaBloco.setBlocoRepertorio(blocoRepertorio);
+
+                umMusicaBloco.setStatus(cursor.getInt(5));
+
+                if(cursor.getString(6) != null){
+                    umMusicaBloco.setDataCadastro(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                if(cursor.getString(7) != null){
+                    umMusicaBloco.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(7)));
+                }
+
+                umMusicaBloco.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(8)));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return umMusicaBloco;
+    }
+
+    public MusicaBloco carregarPorMusicaEBloco(MusicaBloco musicaBloco){
+        Cursor cursor = database.rawQuery("SELECT _id, observacao, ordem, id_musica, id_bloco_repertorio, status, data_cadastro, " +
+                        "data_recebimento, ultima_alteracao FROM musica_bloco WHERE id_musica = ? AND id_bloco_repertorio = ?",
+                new String[]{musicaBloco.getMusica().getId(), musicaBloco.getBlocoRepertorio().getId()});
 
         MusicaBloco umMusicaBloco = null;
 

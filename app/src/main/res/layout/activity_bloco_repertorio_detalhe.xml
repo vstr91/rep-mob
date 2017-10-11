@@ -43,39 +43,30 @@
                 android:textAlignment="center" />
 
             <TextView
-                android:id="@+id/textViewBlocos"
+                android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:layout_weight=".1"
                 android:paddingTop="10dp"
-                android:text="Blocos de Repertorio"
+                android:text="Tempos"
                 android:textAlignment="center"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold" />
 
-            <br.com.vostre.repertori.utils.BlocoDynamicListView
-                android:id="@+id/listViewBlocos"
+            <ListView
+                android:id="@+id/listViewTempos"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.5"
-                android:focusable="true" />
+                android:layout_height="80dp"
+                android:background="@drawable/lista" />
 
             <TextView
-                android:id="@+id/textViewListaBlocosVazia"
+                android:id="@+id/textViewListaTemposVazia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Nenhum bloco encontrado"
+                android:text="Nenhum registro encontrado"
                 android:visibility="gone" />
-
-            <Button
-                android:id="@+id/btnAdicionaBloco"
-                style="@style/botao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Adicionar Bloco" />
 
             <TextView
                 android:id="@+id/textView"
@@ -112,10 +103,18 @@
                 android:text="Adicionar Música" />
 
             <Button
+                android:id="@+id/btnCronometro"
+                style="@style/botao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cronometrar Bloco" />
+
+            <Button
                 android:id="@+id/btnRelatorio"
                 style="@style/botao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="Gerar Resumo PDF" />
 
         </LinearLayout>

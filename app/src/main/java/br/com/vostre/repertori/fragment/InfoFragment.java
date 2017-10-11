@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
+import br.com.vostre.repertori.model.dao.RepDBHelper;
 import br.com.vostre.repertori.utils.AnalyticsApplication;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.ParametrosUtils;
@@ -44,6 +46,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
     TextView textViewUltimaSincronizacao;
     TextView textViewVersao;
+    TextView textViewVersaoDB;
     Button btnAtualizar;
     BroadcastReceiver br;
 
@@ -96,6 +99,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
         textViewUltimaSincronizacao = (TextView) v.findViewById(R.id.textViewUltimoAcesso);
         textViewVersao = (TextView) v.findViewById(R.id.textViewVersao);
+        textViewVersaoDB = (TextView) v.findViewById(R.id.textViewVersaoDB);
         btnAtualizar = (Button) v.findViewById(R.id.btnAtualizar);
 
         carregarDados();
@@ -121,6 +125,8 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
             PackageInfo pInfo = this.getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
             String version = pInfo.versionName;
             textViewVersao.setText(version);
+
+            textViewVersaoDB.setText(String.valueOf(RepDBHelper.DBVERSION));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

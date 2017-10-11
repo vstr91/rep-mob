@@ -208,6 +208,10 @@
                         android:background="@drawable/lista"
                         android:visibility="visible" />
 
+                    <android.support.v4.widget.Space
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp" />
+
                     <ListView
                         android:id="@+id/listViewTempos"
                         android:layout_width="match_parent"

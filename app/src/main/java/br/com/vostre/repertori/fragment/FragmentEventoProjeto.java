@@ -66,7 +66,7 @@ public class FragmentEventoProjeto extends Fragment implements AdapterView.OnIte
 
         lista.setEmptyView(rootView.findViewById(R.id.textViewListaVazia));
 
-        dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Carregando dados", "Por favor aguarde. Carregando dados...");
+        dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Carregando dados", "Por favor aguarde...");
         dialogLoad.show();
 
         CarregarItens carregarItens = new CarregarItens();

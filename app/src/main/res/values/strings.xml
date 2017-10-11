@@ -11,6 +11,9 @@
     <string name="title_activity_repertorio_detalhe">Detalhes do Repertório</string>
     <string name="title_activity_estilo_detalhe">Detalhes do Estilo</string>
     <string name="title_activity_artista_detalhe">Detalhes do Artista</string>
+    <string name="title_activity_bloco_detalhe">Detalhes do Bloco</string>
+    <string name="title_activity_musica_bloco_repertorio">Letras por Bloco</string>
+    <string name="title_activity_cifra_musica_bloco_repertorio">Cifras por Bloco</string>
     <string name="title_activity_artistas">Artistas</string>
     <string name="title_activity_letra">Letra da Música</string>
     <string name="title_activity_cifra">Cifra da Música</string>

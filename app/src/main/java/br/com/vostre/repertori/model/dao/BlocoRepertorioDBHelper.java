@@ -79,4 +79,9 @@ public class BlocoRepertorioDBHelper extends SQLiteOpenHelper {
         return adapter.carregar(blocoRepertorio);
     }
 
+    public boolean jaExiste(Context context, BlocoRepertorio blocoRepertorio){
+        BlocoRepertorioDBAdapter adapter = new BlocoRepertorioDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.jaExiste(blocoRepertorio);
+    }
+
 }

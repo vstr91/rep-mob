@@ -272,4 +272,20 @@ public class BlocoRepertorioDBAdapter {
         return umBlocoRepertorio;
     }
 
+    public boolean jaExiste(BlocoRepertorio blocoRepertorio){
+        Cursor cursor = database.rawQuery("SELECT _id, nome, status, data_cadastro, data_recebimento, ultima_alteracao " +
+                "FROM bloco_repertorio WHERE nome = ? AND _id != ? AND status = 0", new String[]{blocoRepertorio.getNome(), blocoRepertorio.getId() == null ? "-1" : blocoRepertorio.getId()});
+
+        if(cursor.moveToFirst()){
+            cursor.close();
+            database.close();
+            return true;
+        } else{
+            cursor.close();
+            database.close();
+            return false;
+        }
+
+    }
+
 }

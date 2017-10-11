@@ -142,6 +142,18 @@
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity android:name=".BarcodeCaptureActivity"></activity>
+        <activity
+            android:name=".BlocoRepertorioDetalheActivity"
+            android:label="@string/title_activity_bloco_detalhe"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MusicaBlocoRepertorioActivity"
+            android:label="@string/title_activity_musica_bloco_repertorio"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CifraMusicaBlocoRepertorioActivity"
+            android:label="@string/title_activity_cifra_musica_bloco_repertorio"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

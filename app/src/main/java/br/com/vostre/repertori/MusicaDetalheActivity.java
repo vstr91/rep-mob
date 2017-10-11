@@ -179,6 +179,16 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
                 }
             });
 
+            listViewTempos.setOnTouchListener(new View.OnTouchListener() {
+                // Setting on Touch Listener for handling the touch inside ScrollView
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // Disallow the touch request for parent scroll on touch of child view
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
             musicasMesmoTom = musicaDBHelper.listarRelacionadasPorTom(getApplicationContext(), musica);
 
             adapterMusicas =
@@ -209,7 +219,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
                 int cont = 0;
                 List<Entry> dados = new ArrayList<>();
 
-                //long ultimoStamp = tmes.get(0).getMusicaEvento().getEvento().getData().getTimeInMillis();
+                //long ultimoStamp = tmes.get(0).getBlocoRepertorio().getEvento().getData().getTimeInMillis();
 
                 for(TempoMusicaEvento tme : tmes){
 
@@ -373,7 +383,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             case R.id.listViewTempos:
                 tme = tmes.get(position);
 
-                if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
+                if(tme.getAudio() != null && !tme.getAudio().isEmpty() && !tme.getAudio().equals("null")){
 
                     File f = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
 

@@ -22,17 +22,21 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.vostre.repertori.adapter.BlocoRepertorioAdapter;
 import br.com.vostre.repertori.adapter.ComentarioList;
 import br.com.vostre.repertori.adapter.StableArrayAdapter;
 import br.com.vostre.repertori.adapter.MusicaRepertorioAdapter;
+import br.com.vostre.repertori.form.ModalAdicionaBlocoRepertorio;
 import br.com.vostre.repertori.form.ModalAdicionaMusica;
 import br.com.vostre.repertori.form.ModalAdicionaMusicaRepertorio;
 import br.com.vostre.repertori.form.ModalCadastroEvento;
 import br.com.vostre.repertori.form.ModalCadastroRepertorio;
 import br.com.vostre.repertori.form.ModalCronometro;
+import br.com.vostre.repertori.listener.BlocoButtonClickListener;
 import br.com.vostre.repertori.listener.ButtonClickListener;
 import br.com.vostre.repertori.listener.ModalAdicionaListener;
 import br.com.vostre.repertori.listener.ModalCadastroListener;
+import br.com.vostre.repertori.model.BlocoRepertorio;
 import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
@@ -40,12 +44,14 @@ import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Repertorio;
 import br.com.vostre.repertori.model.StatusMusica;
+import br.com.vostre.repertori.model.dao.BlocoRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.RepertorioDBHelper;
+import br.com.vostre.repertori.utils.BlocoDynamicListView;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
 import br.com.vostre.repertori.utils.DynamicListView;
@@ -53,29 +59,40 @@ import br.com.vostre.repertori.utils.DynamicListView;
 import static java.security.AccessController.getContext;
 
 public class RepertorioDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener,
-        ModalCadastroListener, ModalAdicionaListener, ButtonClickListener, DialogInterface.OnClickListener {
+        ModalCadastroListener, ModalAdicionaListener, ButtonClickListener, DialogInterface.OnClickListener, BlocoButtonClickListener {
 
     TextView textViewNome;
     DynamicListView listViewMusicas;
+    BlocoDynamicListView listViewBlocos;
     static MusicaRepertorioAdapter adapterMusicas;
+    static BlocoRepertorioAdapter adapterBlocos;
     Button btnAdicionaMusica;
+    Button btnAdicionaBloco;
     Button btnRelatorio;
     Repertorio repertorio;
 
     List<Musica> musicas;
+    List<BlocoRepertorio> blocosRepertorio;
 
     MusicaRepertorioDBHelper musicaRepertorioDBHelper;
     RepertorioDBHelper repertorioDBHelper;
+    BlocoRepertorioDBHelper blocoRepertorioDBHelper;
 
     MusicaRepertorio musicaRepertorio;
+    BlocoRepertorio blocoRepertorio;
     Dialog dialogLoad;
     TextView textViewTempo;
+
+    Dialog dialogMusica;
+    Dialog dialogBloco;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repertorio_detalhe);
 
         musicaRepertorioDBHelper = new MusicaRepertorioDBHelper(getApplicationContext());
+        blocoRepertorioDBHelper = new BlocoRepertorioDBHelper(getApplicationContext());
         repertorioDBHelper = new RepertorioDBHelper(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -85,12 +102,15 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         listViewMusicas = (DynamicListView) findViewById(R.id.listViewMusicas);
+        listViewBlocos = (BlocoDynamicListView) findViewById(R.id.listViewBlocos);
         btnAdicionaMusica = (Button) findViewById(R.id.btnAdicionaMusica);
+        btnAdicionaBloco = (Button) findViewById(R.id.btnAdicionaBloco);
         btnRelatorio = (Button) findViewById(R.id.btnRelatorio);
         textViewTempo = (TextView) findViewById(R.id.textViewTempo);
 
         btnAdicionaMusica.setOnClickListener(this);
         btnRelatorio.setOnClickListener(this);
+        btnAdicionaBloco.setOnClickListener(this);
 
         repertorio = new Repertorio();
         repertorio.setId(getIntent().getStringExtra("repertorio"));
@@ -98,6 +118,7 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
         carregaInformacaoRepertorio();
 
         carregaListaMusicas();
+        carregaListaBlocos();
 
         String tempo = calcularTempoTotalRepertorio();
 
@@ -153,11 +174,27 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Musica musica = adapterMusicas.getItem(position);
 
-        Intent intent = new Intent(getBaseContext(), MusicaDetalheActivity.class);
-        intent.putExtra("musica", musica.getId());
-        startActivity(intent);
+        Intent intent = null;
+
+        switch(parent.getId()) {
+            case R.id.listViewMusicas:
+                Musica musica = adapterMusicas.getItem(position);
+
+                intent = new Intent(getBaseContext(), MusicaDetalheActivity.class);
+                intent.putExtra("musica", musica.getId());
+                startActivity(intent);
+                break;
+            case R.id.listViewBlocos:
+                BlocoRepertorio blocoRepertorio = adapterBlocos.getItem(position);
+
+                intent = new Intent(getBaseContext(), BlocoRepertorioDetalheActivity.class);
+                intent.putExtra("bloco", blocoRepertorio.getId());
+                startActivity(intent);
+                break;
+        }
+
+
     }
 
     @Override
@@ -176,6 +213,13 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
                 intent.putExtra("repertorio", repertorio.getId());
                 startActivity(intent);
                 break;
+            case R.id.btnAdicionaBloco:
+                ModalAdicionaBlocoRepertorio modalAdicionaBlocoRepertorio = new ModalAdicionaBlocoRepertorio();
+                modalAdicionaBlocoRepertorio.setListener(this);
+                modalAdicionaBlocoRepertorio.setRepertorio(repertorio);
+
+                modalAdicionaBlocoRepertorio.show(getSupportFragmentManager(), "modalAdicionaBlocoRepertorio");
+                break;
         }
     }
 
@@ -186,6 +230,12 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
     @Override
     public void onModalAdicionaDismissed(int resultado) {
+
+        if(resultado == 2){
+            carregaListaBlocos();
+            return;
+        }
+
         carregaListaMusicas();
     }
 
@@ -211,6 +261,28 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
     }
 
+    private void carregaListaBlocos(){
+        blocosRepertorio = blocoRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
+
+        adapterBlocos =
+                new BlocoRepertorioAdapter(this, R.id.listViewBlocos, blocosRepertorio);
+        adapterBlocos.setListener(this);
+
+        adapterBlocos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
+
+        listViewBlocos.setAdapter(adapterBlocos);
+
+        if (listViewBlocos.getOnItemClickListener() == null){
+            listViewBlocos.setOnItemClickListener(this);
+        }
+
+        listViewBlocos.setEmptyView(findViewById(R.id.textViewListaBlocosVazia));
+        listViewBlocos.setLista(blocosRepertorio);
+        listViewBlocos.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listViewBlocos.setRepertorio(repertorio);
+
+    }
+
     private void carregaInformacaoRepertorio() {
         repertorio = repertorioDBHelper.carregar(getApplicationContext(), repertorio);
 
@@ -228,8 +300,8 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
         switch(v.getId()){
             case R.id.btnExcluir:
 
-                Dialog dialog = DialogUtils.criarAlertaConfirmacao(this, "Confirmar Exclusão", "Deseja realmente excluir o registro ("+musicaRepertorio.getMusica().getNome()+")?", this);
-                dialog.show();
+                dialogMusica = DialogUtils.criarAlertaConfirmacao(this, "Confirmar Exclusão", "Deseja realmente excluir o registro ("+musicaRepertorio.getMusica().getNome()+")?", this);
+                dialogMusica.show();
 
                 break;
         }
@@ -240,12 +312,23 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
 
-        switch(i){
-            case -1:
-                ExcluirEntidade excluirEntidade = new ExcluirEntidade();
-                excluirEntidade.execute();
-                break;
-        }
+            switch(i){
+                case -1:
+
+                    ExcluirEntidade excluirEntidade = new ExcluirEntidade();
+
+                    if(dialogMusica != null && dialogMusica.equals(dialogInterface)) {
+                        excluirEntidade.setTipo(1);
+                        excluirEntidade.execute();
+                        break;
+                    } else if(dialogBloco != null && dialogBloco.equals(dialogInterface)) {
+                        excluirEntidade.setTipo(2);
+                        excluirEntidade.execute();
+                    }
+
+            }
+
+
 
     }
 
@@ -273,7 +356,31 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
         return "Tempo Total: "+DataUtils.segundosParaTempo(tempoMedio)+" ("+cont+" música(s) considerada(s))";
     }
 
+    @Override
+    public void onButtonClicked(View v, BlocoRepertorio blocoRepertorio) {
+        this.blocoRepertorio = blocoRepertorioDBHelper.carregar(getApplicationContext(), blocoRepertorio);
+
+        switch(v.getId()){
+            case R.id.btnExcluirBloco:
+
+                dialogBloco = DialogUtils.criarAlertaConfirmacao(this, "Confirmar Exclusão", "Deseja realmente excluir o registro ("+blocoRepertorio.getNome()+")?", this);
+                dialogBloco.show();
+
+                break;
+        }
+    }
+
     private class ExcluirEntidade extends AsyncTask<Void, String, String> {
+
+        int tipo = -1;
+
+        public int getTipo() {
+            return tipo;
+        }
+
+        public void setTipo(int tipo) {
+            this.tipo = tipo;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -284,13 +391,31 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
         @Override
         protected String doInBackground(Void... voids) {
-            musicaRepertorio.setStatus(2);
-            musicaRepertorio.setEnviado(-1);
 
-            musicaRepertorioDBHelper.salvarOuAtualizar(getApplicationContext(), musicaRepertorio);
+            String tempo = "";
 
-            musicaRepertorioDBHelper.corrigirOrdemPorRepertorio(getApplicationContext(), repertorio);
-            String tempo = calcularTempoTotalRepertorio();
+            switch(tipo){
+                case 1:
+                    musicaRepertorio.setStatus(2);
+                    musicaRepertorio.setEnviado(-1);
+
+                    musicaRepertorioDBHelper.salvarOuAtualizar(getApplicationContext(), musicaRepertorio);
+
+                    musicaRepertorioDBHelper.corrigirOrdemPorRepertorio(getApplicationContext(), repertorio);
+                     tempo = calcularTempoTotalRepertorio();
+
+                    break;
+                case 2:
+                    blocoRepertorio.setStatus(2);
+                    blocoRepertorio.setEnviado(-1);
+
+                    blocoRepertorioDBHelper.salvarOuAtualizar(getApplicationContext(), blocoRepertorio);
+
+                    blocoRepertorioDBHelper.corrigirOrdemPorRepertorio(getApplicationContext(), repertorio);
+                    tempo = calcularTempoTotalRepertorio();
+
+                    break;
+            }
 
             return tempo;
 
@@ -299,8 +424,19 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
         @Override
         protected void onPostExecute(String tempo) {
             super.onPostExecute(tempo);
-            Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
-            carregaListaMusicas();
+
+            switch(tipo) {
+                case 1:
+                    Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
+                    carregaListaMusicas();
+                    break;
+                case 2:
+                    Toast.makeText(getBaseContext(), "Bloco Removido", Toast.LENGTH_SHORT).show();
+                    carregaListaBlocos();
+                    break;
+            }
+
+
             dialogLoad.dismiss();
 
         }

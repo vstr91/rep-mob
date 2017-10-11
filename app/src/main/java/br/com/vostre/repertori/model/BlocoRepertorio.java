@@ -8,11 +8,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.List;
 
 import br.com.vostre.repertori.model.dao.BlocoRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.RepertorioDBHelper;
+import br.com.vostre.repertori.model.dao.TempoBlocoRepertorioDBHelper;
+import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
 /**
@@ -24,6 +27,7 @@ public class BlocoRepertorio extends EntidadeBase {
     private String nome;
     private Integer ordem;
     private Repertorio repertorio;
+    private String slug;
 
     public String getNome() {
         return nome;
@@ -49,6 +53,14 @@ public class BlocoRepertorio extends EntidadeBase {
         this.repertorio = repertorio;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
         BlocoRepertorioDBHelper blocoRepertorioDBHelper = new BlocoRepertorioDBHelper(context);
@@ -63,6 +75,7 @@ public class BlocoRepertorio extends EntidadeBase {
             umBlocoRepertorio.setId(object.getString("id"));
             umBlocoRepertorio.setNome(object.getString("nome"));
             umBlocoRepertorio.setOrdem(object.getInt("ordem"));
+            umBlocoRepertorio.setSlug(object.getString("slug"));
 
             Repertorio umRepertorio = new Repertorio();
             umRepertorio.setId(object.getString("repertorio"));
@@ -90,6 +103,36 @@ public class BlocoRepertorio extends EntidadeBase {
 
 
         return resultado;
+    }
+
+    public Calendar calcularMedia(Context context){
+        TempoBlocoRepertorioDBHelper tbrDBHelper = new TempoBlocoRepertorioDBHelper(context);
+        List<TempoBlocoRepertorio> tbrs = tbrDBHelper.listarTodosPorBlocoRepertorio(context, this, 10);
+
+        if(tbrs.size() > 0){
+            long millis = 0;
+
+            for(TempoBlocoRepertorio tbr : tbrs){
+                Calendar tempo = tbr.getTempo();
+                tempo.set(Calendar.DAY_OF_MONTH, 1);
+                tempo.set(Calendar.MONTH, 1);
+                tempo.set(Calendar.YEAR, 2000);
+
+                millis += tempo.getTimeInMillis();
+            }
+
+            long result = millis / tbrs.size();
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(result);
+
+//            c.set(Calendar.DAY_OF_MONTH, 1);
+//            c.set(Calendar.MONTH, 1);
+//            c.set(Calendar.YEAR, 2000);
+            return c;
+        } else{
+            return null;
+        }
+
     }
 
 }

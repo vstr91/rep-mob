@@ -13,16 +13,19 @@ import java.text.ParseException;
 
 import br.com.vostre.repertori.listener.UpdateTaskListener;
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.BlocoRepertorio;
 import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.EstiloMusica;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
+import br.com.vostre.repertori.model.MusicaBloco;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.MusicaProjeto;
 import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.Repertorio;
+import br.com.vostre.repertori.model.TempoBlocoRepertorio;
 import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
@@ -108,6 +111,10 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             JSONArray repertorios = jObj.getJSONArray("repertorios");
             JSONArray musicasRepertorios = jObj.getJSONArray("musicas_repertorios");
 
+            JSONArray blocosRepertorios = jObj.getJSONArray("blocos_repertorios");
+            JSONArray musicasBlocos = jObj.getJSONArray("musicas_blocos_repertorios");
+            JSONArray temposBlocosRepertorios = jObj.getJSONArray("tempos_blocos_repertorios");
+
             // Objetos que contem os metodos de atualizacao
             Artista artista = new Artista();
             TipoEvento tipoEvento = new TipoEvento();
@@ -124,6 +131,10 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
 
             Repertorio repertorio = new Repertorio();
             MusicaRepertorio musicaRepertorio = new MusicaRepertorio();
+
+            BlocoRepertorio blocoRepertorio = new BlocoRepertorio();
+            MusicaBloco musicaBloco = new MusicaBloco();
+            TempoBlocoRepertorio tempoBlocoRepertorio = new TempoBlocoRepertorio();
 
             RepDBHelper repDBHelper = new RepDBHelper(ctx);
 
@@ -308,6 +319,56 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
                 //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
 
                 musicaRepertorio.atualizarDados(musicasRepertorios, qtdMusicasRepertorios, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdEventos+ " musica(s)-repertorio atualizada(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            } else{
+                publishProgress("Músicas-Repertório já atualizadas."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            }
+
+            // novos
+
+            int qtdBlocosRepertorios = blocosRepertorios.length();
+
+            if(qtdBlocosRepertorios > 0){
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+
+                blocoRepertorio.atualizarDados(blocosRepertorios, qtdBlocosRepertorios, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdEventos+ " musica(s)-repertorio atualizada(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            } else{
+                publishProgress("Músicas-Repertório já atualizadas."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            }
+
+            int qtdMusicasBlocos = musicasBlocos.length();
+
+            if(qtdMusicasBlocos > 0){
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+
+                musicaBloco.atualizarDados(musicasBlocos, qtdMusicasBlocos, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdEventos+ " musica(s)-repertorio atualizada(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            } else{
+                publishProgress("Músicas-Repertório já atualizadas."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            }
+
+            int qtdTemposBlocosRepertorios = temposBlocosRepertorios.length();
+
+            if(qtdTemposBlocosRepertorios > 0){
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+
+                tempoBlocoRepertorio.atualizarDados(temposBlocosRepertorios, qtdTemposBlocosRepertorios, progressDialog, ctx);
 
                 //escondeProgressBar(progressDialog);
 

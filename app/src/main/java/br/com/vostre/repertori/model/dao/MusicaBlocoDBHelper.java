@@ -89,4 +89,9 @@ public class MusicaBlocoDBHelper extends SQLiteOpenHelper {
         return adapter.carregar(musicaBloco);
     }
 
+    public MusicaBloco carregarPorMusicaEBloco(Context context, MusicaBloco musicaBloco){
+        MusicaBlocoDBAdapter adapter = new MusicaBlocoDBAdapter(context, repDBHelper.getWritableDatabase());
+        return adapter.carregarPorMusicaEBloco(musicaBloco);
+    }
+
 }

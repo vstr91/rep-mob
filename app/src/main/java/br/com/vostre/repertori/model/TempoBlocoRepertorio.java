@@ -9,7 +9,9 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+import br.com.vostre.repertori.model.dao.BlocoRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
+import br.com.vostre.repertori.model.dao.TempoBlocoRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 
@@ -67,33 +69,33 @@ public class TempoBlocoRepertorio extends EntidadeBase {
 
     public void atualizarDados(JSONArray dados, int qtdDados, ProgressDialog progressDialog, Context context) throws JSONException {
 
-        TempoMusicaEventoDBHelper tmeDBHelper = new TempoMusicaEventoDBHelper(context);
-        MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(context);
+        TempoBlocoRepertorioDBHelper tbrDBHelper = new TempoBlocoRepertorioDBHelper(context);
+        BlocoRepertorioDBHelper blocoRepertorioDBHelper = new BlocoRepertorioDBHelper(context);
 
         for(int i = 0; i < qtdDados; i++){
 
             //progressDialog.setProgress(i+1);
 
             JSONObject object =  dados.getJSONObject(i);
-            TempoBlocoRepertorio umTme = new TempoBlocoRepertorio();
-            umTme.setId(object.getString("id"));
-            umTme.setTempo(DataUtils.bancoParaData(object.getString("tempo")));
+            TempoBlocoRepertorio umTbr = new TempoBlocoRepertorio();
+            umTbr.setId(object.getString("id"));
+            umTbr.setTempo(DataUtils.bancoParaData(object.getString("tempo")));
 
-            MusicaEvento umMusicaEvento = new MusicaEvento();
-            umMusicaEvento.setId(object.getString("musica_evento"));
-            umMusicaEvento = musicaEventoDBHelper.carregar(context, umMusicaEvento);
+            BlocoRepertorio umBlocoRepertorio = new BlocoRepertorio();
+            umBlocoRepertorio.setId(object.getString("bloco_repertorio"));
+            umBlocoRepertorio = blocoRepertorioDBHelper.carregar(context, umBlocoRepertorio);
 
-            umTme.setMusicaEvento(umMusicaEvento);
-            umTme.setEnviado(0);
-            umTme.setAudio(object.getString("audio"));
-            umTme.setAudioEnviado(-1);
-            umTme.setAudioRecebido(-1);
+            umTbr.setBlocoRepertorio(umBlocoRepertorio);
+            umTbr.setEnviado(0);
+            umTbr.setAudio(object.getString("audio"));
+            umTbr.setAudioEnviado(-1);
+            umTbr.setAudioRecebido(-1);
 
-            umTme.setStatus(object.getInt("status"));
-            umTme.setDataRecebimento(Calendar.getInstance());
-            umTme.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
+            umTbr.setStatus(object.getInt("status"));
+            umTbr.setDataRecebimento(Calendar.getInstance());
+            umTbr.setUltimaAlteracao(DataUtils.bancoParaData(object.getString("ultima_alteracao")));
 
-            tmeDBHelper.salvarOuAtualizar(context, umTme);
+            tbrDBHelper.salvarOuAtualizar(context, umTbr);
 
         }
 
@@ -102,7 +104,7 @@ public class TempoBlocoRepertorio extends EntidadeBase {
     public String toJson(){
 
         String resultado = "{\"id\": \""+this.getId()+"\", \"tempo\": \""+DataUtils.dataParaBanco(this.getTempo())+"\", " +
-                "\"musica_evento\": \""+this.getMusicaEvento().getId()+"\",  \"status\": "+this.getStatus()+", \"audio\": \""+this.getAudio()+"\"}";
+                "\"bloco_repertorio\": \""+this.getBlocoRepertorio().getId()+"\",  \"status\": "+this.getStatus()+", \"audio\": \""+this.getAudio()+"\"}";
 
 
         return resultado;

@@ -38,22 +38,20 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.vostre.repertori.adapter.BlocoRepertorioAdapter;
 import br.com.vostre.repertori.adapter.MusicaRepertorioAdapter;
 import br.com.vostre.repertori.adapter.StableArrayAdapter;
 import br.com.vostre.repertori.model.BlocoRepertorio;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
-import br.com.vostre.repertori.model.MusicaBloco;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Repertorio;
-import br.com.vostre.repertori.model.dao.MusicaBlocoDBHelper;
+import br.com.vostre.repertori.model.dao.BlocoRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
 
@@ -78,13 +76,13 @@ import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
  * When the hover cell is either above or below the bounds of the listview, this
  * listview also scrolls on its own so as to reveal additional content.
  */
-public class DynamicListView extends ListView {
+public class BlocoDynamicListView extends ListView {
 
     private final int SMOOTH_SCROLL_AMOUNT_AT_EDGE = 15;
     private final int MOVE_DURATION = 150;
     private final int LINE_THICKNESS = 15;
 
-    public List<Musica> musicas;
+    public List<BlocoRepertorio> blocosRepertorios;
 
     private int mLastEventY = -1;
 
@@ -114,19 +112,18 @@ public class DynamicListView extends ListView {
 
     private Evento evento;
     private Repertorio repertorio;
-    private BlocoRepertorio blocoRepertorio;
 
-    public DynamicListView(Context context) {
+    public BlocoDynamicListView(Context context) {
         super(context);
         init(context);
     }
 
-    public DynamicListView(Context context, AttributeSet attrs, int defStyle) {
+    public BlocoDynamicListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
 
-    public DynamicListView(Context context, AttributeSet attrs) {
+    public BlocoDynamicListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
@@ -142,8 +139,8 @@ public class DynamicListView extends ListView {
      * Listens for long clicks on any items in the listview. When a cell has
      * been selected, the hover cell is created and set up.
      */
-    private AdapterView.OnItemLongClickListener mOnItemLongClickListener =
-            new AdapterView.OnItemLongClickListener() {
+    private OnItemLongClickListener mOnItemLongClickListener =
+            new OnItemLongClickListener() {
                 public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
                     mTotalOffset = 0;
 
@@ -222,8 +219,8 @@ public class DynamicListView extends ListView {
     private void updateNeighborViewsForID(long itemID) {
         int position = getPositionForID(itemID);
 
-        if(repertorio != null || blocoRepertorio != null){
-            MusicaRepertorioAdapter adapter = ((MusicaRepertorioAdapter) getAdapter());
+        if(repertorio != null){
+            BlocoRepertorioAdapter adapter = ((BlocoRepertorioAdapter) getAdapter());
             mAboveItemId = adapter.getItemId(position - 1);
             mBelowItemId = adapter.getItemId(position + 1);
         } else{
@@ -239,8 +236,8 @@ public class DynamicListView extends ListView {
     public View getViewForID (long itemID) {
         int firstVisiblePosition = getFirstVisiblePosition();
 
-        if(repertorio != null || blocoRepertorio != null){
-            MusicaRepertorioAdapter adapter = ((MusicaRepertorioAdapter) getAdapter());
+        if(repertorio != null){
+            BlocoRepertorioAdapter adapter = ((BlocoRepertorioAdapter) getAdapter());
             for(int i = 0; i < getChildCount(); i++) {
                 View v = getChildAt(i);
                 int position = firstVisiblePosition + i;
@@ -377,7 +374,7 @@ public class DynamicListView extends ListView {
                 return;
             }
 
-            swapElements(musicas, originalItem, getPositionForView(switchView));
+            swapElements(blocosRepertorios, originalItem, getPositionForView(switchView));
             mobileView.setVisibility(VISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -507,7 +504,7 @@ public class DynamicListView extends ListView {
                     setEnabled(true);
                     invalidate();
 
-                    atualizaOrdem(musicas);
+                    atualizaOrdem(blocosRepertorios);
 
                 }
             });
@@ -517,64 +514,24 @@ public class DynamicListView extends ListView {
         }
     }
 
-    private void atualizaOrdem(List<Musica> musicas){
-        int total = musicas.size();
+    private void atualizaOrdem(List<BlocoRepertorio> blocosRepertorios){
+        int total = blocosRepertorios.size();
 
         if(repertorio != null){
-            MusicaRepertorioDBHelper musicaRepertorioDBHelper = new MusicaRepertorioDBHelper(getContext());
+            BlocoRepertorioDBHelper blocoRepertorioDBHelper = new BlocoRepertorioDBHelper(getContext());
 
             for(int i = 0; i < total; i++){
-                MusicaRepertorio musicaRepertorio = new MusicaRepertorio();
-                Musica musica = musicas.get(i);
+                BlocoRepertorio blocoRepertorio = blocosRepertorios.get(i);
                 Repertorio repertorio = getRepertorio();
 
-                musicaRepertorio.setMusica(musica);
-                musicaRepertorio.setRepertorio(repertorio);
+                blocoRepertorio.setRepertorio(repertorio);
 
-                musicaRepertorio = musicaRepertorioDBHelper.carregarPorMusicaERepertorio(getContext(), musicaRepertorio);
-                musicaRepertorio.setOrdem(i+1);
-                musicaRepertorio.setEnviado(-1);
-                musicaRepertorio.setUltimaAlteracao(Calendar.getInstance());
+                blocoRepertorio = blocoRepertorioDBHelper.carregar(getContext(), blocoRepertorio);
+                blocoRepertorio.setOrdem(i+1);
+                blocoRepertorio.setEnviado(-1);
+                blocoRepertorio.setUltimaAlteracao(Calendar.getInstance());
 
-                musicaRepertorioDBHelper.salvarOuAtualizar(getContext(), musicaRepertorio);
-
-            }
-        } else if(evento != null){
-            MusicaEventoDBHelper musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
-
-            for(int i = 0; i < total; i++){
-                MusicaEvento musicaEvento = new MusicaEvento();
-                Musica musica = musicas.get(i);
-                Evento evento = getEvento();
-
-                musicaEvento.setMusica(musica);
-                musicaEvento.setEvento(evento);
-
-                musicaEvento = musicaEventoDBHelper.carregarPorMusicaEEvento(getContext(), musicaEvento);
-                musicaEvento.setOrdem(i+1);
-                musicaEvento.setEnviado(-1);
-                musicaEvento.setUltimaAlteracao(Calendar.getInstance());
-
-                musicaEventoDBHelper.salvarOuAtualizar(getContext(), musicaEvento);
-
-            }
-        } else if(blocoRepertorio != null){
-            MusicaBlocoDBHelper musicaBlocoDBHelper = new MusicaBlocoDBHelper(getContext());
-
-            for(int i = 0; i < total; i++){
-                MusicaBloco musicaBloco = new MusicaBloco();
-                Musica musica = musicas.get(i);
-                BlocoRepertorio blocoRepertorio = getBlocoRepertorio();
-
-                musicaBloco.setMusica(musica);
-                musicaBloco.setBlocoRepertorio(blocoRepertorio);
-
-                musicaBloco = musicaBlocoDBHelper.carregarPorMusicaEBloco(getContext(), musicaBloco);
-                musicaBloco.setOrdem(i+1);
-                musicaBloco.setEnviado(-1);
-                musicaBloco.setUltimaAlteracao(Calendar.getInstance());
-
-                musicaBlocoDBHelper.salvarOuAtualizar(getContext(), musicaBloco);
+                blocoRepertorioDBHelper.salvarOuAtualizar(getContext(), blocoRepertorio);
 
             }
         }
@@ -653,8 +610,8 @@ public class DynamicListView extends ListView {
         return false;
     }
 
-    public void setLista(List<Musica> cheeseList) {
-        musicas = cheeseList;
+    public void setLista(List<BlocoRepertorio> cheeseList) {
+        blocosRepertorios = cheeseList;
     }
 
     public Evento getEvento() {
@@ -673,14 +630,6 @@ public class DynamicListView extends ListView {
         this.repertorio = repertorio;
     }
 
-    public BlocoRepertorio getBlocoRepertorio() {
-        return blocoRepertorio;
-    }
-
-    public void setBlocoRepertorio(BlocoRepertorio blocoRepertorio) {
-        this.blocoRepertorio = blocoRepertorio;
-    }
-
     /**
      * This scroll listener is added to the listview in order to handle cell swapping
      * when the cell is either at the top or bottom edge of the listview. If the hover
@@ -688,7 +637,7 @@ public class DynamicListView extends ListView {
      * scrolling takes place, the listview continuously checks if new cells became visible
      * and determines whether they are potential candidates for a cell swap.
      */
-    private AbsListView.OnScrollListener mScrollListener = new AbsListView.OnScrollListener () {
+    private OnScrollListener mScrollListener = new OnScrollListener () {
 
         private int mPreviousFirstVisibleItem = -1;
         private int mPreviousVisibleItemCount = -1;

@@ -35,21 +35,26 @@ import br.com.vostre.repertori.listener.TokenTaskListener;
 import br.com.vostre.repertori.listener.UpdateSentTaskListener;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.BlocoRepertorio;
 import br.com.vostre.repertori.model.ComentarioEvento;
 import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
+import br.com.vostre.repertori.model.MusicaBloco;
 import br.com.vostre.repertori.model.MusicaEvento;
 import br.com.vostre.repertori.model.MusicaProjeto;
 import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.Repertorio;
+import br.com.vostre.repertori.model.TempoBlocoRepertorio;
 import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
+import br.com.vostre.repertori.model.dao.BlocoRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
 import br.com.vostre.repertori.model.dao.EstiloDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
+import br.com.vostre.repertori.model.dao.MusicaBlocoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaProjetoDBHelper;
@@ -57,6 +62,7 @@ import br.com.vostre.repertori.model.dao.MusicaRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.ParametroDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
 import br.com.vostre.repertori.model.dao.RepertorioDBHelper;
+import br.com.vostre.repertori.model.dao.TempoBlocoRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.TipoEventoDBHelper;
 import br.com.vostre.repertori.utils.Constants;
@@ -83,6 +89,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
     String tokenCriptografado;
     List<TempoMusicaEvento> tmes;
+    List<TempoBlocoRepertorio> tbrs;
     List<TempoMusicaEvento> tmesRecebeAudio;
 
     @Nullable
@@ -165,6 +172,10 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 List<Repertorio> repertorios;
                 List<MusicaRepertorio> musicasRepertorios;
 
+                List<BlocoRepertorio> blocosRepertorios;
+                List<MusicaBloco> musicasBlocos;
+                List<TempoBlocoRepertorio> temposBlocosRepertorios;
+
                 ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
                 MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
                 ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(getApplicationContext());
@@ -178,6 +189,10 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getApplicationContext());
                 RepertorioDBHelper repertorioDBHelper = new RepertorioDBHelper(getApplicationContext());
                 MusicaRepertorioDBHelper musicaRepertorioDBHelper = new MusicaRepertorioDBHelper(getApplicationContext());
+
+                BlocoRepertorioDBHelper blocoRepertorioDBHelper = new BlocoRepertorioDBHelper(getApplicationContext());
+                MusicaBlocoDBHelper musicaBlocoDBHelper = new MusicaBlocoDBHelper(getApplicationContext());
+                TempoBlocoRepertorioDBHelper tempoBlocoRepertorioDBHelper = new TempoBlocoRepertorioDBHelper(getApplicationContext());
 
                 try {
                     tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
@@ -204,10 +219,14 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     repertorios = repertorioDBHelper.listarTodosAEnviar(getApplicationContext());
                     musicasRepertorios = musicaRepertorioDBHelper.listarTodosAEnviar(getApplicationContext());
 
+                    blocosRepertorios = blocoRepertorioDBHelper.listarTodosAEnviar(getApplicationContext());
+                    musicasBlocos = musicaBlocoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    temposBlocosRepertorios = tempoBlocoRepertorioDBHelper.listarTodosAEnviar(getApplicationContext());
+
                     // COMENTARIOS
                     int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size()
                             + musicasEventos.size() + projetos.size() + estilos.size() + musicasProjetos.size() + tiposEventos.size() + temposMusicasEventos.size()
-                            + repertorios.size() + musicasRepertorios.size();
+                            + repertorios.size() + musicasRepertorios.size() + blocosRepertorios.size() + musicasBlocos.size() + temposBlocosRepertorios.size();
 
                     if(totalRegistros > 0){
                         String json = "{";
@@ -472,6 +491,72 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                             }
                         }
 
+                        // BLOCO REPERTORIO
+
+                        json = json.concat("],");
+
+                        json = json.concat("\"blocos_repertorios\":[");
+                        cont = 1;
+                        int qtdBlocosRepertorios = blocosRepertorios.size();
+
+                        if(qtdBlocosRepertorios > 0) {
+                            for (BlocoRepertorio umBlocoRepertorio : blocosRepertorios) {
+
+                                if (cont < qtdBlocosRepertorios) {
+                                    json = json.concat(umBlocoRepertorio.toJson() + ",");
+                                } else {
+                                    json = json.concat(umBlocoRepertorio.toJson());
+                                }
+
+                                cont++;
+
+                            }
+                        }
+
+                        // MUSICA BLOCO REPERTORIO
+
+                        json = json.concat("],");
+
+                        json = json.concat("\"musicas_blocos_repertorios\":[");
+                        cont = 1;
+                        int qtdMusicasBlocos = musicasBlocos.size();
+
+                        if(qtdMusicasBlocos > 0) {
+                            for (MusicaBloco umMusicaBloco : musicasBlocos) {
+
+                                if (cont < qtdMusicasBlocos) {
+                                    json = json.concat(umMusicaBloco.toJson() + ",");
+                                } else {
+                                    json = json.concat(umMusicaBloco.toJson());
+                                }
+
+                                cont++;
+
+                            }
+                        }
+
+                        // TEMPO BLOCO REPERTORIO
+
+                        json = json.concat("],");
+
+                        json = json.concat("\"tempos_blocos_repertorios\":[");
+                        cont = 1;
+                        int qtdTemposBlocos = temposBlocosRepertorios.size();
+
+                        if(qtdTemposBlocos > 0) {
+                            for (TempoBlocoRepertorio umTempoBlocoRepertorio : temposBlocosRepertorios) {
+
+                                if (cont < qtdTemposBlocos) {
+                                    json = json.concat(umTempoBlocoRepertorio.toJson() + ",");
+                                } else {
+                                    json = json.concat(umTempoBlocoRepertorio.toJson());
+                                }
+
+                                cont++;
+
+                            }
+                        }
+
                         json = json.concat("]");
 
                         json = json.concat("}");
@@ -495,7 +580,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 } catch (Exception e) {
                     this.stopSelf();
                     System.out.println("TERMINOU ERRO 1");
-                    Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Houve algum problema ao sincronizar os dados... por favor tente novamente.", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
                 break;
@@ -513,6 +598,26 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                                 String url = Constants.URLSERVIDORENVIOAUDIO+tokenCriptografado+"/"+tme.getAudio().replace(".", "_");
                                 Map<String, String> params = new HashMap<>();
                                 params.put("audio", tme.getAudio());
+                                TarefaAssincrona ut = new TarefaAssincrona(url, "POST", AtualizaDadosService.this, params, true, 1);
+                                ut.setOnResultListener(this);
+                                ut.execute();
+                            }
+
+
+                        }
+
+                    }
+
+                    for(TempoBlocoRepertorio tbr : tbrs){
+
+                        if(tbr.getAudio() != null && !tbr.getAudio().isEmpty()){
+
+                            File arquivo = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tbr.getAudio());
+
+                            if(arquivo.exists() && arquivo.canRead()){
+                                String url = Constants.URLSERVIDORENVIOAUDIO+tokenCriptografado+"/"+tbr.getAudio().replace(".", "_");
+                                Map<String, String> params = new HashMap<>();
+                                params.put("audio", tbr.getAudio());
                                 TarefaAssincrona ut = new TarefaAssincrona(url, "POST", AtualizaDadosService.this, params, true, 1);
                                 ut.setOnResultListener(this);
                                 ut.execute();
@@ -566,7 +671,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
         if(acao == 0){
             if(map == null || map.size() == 0){
-                Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Houve algum problema ao sincronizar os dados... por favor tente novamente.", Toast.LENGTH_LONG).show();
                 this.stopSelf();
                 System.out.println("TERMINOU ERRO 2");
                 return;
@@ -590,7 +695,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(this, "Houve algum problema ao sincronizar os dados... uma nova tentativa será feita em breve.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Houve algum problema ao sincronizar os dados... por favor tente novamente.", Toast.LENGTH_LONG).show();
                     this.stopSelf();
                     System.out.println("TERMINOU ERRO 3");
                 }
@@ -699,10 +804,12 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
     private void enviaAudios() {
 
         TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getBaseContext());
+        TempoBlocoRepertorioDBHelper tempoBlocoRepertorioDBHelper = new TempoBlocoRepertorioDBHelper(getBaseContext());
 
         tmes = tempoMusicaEventoDBHelper.listarTodosAEnviarAudio(getBaseContext());
+        tbrs = tempoBlocoRepertorioDBHelper.listarTodosAEnviarAudio(getBaseContext());
 
-        if(tmes.size() > 0){
+        if(tmes.size() > 0 || tbrs.size() > 0){
             String urlToken = Constants.URLTOKEN;
 
             TokenTask tokenTask = new TokenTask(urlToken, AtualizaDadosService.this, true, 2);

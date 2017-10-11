@@ -4,8 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import br.com.vostre.repertori.model.MusicaBloco;
 import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Repertorio;
+import br.com.vostre.repertori.model.TempoBlocoRepertorio;
 import br.com.vostre.repertori.model.TipoEvento;
 
 /**
@@ -13,7 +15,7 @@ import br.com.vostre.repertori.model.TipoEvento;
  */
 public class RepDBHelper extends SQLiteOpenHelper {
 
-    public static final int DBVERSION = 1;
+    public static final int DBVERSION = 2;
     public static final String DBNAME = "rep.db";
 
     public RepDBHelper(Context context){
@@ -22,6 +24,7 @@ public class RepDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // versao 1
         db.execSQL(ArtistaDBHelper.DBCREATE);
         db.execSQL(TipoEventoDBHelper.DBCREATE);
         db.execSQL(EventoDBHelper.DBCREATE);
@@ -38,12 +41,41 @@ public class RepDBHelper extends SQLiteOpenHelper {
         db.execSQL(RepertorioDBHelper.DBCREATE);
         db.execSQL(MusicaRepertorioDBHelper.DBCREATE);
 
+        db.execSQL(BlocoRepertorioDBHelper.DBCREATE);
+        db.execSQL(MusicaBlocoDBHelper.DBCREATE);
+        db.execSQL(TempoBlocoRepertorioDBHelper.DBCREATE);
+
         db.execSQL(ParametroDBHelper.DBPOPULATE);
+
+        // versao 2
+        // nada ainda
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //nada ainda
+
+        switch(oldVersion){
+            case 1:
+                db.execSQL("DROP TABLE IF EXISTS artista");
+                db.execSQL("DROP TABLE IF EXISTS tipo_evento");
+                db.execSQL("DROP TABLE IF EXISTS evento");
+                db.execSQL("DROP TABLE IF EXISTS musica");
+                db.execSQL("DROP TABLE IF EXISTS musica_evento");
+                db.execSQL("DROP TABLE IF EXISTS comentario_evento");
+                db.execSQL("DROP TABLE IF EXISTS parametro");
+                db.execSQL("DROP TABLE IF EXISTS musica_projeto");
+                db.execSQL("DROP TABLE IF EXISTS projeto");
+                db.execSQL("DROP TABLE IF EXISTS estilo");
+                db.execSQL("DROP TABLE IF EXISTS tempo_musica_evento");
+                db.execSQL("DROP TABLE IF EXISTS repertorio");
+                db.execSQL("DROP TABLE IF EXISTS musica_repertorio");
+                db.execSQL("DROP TABLE IF EXISTS bloco_repertorio");
+                db.execSQL("DROP TABLE IF EXISTS musica_bloco");
+                db.execSQL("DROP TABLE IF EXISTS tempo_bloco_repertorio");
+                onCreate(db);
+                break;
+        }
+
     }
 
 }
