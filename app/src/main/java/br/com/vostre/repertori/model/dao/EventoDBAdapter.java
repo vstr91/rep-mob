@@ -76,7 +76,7 @@ public class EventoDBAdapter {
 
     public List<Evento> listarTodos(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, id_projeto, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug FROM evento", null);
+                "ultima_alteracao, slug FROM evento WHERE status = 0", null);
         List<Evento> eventos = new ArrayList<Evento>();
 
         if(cursor.moveToFirst()){

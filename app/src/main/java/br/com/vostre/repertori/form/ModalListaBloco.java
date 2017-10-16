@@ -1,6 +1,7 @@
 package br.com.vostre.repertori.form;
 
 import android.app.Dialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.List;
 
+import br.com.vostre.repertori.BlocoRepertorioDetalheActivity;
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.BlocoRepertorioAdapter;
 import br.com.vostre.repertori.adapter.RepertorioList;
@@ -31,6 +33,7 @@ import br.com.vostre.repertori.model.dao.BlocoRepertorioDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaBlocoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaEventoDBHelper;
 import br.com.vostre.repertori.model.dao.RepertorioDBHelper;
+import br.com.vostre.repertori.utils.DialogUtils;
 
 public class ModalListaBloco extends android.support.v4.app.DialogFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
@@ -46,6 +49,7 @@ public class ModalListaBloco extends android.support.v4.app.DialogFragment imple
     BlocoRepertorioAdapter adapterBloco;
 
     MusicaEventoDBHelper musicaEventoDBHelper;
+    Dialog dialogLoad;
 
     public Repertorio getRepertorio() {
         return repertorio;
@@ -117,43 +121,10 @@ public class ModalListaBloco extends android.support.v4.app.DialogFragment imple
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        BlocoRepertorio blocoRepertorio = blocos.get(position);
-        Toast.makeText(getContext(), "Adicionando "+blocoRepertorio.getNome()+" ao evento "+evento.getNome(), Toast.LENGTH_LONG).show();
 
-        MusicaBlocoDBHelper musicaBlocoDBHelper = new MusicaBlocoDBHelper(getContext());
-        musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
-
-        List<Musica> musicas = musicaBlocoDBHelper.listarTodosPorBloco(getContext(), blocoRepertorio, 0);
-
-        for(Musica m : musicas){
-
-            MusicaEvento musicaEvento = new MusicaEvento();
-            musicaEvento.setMusica(m);
-            musicaEvento.setEvento(evento);
-
-            musicaEvento = musicaEventoDBHelper.carregarPorMusicaEEvento(getContext(), musicaEvento);
-
-            if(musicaEvento == null){
-                musicaEvento = new MusicaEvento();
-                musicaEvento.setMusica(m);
-                musicaEvento.setEvento(evento);
-            }
-
-            musicaEvento.setStatus(0);
-            musicaEvento.setUltimaAlteracao(Calendar.getInstance());
-            musicaEvento.setDataCadastro(Calendar.getInstance());
-            musicaEvento.setEnviado(-1);
-
-            int ordem = corrigeOrdemMusicas();
-
-            musicaEvento.setOrdem(ordem);
-
-            musicaEventoDBHelper.salvarOuAtualizar(getContext(), musicaEvento);
-
-        }
-
-        listener.onModalAdicionaDismissed(0);
-        dismiss();
+        CadastraMusica cadastraMusica = new CadastraMusica();
+        cadastraMusica.setPosicao(position);
+        cadastraMusica.execute();
     }
 
     private int corrigeOrdemMusicas(){
@@ -174,6 +145,76 @@ public class ModalListaBloco extends android.support.v4.app.DialogFragment imple
 
         return qtdMusicas+1;
 
+    }
+
+    private class CadastraMusica extends AsyncTask<Void, String, String> {
+
+        int posicao = -1;
+
+        public int getPosicao() {
+            return posicao;
+        }
+
+        public void setPosicao(int posicao) {
+            this.posicao = posicao;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialogLoad = DialogUtils.criarAlertaCarregando(getContext(), "Salvando alterações", "Por favor aguarde...");
+            dialogLoad.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            BlocoRepertorio blocoRepertorio = blocos.get(getPosicao());
+            //Toast.makeText(getContext(), "Adicionando "+blocoRepertorio.getNome()+" ao evento "+evento.getNome(), Toast.LENGTH_LONG).show();
+
+            MusicaBlocoDBHelper musicaBlocoDBHelper = new MusicaBlocoDBHelper(getContext());
+            musicaEventoDBHelper = new MusicaEventoDBHelper(getContext());
+
+            List<Musica> musicas = musicaBlocoDBHelper.listarTodosPorBloco(getContext(), blocoRepertorio, 0);
+
+            for(Musica m : musicas){
+
+                MusicaEvento musicaEvento = new MusicaEvento();
+                musicaEvento.setMusica(m);
+                musicaEvento.setEvento(evento);
+
+                musicaEvento = musicaEventoDBHelper.carregarPorMusicaEEvento(getContext(), musicaEvento);
+
+                if(musicaEvento == null){
+                    musicaEvento = new MusicaEvento();
+                    musicaEvento.setMusica(m);
+                    musicaEvento.setEvento(evento);
+                }
+
+                musicaEvento.setStatus(0);
+                musicaEvento.setUltimaAlteracao(Calendar.getInstance());
+                musicaEvento.setDataCadastro(Calendar.getInstance());
+                musicaEvento.setEnviado(-1);
+
+                int ordem = corrigeOrdemMusicas();
+
+                musicaEvento.setOrdem(ordem);
+
+                musicaEventoDBHelper.salvarOuAtualizar(getContext(), musicaEvento);
+
+            }
+
+            return "";
+
+        }
+
+        @Override
+        protected void onPostExecute(String tempo) {
+            super.onPostExecute(tempo);
+            dialogLoad.dismiss();
+            listener.onModalAdicionaDismissed(0);
+            dismiss();
+        }
     }
 
 }
