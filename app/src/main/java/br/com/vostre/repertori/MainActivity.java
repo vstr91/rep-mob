@@ -72,10 +72,10 @@ import br.com.vostre.repertori.utils.ParametrosUtils;
 import br.com.vostre.repertori.utils.ServiceUtils;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, LoadListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, LoadListener {
 
-    private DrawerLayout drawer;
-    private NavigationView navView;
+//    private DrawerLayout drawer;
+//    private NavigationView navView;
     private ActionBarDrawerToggle drawerToggle;
     private FrameLayout conteudo;
     Class fragmentClass = null;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ProgressDialog pd;
     Tracker mTracker;
 
-    static int RC_BARCODE_CAPTURE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +97,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.container);
-        navView = (NavigationView) findViewById(R.id.nav);
+//        drawer = (DrawerLayout) findViewById(R.id.container);
+//        navView = (NavigationView) findViewById(R.id.nav);
         conteudo = (FrameLayout) findViewById(R.id.conteudo);
+        Integer fragmento = getIntent().getIntExtra("fragmento", -1);
 
-        navView.setNavigationItemSelectedListener(this);
+        carregaFragmentoAtual(fragmento);
+
+//        navView.setNavigationItemSelectedListener(this);
 
 //        MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getBaseContext());
 //        List<Musica> musicas = musicaDBHelper.listarTodos(getBaseContext());
@@ -139,20 +142,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //
 //        // FIM EXPORT
 
-        if(savedInstanceState != null && savedInstanceState.getInt("fragmento") > 0) {
-            fragmentoAtual = savedInstanceState.getInt("fragmento");
-            carregaFragmentoAtual(fragmentoAtual);
+//        if(savedInstanceState != null && savedInstanceState.getInt("fragmento") > 0) {
+//            fragmentoAtual = savedInstanceState.getInt("fragmento");
+//            carregaFragmentoAtual(fragmentoAtual);
+//
+//        } else{
+//            fragmentClass = EventosFragment.class;
+//        }
 
-        } else{
-            fragmentClass = EventosFragment.class;
-        }
 
-
-        App application = (App) getApplication();
-        mTracker = application.getDefaultTracker();
-
-        mTracker.setScreenName("Tela Principal");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+//        App application = (App) getApplication();
+//        mTracker = application.getDefaultTracker();
+//
+//        mTracker.setScreenName("Tela Principal");
+//        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         fragmentManager = getSupportFragmentManager();
         try {
@@ -163,59 +166,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
         fragmentManager.beginTransaction().replace(R.id.conteudo, fragment).commit();
-        setTitle("Eventos");
+        //setTitle("Eventos");
 
         // --------------------------------------------------------
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, 0, 0){
+//        drawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, 0, 0){
+//
+//            public void onDrawerClosed(View view){
+//                super.onDrawerClosed(view);
+//                drawerToggle.syncState();
+//
+//                try {
+//
+//                    switch(fragmentClass.getCanonicalName()){
+//                        case "br.com.vostre.repertori.fragment.MusicasFragment":
+//                            fragment = (MusicasFragment) fragmentClass.newInstance();
+//                            MusicasFragment f = (MusicasFragment) fragment;
+//                            f.setListener(MainActivity.this);
+//                            insereFragmento(f, true);
+//                            break;
+//                        case "br.com.vostre.repertori.fragment.ProjetosFragment":
+//                            fragment = (ProjetosFragment) fragmentClass.newInstance();
+//                            ProjetosFragment f2 = (ProjetosFragment) fragment;
+//                            f2.setListener(MainActivity.this);
+//                            insereFragmento(f2, true);
+//                            break;
+//                        default:
+//                            fragment = (Fragment) fragmentClass.newInstance();
+//                            insereFragmento(fragment, false);
+//                            break;
+//                    }
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//
+//            }
+//
+//            public void onDrawerOpened(View view){
+//                super.onDrawerOpened(view);
+//                drawerToggle.syncState();
+//            }
+//
+//        };
+//
+//        // --------------------------------------------------------
+//
+//        drawer.setDrawerListener(drawerToggle);
+//        drawerToggle.syncState();
 
-            public void onDrawerClosed(View view){
-                super.onDrawerClosed(view);
-                drawerToggle.syncState();
 
-                try {
-
-                    switch(fragmentClass.getCanonicalName()){
-                        case "br.com.vostre.repertori.fragment.MusicasFragment":
-                            fragment = (MusicasFragment) fragmentClass.newInstance();
-                            MusicasFragment f = (MusicasFragment) fragment;
-                            f.setListener(MainActivity.this);
-                            insereFragmento(f, true);
-                            break;
-                        case "br.com.vostre.repertori.fragment.ProjetosFragment":
-                            fragment = (ProjetosFragment) fragmentClass.newInstance();
-                            ProjetosFragment f2 = (ProjetosFragment) fragment;
-                            f2.setListener(MainActivity.this);
-                            insereFragmento(f2, true);
-                            break;
-                        default:
-                            fragment = (Fragment) fragmentClass.newInstance();
-                            insereFragmento(fragment, false);
-                            break;
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-
-            }
-
-            public void onDrawerOpened(View view){
-                super.onDrawerOpened(view);
-                drawerToggle.syncState();
-            }
-
-        };
-
-        // --------------------------------------------------------
-
-        drawer.setDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-
-        ServiceUtils.iniciaServicoAtualizacao(true, getBaseContext());
 
 //        GoogleSignInAccount acc = (GoogleSignInAccount) getIntent().getExtras().get("usuario");
 //        textViewUsuario.setText("Logado como "+acc.getDisplayName()+" ("+acc.getEmail()+")");
@@ -320,28 +323,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-        if(menuItem.getItemId() == R.id.qr){
-            Intent intent = new Intent(this, BarcodeCaptureActivity.class);
-            intent.putExtra(BarcodeCaptureActivity.AutoFocus,true);
-            intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
-
-            startActivityForResult(intent, RC_BARCODE_CAPTURE);
-        } else{
-            carregaFragmentoAtual(menuItem.getItemId());
-
-            fragmentoAtual = menuItem.getItemId();
-
-            menuItem.setChecked(true);
-            setTitle(menuItem.getTitle());
-        }
-
-        drawer.closeDrawers();
-
-        return true;
-    }
+//    @Override
+//    public boolean onNavigationItemSelected(MenuItem menuItem) {
+//
+//        if(menuItem.getItemId() == R.id.qr){
+//            Intent intent = new Intent(this, BarcodeCaptureActivity.class);
+//            intent.putExtra(BarcodeCaptureActivity.AutoFocus,true);
+//            intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+//
+//            startActivityForResult(intent, RC_BARCODE_CAPTURE);
+//        } else{
+//            carregaFragmentoAtual(menuItem.getItemId());
+//
+//            fragmentoAtual = menuItem.getItemId();
+//
+//            menuItem.setChecked(true);
+//            setTitle(menuItem.getTitle());
+//        }
+//
+//        drawer.closeDrawers();
+//
+//        return true;
+//    }
 
     @Override
     public void onLoadFinished() {
@@ -357,95 +360,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (fragmentoAtual){
             case R.id.projetos:
                 fragmentClass = ProjetosFragment.class;
+                setTitle("Projetos");
                 break;
             case R.id.eventos:
                 fragmentClass = EventosFragment.class;
+                setTitle("Eventos");
                 break;
             case R.id.musicas:
                 fragmentClass = MusicasFragment.class;
+                setTitle("Banco de Músicas");
                 break;
             case R.id.estilos:
                 fragmentClass = EstilosFragment.class;
+                setTitle("Estilos");
                 break;
             case R.id.artistas:
                 fragmentClass = ArtistasFragment.class;
+                setTitle("Artistas");
                 break;
             case R.id.info:
                 fragmentClass = InfoFragment.class;
+                setTitle("Informações do Sistema");
                 break;
         }
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_BARCODE_CAPTURE) {
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-
-                    String[] valor = barcode.rawValue.split("/");
-                    String dominio = valor[0];
-
-                    if(dominio.equals("draffonso:")){
-                        String tipo = valor[2];
-
-                        String slug = valor[3];
-
-                        Intent intent;
-
-                        switch(tipo){
-                            case "musicas":
-                                MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getBaseContext());
-                                Musica musica = new Musica();
-                                musica.setSlug(slug);
-                                musica = musicaDBHelper.carregarPorSlug(getBaseContext(), musica);
-
-                                if(musica != null){
-                                    intent = new Intent(getBaseContext(), MusicaDetalheActivity.class);
-                                    intent.putExtra("musica", musica.getId());
-                                    intent.putExtra("qr", true);
-                                    startActivity(intent);
-                                } else{
-                                    Toast.makeText(getBaseContext(), "Música não encontrada. Registro pode ter sido removido ou alterado.", Toast.LENGTH_SHORT).show();
-                                }
-
-                                break;
-                            case "eventos":
-                                EventoDBHelper eventoDBHelper = new EventoDBHelper(getBaseContext());
-                                Evento evento = new Evento();
-                                evento.setSlug(slug);
-                                evento = eventoDBHelper.carregarPorSlug(getBaseContext(), evento);
-
-                                if(evento != null){
-                                    intent = new Intent(getBaseContext(), EventoDetalheActivity.class);
-                                    intent.putExtra("evento", evento.getId());
-                                    intent.putExtra("qr", true);
-                                    startActivity(intent);
-                                } else{
-                                    Toast.makeText(getBaseContext(), "Evento não encontrado. Registro pode ter sido removido ou alterado.", Toast.LENGTH_SHORT).show();
-                                }
-
-                                break;
-                            default:
-                                Toast.makeText(getBaseContext(), "Erro ao ler QR Code. QR Code não relativo ao aplicativo.", Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-
-                    } else{
-                        Toast.makeText(getBaseContext(), "Erro ao ler QR Code. QR Code não relativo ao aplicativo.", Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    Toast.makeText(getBaseContext(), "Erro ao ler QR Code. Resultado vazio.", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(getBaseContext(), "Erro ao ler QR Code", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
 }

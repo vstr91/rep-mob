@@ -767,6 +767,8 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     System.out.println(audio);
                     TempoMusicaEventoDBHelper tempoMusicaEventoDBHelper = new TempoMusicaEventoDBHelper(getBaseContext());
                     tempoMusicaEventoDBHelper.sinalizaEnvioAudio(getBaseContext(), audio);
+                    TempoBlocoRepertorioDBHelper tempoBlocoRepertorioDBHelper = new TempoBlocoRepertorioDBHelper(getBaseContext());
+                    tempoBlocoRepertorioDBHelper.sinalizaEnvioAudio(getBaseContext(), audio);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

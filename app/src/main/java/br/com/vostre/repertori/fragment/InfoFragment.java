@@ -47,7 +47,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
     TextView textViewUltimaSincronizacao;
     TextView textViewVersao;
     TextView textViewVersaoDB;
-    Button btnAtualizar;
+//    Button btnAtualizar;
     BroadcastReceiver br;
 
     Tracker mTracker;
@@ -100,11 +100,11 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         textViewUltimaSincronizacao = (TextView) v.findViewById(R.id.textViewUltimoAcesso);
         textViewVersao = (TextView) v.findViewById(R.id.textViewVersao);
         textViewVersaoDB = (TextView) v.findViewById(R.id.textViewVersaoDB);
-        btnAtualizar = (Button) v.findViewById(R.id.btnAtualizar);
+//        btnAtualizar = (Button) v.findViewById(R.id.btnAtualizar);
 
         carregarDados();
 
-        btnAtualizar.setOnClickListener(this);
+//        btnAtualizar.setOnClickListener(this);
 
         return v;
     }

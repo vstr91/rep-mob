@@ -29,11 +29,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".RepertorioActivity"
@@ -141,7 +137,7 @@
             android:label="@string/title_activity_artista_detalhe"
             android:noHistory="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".BarcodeCaptureActivity"></activity>
+        <activity android:name=".BarcodeCaptureActivity" />
         <activity
             android:name=".BlocoRepertorioDetalheActivity"
             android:label="@string/title_activity_bloco_detalhe"
@@ -154,6 +150,13 @@
             android:name=".CifraMusicaBlocoRepertorioActivity"
             android:label="@string/title_activity_cifra_musica_bloco_repertorio"
             android:screenOrientation="portrait" />
+        <activity android:name=".MenuActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

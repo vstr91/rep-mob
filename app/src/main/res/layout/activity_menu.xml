@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="br.com.vostre.repertori.MenuActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Gerenciador de Projetos"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        app:alignmentMode="alignBounds"
+        app:columnCount="2">
+
+        <Button
+            style="@style/botao_menu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_description_black_24dp"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:text="Projetos"
+            android:id="@+id/btnProjetos"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+        <Button
+            style="@style/botao_menu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_today_black_24dp"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:text="Eventos"
+            android:id="@+id/btnEventos"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+        <Button
+            style="@style/botao_menu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_library_music_black_24dp"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:text="Banco de Músicas"
+            android:id="@+id/btnMusicas"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+        <Button
+            style="@style/botao_menu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_group_black_24dp"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:text="Artistas"
+            android:id="@+id/btnArtistas"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+        <Button
+            style="@style/botao_menu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_volume_up_black_24dp"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:text="Estilos"
+            android:id="@+id/btnEstilos"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+        <Button
+            style="@style/botao_menu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_info_outline_black_24dp"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:text="Infos do sistema"
+            android:id="@+id/btnInfos"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+        <Button
+            style="@style/botao_menu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_filter_center_focus_black_24dp"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:text="Leitor de QR Code"
+            android:id="@+id/btnQR"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+        <Button
+            style="@style/botao_menu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_sync_black_24dp"
+            android:padding="16dp"
+            android:textSize="14sp"
+            android:text="Sincronizar Dados"
+            android:id="@+id/btnAtualizar"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1" />
+
+    </android.support.v7.widget.GridLayout>
+
+</LinearLayout>
