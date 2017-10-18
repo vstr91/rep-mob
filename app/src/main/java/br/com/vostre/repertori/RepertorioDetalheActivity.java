@@ -85,6 +85,7 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
     Dialog dialogMusica;
     Dialog dialogBloco;
+    String tempo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +116,8 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
         repertorio = new Repertorio();
         repertorio.setId(getIntent().getStringExtra("repertorio"));
 
-        carregaInformacaoRepertorio();
-
-        carregaListaMusicas();
-        carregaListaBlocos();
-
-        String tempo = calcularTempoTotalRepertorio();
-
-        textViewTempo.setText(tempo);
+        CarregarItens carregarItens = new CarregarItens();
+        carregarItens.execute();
 
     }
 
@@ -232,18 +227,18 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
     public void onModalAdicionaDismissed(int resultado) {
 
         if(resultado == 2){
-            carregaListaBlocos();
+            blocosRepertorio = blocoRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
+            carregaListaBlocos(blocosRepertorio);
             return;
         }
 
-        carregaListaMusicas();
-    }
-
-    private void carregaListaMusicas(){
         musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
 
-        adapterMusicas =
-                new MusicaRepertorioAdapter(this, R.id.listViewMusicas, musicas);
+        carregaListaMusicas(musicas);
+    }
+
+    private void carregaListaMusicas(List<Musica> musicas){
+        adapterMusicas = new MusicaRepertorioAdapter(this, R.id.listViewMusicas, musicas);
         adapterMusicas.setListener(this);
 
         adapterMusicas.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
@@ -261,11 +256,8 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
 
     }
 
-    private void carregaListaBlocos(){
-        blocosRepertorio = blocoRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
-
-        adapterBlocos =
-                new BlocoRepertorioAdapter(this, R.id.listViewBlocos, blocosRepertorio);
+    private void carregaListaBlocos(List<BlocoRepertorio> blocosRepertorio){
+        adapterBlocos = new BlocoRepertorioAdapter(this, R.id.listViewBlocos, blocosRepertorio);
         adapterBlocos.setListener(this);
 
         adapterBlocos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);
@@ -428,15 +420,49 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
             switch(tipo) {
                 case 1:
                     Toast.makeText(getBaseContext(), "Música Removida", Toast.LENGTH_SHORT).show();
-                    carregaListaMusicas();
+                    musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
+                    carregaListaMusicas(musicas);
                     break;
                 case 2:
                     Toast.makeText(getBaseContext(), "Bloco Removido", Toast.LENGTH_SHORT).show();
-                    carregaListaBlocos();
+                    blocosRepertorio = blocoRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
+                    carregaListaBlocos(blocosRepertorio);
                     break;
             }
 
 
+            dialogLoad.dismiss();
+
+        }
+    }
+
+    private class CarregarItens extends AsyncTask<Void, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialogLoad = DialogUtils.criarAlertaCarregando(RepertorioDetalheActivity.this, "Carregando dados", "Por favor aguarde...");
+            dialogLoad.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            carregaInformacaoRepertorio();
+
+            musicas = musicaRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
+            blocosRepertorio = blocoRepertorioDBHelper.listarTodosPorRepertorio(getApplicationContext(), repertorio, 0);
+
+            tempo = calcularTempoTotalRepertorio();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String tempo) {
+            super.onPostExecute(tempo);
+            textViewTempo.setText(tempo);
+            carregaListaMusicas(musicas);
+            carregaListaBlocos(blocosRepertorio);
             dialogLoad.dismiss();
 
         }

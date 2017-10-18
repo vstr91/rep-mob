@@ -5,129 +5,132 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="br.com.vostre.repertori.MenuActivity">
 
-    <TextView
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
         android:layout_marginBottom="1dp"
-        android:background="@color/colorPrimary"
+        android:layout_weight="1"
         android:gravity="center"
-        android:padding="5dp"
-        android:text="Gerenciador de Projetos"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:src="@drawable/logo_completa" />
 
     <android.support.v7.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimary"
+        android:layout_margin="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_weight=".15"
         app:alignmentMode="alignBounds"
         app:columnCount="2">
 
         <Button
+            android:id="@+id/btnProjetos"
             style="@style/botao_menu"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:drawableTop="@drawable/ic_description_black_24dp"
-            android:padding="16dp"
-            android:textSize="14sp"
+            android:padding="12dp"
             android:text="Projetos"
-            android:id="@+id/btnProjetos"
+            android:textSize="13sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_rowWeight="1" />
 
         <Button
+            android:id="@+id/btnEventos"
             style="@style/botao_menu"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:drawableTop="@drawable/ic_today_black_24dp"
-            android:padding="16dp"
-            android:textSize="14sp"
+            android:padding="12dp"
             android:text="Eventos"
-            android:id="@+id/btnEventos"
+            android:textSize="13sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_rowWeight="1" />
 
         <Button
+            android:id="@+id/btnMusicas"
             style="@style/botao_menu"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:drawableTop="@drawable/ic_library_music_black_24dp"
-            android:padding="16dp"
-            android:textSize="14sp"
+            android:padding="12dp"
             android:text="Banco de Músicas"
-            android:id="@+id/btnMusicas"
+            android:textSize="13sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_rowWeight="1" />
 
         <Button
+            android:id="@+id/btnArtistas"
             style="@style/botao_menu"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:drawableTop="@drawable/ic_group_black_24dp"
-            android:padding="16dp"
-            android:textSize="14sp"
+            android:padding="12dp"
             android:text="Artistas"
-            android:id="@+id/btnArtistas"
+            android:textSize="13sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_rowWeight="1" />
 
         <Button
+            android:id="@+id/btnEstilos"
             style="@style/botao_menu"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:drawableTop="@drawable/ic_volume_up_black_24dp"
-            android:padding="16dp"
-            android:textSize="14sp"
+            android:padding="12dp"
             android:text="Estilos"
-            android:id="@+id/btnEstilos"
+            android:textSize="13sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_rowWeight="1" />
 
         <Button
+            android:id="@+id/btnInfos"
             style="@style/botao_menu"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:drawableTop="@drawable/ic_info_outline_black_24dp"
-            android:padding="16dp"
-            android:textSize="14sp"
+            android:padding="12dp"
             android:text="Infos do sistema"
-            android:id="@+id/btnInfos"
+            android:textSize="13sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_rowWeight="1" />
 
         <Button
+            android:id="@+id/btnQR"
             style="@style/botao_menu"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:drawableTop="@drawable/ic_filter_center_focus_black_24dp"
-            android:padding="16dp"
-            android:textSize="14sp"
+            android:padding="12dp"
             android:text="Leitor de QR Code"
-            android:id="@+id/btnQR"
+            android:textSize="13sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_rowWeight="1" />
 
         <Button
+            android:id="@+id/btnAtualizar"
             style="@style/botao_menu"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:drawableTop="@drawable/ic_sync_black_24dp"
-            android:padding="16dp"
-            android:textSize="14sp"
+            android:padding="12dp"
             android:text="Sincronizar Dados"
-            android:id="@+id/btnAtualizar"
+            android:textSize="13sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill"
             app:layout_rowWeight="1" />

@@ -59,26 +59,26 @@
             android:textAlignment="textEnd" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:padding="10dp">-->
 
-        <TextView
-            android:id="@+id/textView21"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Versão do Banco de Dados:" />
+        <!--<TextView-->
+            <!--android:id="@+id/textView21"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Versão da Base de Dados:" />-->
 
-        <TextView
-            android:id="@+id/textViewVersaoDB"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:textAlignment="textEnd" />
-    </LinearLayout>
+        <!--<TextView-->
+            <!--android:id="@+id/textViewVersaoDB"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="2"-->
+            <!--android:textAlignment="textEnd" />-->
+    <!--</LinearLayout>-->
 
     <!--<Button-->
         <!--android:id="@+id/btnAtualizar"-->

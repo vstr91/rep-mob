@@ -120,6 +120,13 @@ public class ProjetosFragment extends Fragment implements AdapterView.OnItemClic
             projetoDBHelper = new ProjetoDBHelper(getContext());
             projetos = projetoDBHelper.listarTodosAtivos(getContext());
 
+            if(projetos.size() == 1){
+                Projeto projeto = projetos.get(0);
+                Intent intent = new Intent(getContext(), MusicaProjetoActivity.class);
+                intent.putExtra("projeto", projeto.getId());
+                startActivity(intent);
+            }
+
             adapter = new ProjetoList(getActivity(), R.layout.listview_projetos, projetos, false);
 
             return null;
@@ -132,6 +139,7 @@ public class ProjetosFragment extends Fragment implements AdapterView.OnItemClic
             listViewProjetos.setOnItemClickListener(ProjetosFragment.this);
             listViewProjetos.setOnItemLongClickListener(ProjetosFragment.this);
             dialogLoad.dismiss();
+
         }
     }
 

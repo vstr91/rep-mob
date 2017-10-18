@@ -46,7 +46,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
     TextView textViewUltimaSincronizacao;
     TextView textViewVersao;
-    TextView textViewVersaoDB;
+//    TextView textViewVersaoDB;
 //    Button btnAtualizar;
     BroadcastReceiver br;
 
@@ -99,7 +99,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
         textViewUltimaSincronizacao = (TextView) v.findViewById(R.id.textViewUltimoAcesso);
         textViewVersao = (TextView) v.findViewById(R.id.textViewVersao);
-        textViewVersaoDB = (TextView) v.findViewById(R.id.textViewVersaoDB);
+//        textViewVersaoDB = (TextView) v.findViewById(R.id.textViewVersaoDB);
 //        btnAtualizar = (Button) v.findViewById(R.id.btnAtualizar);
 
         carregarDados();
@@ -126,7 +126,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
             String version = pInfo.versionName;
             textViewVersao.setText(version);
 
-            textViewVersaoDB.setText(String.valueOf(RepDBHelper.DBVERSION));
+//            textViewVersaoDB.setText(String.valueOf(RepDBHelper.DBVERSION));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

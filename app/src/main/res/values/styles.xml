@@ -26,7 +26,7 @@
         <item name="android:layout_margin">5dp</item>
     </style>
 
-    <style name="botao_menu" parent="Base.TextAppearance.AppCompat.Button">
+    <style name="botao_menu" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/botao_menu</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_margin">1dp</item>

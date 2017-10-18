@@ -150,7 +150,8 @@
             android:name=".CifraMusicaBlocoRepertorioActivity"
             android:label="@string/title_activity_cifra_musica_bloco_repertorio"
             android:screenOrientation="portrait" />
-        <activity android:name=".MenuActivity">
+        <activity android:name=".MenuActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
