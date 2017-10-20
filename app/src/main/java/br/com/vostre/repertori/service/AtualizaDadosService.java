@@ -142,6 +142,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
 
         } else{
             Toast.makeText(this, "Não foi possível estabelecer conexão com o servidor. Por favor verifique sua conexão com a internet.", Toast.LENGTH_SHORT).show();
+            enviaBroadcast();
             this.stopSelf();
             System.out.println("TERMINOU ERRO INTERNET");
         }
@@ -581,6 +582,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     this.stopSelf();
                     System.out.println("TERMINOU ERRO 1");
                     Toast.makeText(this, "Houve algum problema ao sincronizar os dados... por favor tente novamente.", Toast.LENGTH_LONG).show();
+                    enviaBroadcast();
                     e.printStackTrace();
                 }
                 break;
@@ -672,6 +674,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
         if(acao == 0){
             if(map == null || map.size() == 0){
                 Toast.makeText(this, "Houve algum problema ao sincronizar os dados... por favor tente novamente.", Toast.LENGTH_LONG).show();
+                enviaBroadcast();
                 this.stopSelf();
                 System.out.println("TERMINOU ERRO 2");
                 return;
@@ -696,6 +699,7 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     }
                 } else {
                     Toast.makeText(this, "Houve algum problema ao sincronizar os dados... por favor tente novamente.", Toast.LENGTH_LONG).show();
+                    enviaBroadcast();
                     this.stopSelf();
                     System.out.println("TERMINOU ERRO 3");
                 }
