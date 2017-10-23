@@ -1,12 +1,17 @@
 package br.com.vostre.repertori;
 
+import android.*;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -89,6 +94,7 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
     List<TempoMusicaEvento> tmes;
     TempoMusicaEventoDBHelper tmeDBHelper;
     TempoMusicaEvento tme;
+    private static final int REQUEST_STORAGE_PERMISSION = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -322,6 +328,12 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             finish();
         }
 
+        int permissionStorage = ActivityCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionStorage != PackageManager.PERMISSION_GRANTED) {
+            requestStorage();
+        }
+
     }
 
     @Override
@@ -514,6 +526,20 @@ public class MusicaDetalheActivity extends BaseActivity implements AdapterView.O
             getAudioTask.execute();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+    }
+
+    private void requestStorage() {
+        Log.w("Armazenamento", "Armazenamento nao autorizado. Solicitando permissão...");
+
+        final String[] permissions = new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                requestPermissions(permissions, REQUEST_STORAGE_PERMISSION);
+                return;
+            }
         }
 
     }

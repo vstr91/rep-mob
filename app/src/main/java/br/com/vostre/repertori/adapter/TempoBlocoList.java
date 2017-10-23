@@ -40,7 +40,7 @@ public class TempoBlocoList extends ArrayAdapter<TempoBlocoRepertorio> {
         TempoBlocoRepertorio tbr = tbrs.get(position);
 
         textViewTempo.setText(DataUtils.toStringSomenteHoras(tbr.getTempo(), 1));
-        textViewData.setText(DataUtils.toString(tbr.getDataCadastro(), false));
+        textViewData.setText(DataUtils.toString(tbr.getDataRecebimento(), false));
 
         if(tbr.getAudio().isEmpty() || tbr.getAudio().equals("null")){
             imageViewPlay.setVisibility(View.INVISIBLE);

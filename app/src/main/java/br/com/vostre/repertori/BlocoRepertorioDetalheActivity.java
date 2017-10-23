@@ -1,11 +1,17 @@
 package br.com.vostre.repertori;
 
+import android.*;
+import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,6 +90,7 @@ public class BlocoRepertorioDetalheActivity extends BaseActivity implements Adap
     TextView textViewTempo;
 
     TempoBlocoRepertorio tbr;
+    private static final int REQUEST_STORAGE_PERMISSION = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +128,12 @@ public class BlocoRepertorioDetalheActivity extends BaseActivity implements Adap
         String tempo = calcularTempoTotalBloco();
 
         textViewTempo.setText(tempo);
+
+        int permissionStorage = ActivityCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionStorage != PackageManager.PERMISSION_GRANTED) {
+            requestStorage();
+        }
 
     }
 
@@ -384,6 +397,20 @@ public class BlocoRepertorioDetalheActivity extends BaseActivity implements Adap
             getAudioTask.execute();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+    }
+
+    private void requestStorage() {
+        Log.w("Armazenamento", "Armazenamento nao autorizado. Solicitando permissão...");
+
+        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                requestPermissions(permissions, REQUEST_STORAGE_PERMISSION);
+                return;
+            }
         }
 
     }

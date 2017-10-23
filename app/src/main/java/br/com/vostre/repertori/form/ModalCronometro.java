@@ -374,7 +374,7 @@ public class ModalCronometro extends android.support.v4.app.DialogFragment imple
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         tme = tmes.get(i);
 
-        if(tme.getAudio() != null && !tme.getAudio().isEmpty()){
+        if(tme.getAudio() != null && !tme.getAudio().isEmpty() && !tme.getAudio().equals("null")){
 
             File f = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tme.getAudio());
 

@@ -351,7 +351,7 @@ public class ModalCronometroBloco extends android.support.v4.app.DialogFragment 
 
     private boolean excluiArquivo(TempoBlocoRepertorio tbr){
 
-        if(tbr.getAudio() != null && !tbr.getAudio().isEmpty()){
+        if(tbr.getAudio() != null && !tbr.getAudio().isEmpty()  && !tbr.getAudio().equals("null")){
 
             File f  = new File(Constants.CAMINHO_PADRAO_AUDIO+File.separator+tbr.getAudio());
 
