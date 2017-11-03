@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -87,6 +88,8 @@ public class MusicasFragment extends Fragment implements AdapterView.OnItemClick
 
         CarregarItens carregarItens = new CarregarItens();
         carregarItens.execute();
+
+        this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         return v;
     }

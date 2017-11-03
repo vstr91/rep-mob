@@ -75,7 +75,7 @@ public class ModalListaBloco extends android.support.v4.app.DialogFragment imple
 
         blocos = blocoRepertorioDBHelper.listarTodosPorRepertorio(getContext(), repertorio, 0);
 
-        adapterBloco = new BlocoRepertorioAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, blocos);
+        adapterBloco = new BlocoRepertorioAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, blocos, false);
         listViewBlocos.setAdapter(adapterBloco);
         listViewBlocos.setOnItemClickListener(this);
 

@@ -257,7 +257,7 @@ public class RepertorioDetalheActivity extends BaseActivity implements AdapterVi
     }
 
     private void carregaListaBlocos(List<BlocoRepertorio> blocosRepertorio){
-        adapterBlocos = new BlocoRepertorioAdapter(this, R.id.listViewBlocos, blocosRepertorio);
+        adapterBlocos = new BlocoRepertorioAdapter(this, R.id.listViewBlocos, blocosRepertorio, true);
         adapterBlocos.setListener(this);
 
         adapterBlocos.setDropDownViewResource(android.R.layout.simple_selectable_list_item);

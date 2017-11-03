@@ -42,11 +42,13 @@ public class BlocoRepertorioAdapter extends ArrayAdapter<BlocoRepertorio> {
     private Activity context;
     ImageButton btnExcluir;
     BlocoButtonClickListener listener;
+    boolean mostraBotao;
 
-    public BlocoRepertorioAdapter(Activity context, int textViewResourceId, List<BlocoRepertorio> objects) {
+    public BlocoRepertorioAdapter(Activity context, int textViewResourceId, List<BlocoRepertorio> objects, boolean mostraBotao) {
         super(context, textViewResourceId, objects);
         blocos = objects;
         this.context = context;
+        this.mostraBotao = mostraBotao;
 
         for (int i = 0; i < objects.size(); ++i) {
             mIdMap.put(objects.get(i).getId(), i);
@@ -70,15 +72,21 @@ public class BlocoRepertorioAdapter extends ArrayAdapter<BlocoRepertorio> {
 
         textViewNome.setText(blocoRepertorio.getNome());
 
-        btnExcluir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(mostraBotao){
+            btnExcluir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                listener.onButtonClicked(v, blocoRepertorio);
-            }
-        });
+                    listener.onButtonClicked(v, blocoRepertorio);
+                }
+            });
 
-        btnExcluir.setFocusable(false);
+            btnExcluir.setFocusable(false);
+        } else{
+            btnExcluir.setVisibility(View.GONE);
+        }
+
+
 
         return rowView;
     }
