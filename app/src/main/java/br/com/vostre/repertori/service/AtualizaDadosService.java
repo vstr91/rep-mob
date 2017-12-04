@@ -36,7 +36,10 @@ import br.com.vostre.repertori.listener.UpdateSentTaskListener;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.BlocoRepertorio;
+import br.com.vostre.repertori.model.Casa;
 import br.com.vostre.repertori.model.ComentarioEvento;
+import br.com.vostre.repertori.model.Contato;
+import br.com.vostre.repertori.model.ContatoCasa;
 import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
@@ -51,7 +54,10 @@ import br.com.vostre.repertori.model.TempoMusicaEvento;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
 import br.com.vostre.repertori.model.dao.BlocoRepertorioDBHelper;
+import br.com.vostre.repertori.model.dao.CasaDBHelper;
 import br.com.vostre.repertori.model.dao.ComentarioEventoDBHelper;
+import br.com.vostre.repertori.model.dao.ContatoCasaDBHelper;
+import br.com.vostre.repertori.model.dao.ContatoDBHelper;
 import br.com.vostre.repertori.model.dao.EstiloDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaBlocoDBHelper;
@@ -177,6 +183,10 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 List<MusicaBloco> musicasBlocos;
                 List<TempoBlocoRepertorio> temposBlocosRepertorios;
 
+                List<Casa> casas;
+                List<Contato> contatos;
+                List<ContatoCasa> contatosCasas;
+
                 ComentarioEventoDBHelper comentarioEventoDBHelper = new ComentarioEventoDBHelper(getApplicationContext());
                 MusicaDBHelper musicaDBHelper = new MusicaDBHelper(getApplicationContext());
                 ArtistaDBHelper artistaDBHelper = new ArtistaDBHelper(getApplicationContext());
@@ -194,6 +204,10 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                 BlocoRepertorioDBHelper blocoRepertorioDBHelper = new BlocoRepertorioDBHelper(getApplicationContext());
                 MusicaBlocoDBHelper musicaBlocoDBHelper = new MusicaBlocoDBHelper(getApplicationContext());
                 TempoBlocoRepertorioDBHelper tempoBlocoRepertorioDBHelper = new TempoBlocoRepertorioDBHelper(getApplicationContext());
+
+                CasaDBHelper casaDBHelper = new CasaDBHelper(getApplicationContext());
+                ContatoDBHelper contatoDBHelper = new ContatoDBHelper(getApplicationContext());
+                ContatoCasaDBHelper contatoCasaDBHelper = new ContatoCasaDBHelper(getApplicationContext());
 
                 try {
                     tokenCriptografado = crypt.bytesToHex(crypt.encrypt(token));
@@ -224,10 +238,15 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                     musicasBlocos = musicaBlocoDBHelper.listarTodosAEnviar(getApplicationContext());
                     temposBlocosRepertorios = tempoBlocoRepertorioDBHelper.listarTodosAEnviar(getApplicationContext());
 
+                    casas = casaDBHelper.listarTodosAEnviar(getApplicationContext());
+                    contatos = contatoDBHelper.listarTodosAEnviar(getApplicationContext());
+                    contatosCasas = contatoCasaDBHelper.listarTodosAEnviar(getApplicationContext());
+
                     // COMENTARIOS
                     int totalRegistros = comentarios.size() + musicas.size() + artistas.size() + eventos.size()
                             + musicasEventos.size() + projetos.size() + estilos.size() + musicasProjetos.size() + tiposEventos.size() + temposMusicasEventos.size()
-                            + repertorios.size() + musicasRepertorios.size() + blocosRepertorios.size() + musicasBlocos.size() + temposBlocosRepertorios.size();
+                            + repertorios.size() + musicasRepertorios.size() + blocosRepertorios.size() + musicasBlocos.size() + temposBlocosRepertorios.size()
+                            + casas.size() + contatos.size();
 
                     if(totalRegistros > 0){
                         String json = "{";
@@ -353,6 +372,28 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                                     json = json.concat(umMusica.toJson() + ",");
                                 } else {
                                     json = json.concat(umMusica.toJson());
+                                }
+
+                                cont++;
+
+                            }
+                        }
+
+                        // CASAS
+
+                        json = json.concat("],");
+
+                        json = json.concat("\"casas\":[");
+                        cont = 1;
+                        int qtdCasas = casas.size();
+
+                        if(qtdCasas > 0) {
+                            for (Casa umCasa : casas) {
+
+                                if (cont < qtdCasas) {
+                                    json = json.concat(umCasa.toJson() + ",");
+                                } else {
+                                    json = json.concat(umCasa.toJson());
                                 }
 
                                 cont++;
@@ -551,6 +592,50 @@ public class AtualizaDadosService extends Service implements ServerUtilsListener
                                     json = json.concat(umTempoBlocoRepertorio.toJson() + ",");
                                 } else {
                                     json = json.concat(umTempoBlocoRepertorio.toJson());
+                                }
+
+                                cont++;
+
+                            }
+                        }
+
+                        // CONTATOS
+
+                        json = json.concat("],");
+
+                        json = json.concat("\"contatos\":[");
+                        cont = 1;
+                        int qtdContatos = contatos.size();
+
+                        if(qtdContatos > 0) {
+                            for (Contato umContato : contatos) {
+
+                                if (cont < qtdContatos) {
+                                    json = json.concat(umContato.toJson() + ",");
+                                } else {
+                                    json = json.concat(umContato.toJson());
+                                }
+
+                                cont++;
+
+                            }
+                        }
+
+                        // CONTATOS CASAS
+
+                        json = json.concat("],");
+
+                        json = json.concat("\"contatos_casas\":[");
+                        cont = 1;
+                        int qtdContatosCasas = contatosCasas.size();
+
+                        if(qtdContatosCasas > 0) {
+                            for (ContatoCasa umContatoCasa : contatosCasas) {
+
+                                if (cont < qtdContatosCasas) {
+                                    json = json.concat(umContatoCasa.toJson() + ",");
+                                } else {
+                                    json = json.concat(umContatoCasa.toJson());
                                 }
 
                                 cont++;

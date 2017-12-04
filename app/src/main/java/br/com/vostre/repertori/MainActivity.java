@@ -51,6 +51,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import br.com.vostre.repertori.fragment.ArtistasFragment;
+import br.com.vostre.repertori.fragment.CasasFragment;
+import br.com.vostre.repertori.fragment.ContatosFragment;
 import br.com.vostre.repertori.fragment.EstilosFragment;
 import br.com.vostre.repertori.fragment.EventosFragment;
 import br.com.vostre.repertori.fragment.FragmentRepertorio;
@@ -373,6 +375,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.estilos:
                 fragmentClass = EstilosFragment.class;
                 setTitle("Estilos");
+                break;
+            case R.id.casas:
+                fragmentClass = CasasFragment.class;
+                setTitle("Casas de Show");
+                break;
+            case R.id.contatos:
+                fragmentClass = ContatosFragment.class;
+                setTitle("Contatos");
                 break;
             case R.id.artistas:
                 fragmentClass = ArtistasFragment.class;

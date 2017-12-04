@@ -23,6 +23,12 @@
         android:id="@+id/estilos"
         android:title="Estilos Musicais" />
     <item
+        android:id="@+id/casas"
+        android:title="Casas de Show" />
+    <item
+        android:id="@+id/contatos"
+        android:title="Contatos" />
+    <item
         android:id="@+id/artistas"
         android:title="Artistas" />
     <item

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.Casa;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Projeto;
 
@@ -21,7 +22,7 @@ public class EventoDBHelper extends SQLiteOpenHelper {
     private static final int DBVERSION = RepDBHelper.DBVERSION;
     private static final String DBNAME = RepDBHelper.DBNAME;
     public static final String DBCREATE = "CREATE TABLE evento (_id text primary key, nome text NOT NULL, " +
-            "data text NOT NULL, id_tipo_evento integer NOT NULL, id_projeto integer NOT NULL, status integer NOT NULL, data_cadastro text, " +
+            "data text NOT NULL, id_tipo_evento integer NOT NULL, id_projeto integer NOT NULL, id_casa integer, cache decimal(10,2), status integer NOT NULL, data_cadastro text, " +
             "data_recebimento text, ultima_alteracao text, slug text, enviado integer NOT NULL);";
     RepDBHelper repDBHelper;
 
@@ -71,6 +72,11 @@ public class EventoDBHelper extends SQLiteOpenHelper {
     public List<Evento> listarTodosPorData(Context context, Calendar data){
         EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getReadableDatabase());
         return adapter.listarTodosPorData(data);
+    }
+
+    public List<Evento> listarTodosPorCasa(Context context, Casa casa){
+        EventoDBAdapter adapter = new EventoDBAdapter(context, repDBHelper.getReadableDatabase());
+        return adapter.listarTodosPorCasa(casa);
     }
 
     public long salvarOuAtualizar(Context context, Evento evento){

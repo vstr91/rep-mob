@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -60,11 +63,12 @@ import br.com.vostre.repertori.model.dao.TempoMusicaEventoDBHelper;
 import br.com.vostre.repertori.utils.DataUtils;
 import br.com.vostre.repertori.utils.DialogUtils;
 import br.com.vostre.repertori.utils.DynamicListView;
+import br.com.vostre.repertori.utils.MoneyTextWatcher;
 import br.com.vostre.repertori.utils.SnackbarHelper;
 import br.com.vostre.repertori.utils.ToolbarUtils;
 
 public class EventoDetalheActivity extends BaseActivity implements AdapterView.OnItemClickListener,
-        ModalCadastroListener, ModalAdicionaListener, ButtonClickListener, DialogInterface.OnClickListener {
+        ModalCadastroListener, ModalAdicionaListener, ButtonClickListener, DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     TextView textViewNome;
     TextView textViewData;
@@ -79,6 +83,10 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
     ComentarioList adapterComentarios;
     Evento evento;
 
+    CheckBox checkBoxCache;
+    EditText editTextCache;
+    Button btnSalvarCache;
+
     List<Musica> musicas;
     List<ComentarioEvento> comentarios;
 
@@ -88,6 +96,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
     MusicaEvento musicaEvento;
     boolean qrCode = false;
+    boolean temCache = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,10 +122,16 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         btnAdicionaBlocoMusica = (Button) findViewById(R.id.btnAdicionaBlocoMusica);
         btnPDF = (Button) findViewById(R.id.btnPDF);
 
+        checkBoxCache = (CheckBox) findViewById(R.id.checkBoxCache);
+        editTextCache = (EditText) findViewById(R.id.editTextCache);
+        btnSalvarCache = (Button) findViewById(R.id.btnSalvarCache);
+
         btnComentario.setOnClickListener(this);
         btnAdicionaMusica.setOnClickListener(this);
         btnAdicionaBlocoMusica.setOnClickListener(this);
         btnPDF.setOnClickListener(this);
+        checkBoxCache.setOnCheckedChangeListener(this);
+        btnSalvarCache.setOnClickListener(this);
         evento = new Evento();
 
         Uri data = getIntent().getData();
@@ -149,6 +164,7 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
+
 
 
 
@@ -259,6 +275,32 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
                 modalListaRepertorio.show(getSupportFragmentManager(), "modalListaRepertorio");
                 break;
+            case R.id.btnSalvarCache:
+                String cacheString = editTextCache.getText().toString();
+                cacheString = cacheString.replace(",", ".");
+                cacheString = cacheString.replaceAll("[^\\d.]", "");
+
+                Double cache = Double.parseDouble(cacheString);
+
+                if(cache > 0){
+                    evento.setCache(cache);
+                    evento.setUltimaAlteracao(Calendar.getInstance());
+                    evento.setEnviado(-1);
+                    eventoDBHelper.salvarOuAtualizar(getApplicationContext(), evento);
+                    Toast.makeText(getApplicationContext(), "Cachê Salvo!", Toast.LENGTH_SHORT).show();
+                    editTextComentario.requestFocus();
+
+                    View view = this.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+
+                } else{
+                    Toast.makeText(getApplicationContext(), "Informe antes o valor do cachê!", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
         }
     }
 
@@ -319,6 +361,21 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
         } else{
             textViewNome.setText(evento.getNome());
             textViewData.setText(DataUtils.toString(evento.getData(), true));
+
+            if(evento.getCache() > 0){
+                editTextCache.setVisibility(View.VISIBLE);
+                btnSalvarCache.setVisibility(View.VISIBLE);
+                checkBoxCache.setChecked(true);
+                checkBoxCache.invalidate();
+                editTextCache.addTextChangedListener(new MoneyTextWatcher(editTextCache));
+                DecimalFormat format = new DecimalFormat("###.00");
+                String cache = format.format(evento.getCache());
+                editTextCache.setText(cache);
+            } else{
+                btnSalvarCache.setVisibility(View.INVISIBLE);
+                editTextCache.setVisibility(View.INVISIBLE);
+            }
+
             return true;
         }
 
@@ -384,4 +441,17 @@ public class EventoDetalheActivity extends BaseActivity implements AdapterView.O
 
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+        if(isChecked){
+            editTextCache.setVisibility(View.VISIBLE);
+            btnSalvarCache.setVisibility(View.VISIBLE);
+        } else{
+            evento.setCache(0);
+            editTextCache.setVisibility(View.INVISIBLE);
+            btnSalvarCache.setVisibility(View.INVISIBLE);
+        }
+
+    }
 }

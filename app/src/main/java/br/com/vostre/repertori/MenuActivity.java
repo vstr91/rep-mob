@@ -11,6 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -30,6 +34,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     Button btnMusicas;
     Button btnArtistas;
     Button btnEstilos;
+    Button btnCasas;
+    Button btnContatos;
     Button btnQR;
     Button btnInfos;
     Button btnAtualizar;
@@ -48,6 +54,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         btnMusicas = (Button) findViewById(R.id.btnMusicas);
         btnArtistas = (Button) findViewById(R.id.btnArtistas);
         btnEstilos = (Button) findViewById(R.id.btnEstilos);
+        btnCasas = (Button) findViewById(R.id.btnCasas);
+        btnContatos = (Button) findViewById(R.id.btnContatos);
         btnQR = (Button) findViewById(R.id.btnQR);
         btnInfos = (Button) findViewById(R.id.btnInfos);
         btnAtualizar = (Button) findViewById(R.id.btnAtualizar);
@@ -57,6 +65,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         btnMusicas.setOnClickListener(this);
         btnArtistas.setOnClickListener(this);
         btnEstilos.setOnClickListener(this);
+        btnCasas.setOnClickListener(this);
+        btnContatos.setOnClickListener(this);
         btnQR.setOnClickListener(this);
         btnInfos.setOnClickListener(this);
         btnAtualizar.setOnClickListener(this);
@@ -68,6 +78,18 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         ServiceUtils.iniciaServicoAtualizacao(true, getBaseContext());
+
+//        new GraphRequest(
+//                AccessToken.getCurrentAccessToken(),
+//                "/884240481696807/likes",
+//                null,
+//                HttpMethod.GET,
+//                new GraphRequest.Callback() {
+//                    public void onCompleted(GraphResponse response) {
+//                        System.out.println(response);
+//                    }
+//                }
+//        ).executeAsync();
 
     }
 
@@ -100,6 +122,16 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnEstilos:
                 i = new Intent(getBaseContext(), MainActivity.class);
                 i.putExtra("fragmento", R.id.estilos);
+                startActivity(i);
+                break;
+            case R.id.btnCasas:
+                i = new Intent(getBaseContext(), MainActivity.class);
+                i.putExtra("fragmento", R.id.casas);
+                startActivity(i);
+                break;
+            case R.id.btnContatos:
+                i = new Intent(getBaseContext(), MainActivity.class);
+                i.putExtra("fragmento", R.id.contatos);
                 startActivity(i);
                 break;
             case R.id.btnQR:

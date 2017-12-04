@@ -115,6 +115,14 @@
             android:label="@string/title_activity_artista_detalhe"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".CasaDetalheActivity"
+            android:label="@string/title_activity_casa_detalhe"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ContatoDetalheActivity"
+            android:label="@string/title_activity_contato_detalhe"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".LetraActivity"
             android:label="@string/title_activity_letra"
             android:screenOrientation="portrait" />

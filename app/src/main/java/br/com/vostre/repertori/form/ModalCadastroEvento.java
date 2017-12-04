@@ -24,6 +24,7 @@ import java.util.List;
 
 import br.com.vostre.repertori.R;
 import br.com.vostre.repertori.adapter.ArtistaList;
+import br.com.vostre.repertori.adapter.CasaList;
 import br.com.vostre.repertori.adapter.EventoList;
 import br.com.vostre.repertori.adapter.ProjetoList;
 import br.com.vostre.repertori.adapter.TipoEventoList;
@@ -31,12 +32,14 @@ import br.com.vostre.repertori.listener.ModalCadastroListener;
 import br.com.vostre.repertori.listener.ModalDataListener;
 import br.com.vostre.repertori.listener.ModalHoraListener;
 import br.com.vostre.repertori.model.Artista;
+import br.com.vostre.repertori.model.Casa;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Musica;
 import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.StatusMusica;
 import br.com.vostre.repertori.model.TipoEvento;
 import br.com.vostre.repertori.model.dao.ArtistaDBHelper;
+import br.com.vostre.repertori.model.dao.CasaDBHelper;
 import br.com.vostre.repertori.model.dao.EventoDBHelper;
 import br.com.vostre.repertori.model.dao.MusicaDBHelper;
 import br.com.vostre.repertori.model.dao.ProjetoDBHelper;
@@ -50,12 +53,13 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
     TextView textViewData;
     Spinner spinnerTipoEvento;
     Spinner spinnerProjeto;
+    Spinner spinnerCasa;
     Spinner spinnerStatus;
     Button btnSalvar;
     Button btnFechar;
     Button btnData;
 
-    TextView textViewLabelStatus;
+    TextView textViewLabelLocal;
 
     ModalCadastroListener listener;
 
@@ -63,8 +67,10 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
     Evento evento;
     TipoEvento tipoEvento;
     Projeto projeto;
+    Casa casa;
     List<TipoEvento> tiposEvento;
     List<Projeto> projetos;
+    List<Casa> casas;
     List<StatusMusica> statusList;
 
     Calendar data;
@@ -106,6 +112,7 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
 
         TipoEventoDBHelper tipoEventoDBHelper;
         ProjetoDBHelper projetoDBHelper;
+        CasaDBHelper casaDBHelper;
 
         View view = inflater.inflate(R.layout.modal_cadastro_evento, container, false);
 
@@ -113,8 +120,10 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
 
         editTextNome = (EditText) view.findViewById(R.id.editTextNome);
         textViewData = (TextView) view.findViewById(R.id.textViewData);
+        textViewLabelLocal = (TextView) view.findViewById(R.id.textViewLabelLocal);
         spinnerTipoEvento = (Spinner) view.findViewById(R.id.spinnerTipoEvento);
         spinnerProjeto = (Spinner) view.findViewById(R.id.spinnerProjeto);
+        spinnerCasa = (Spinner) view.findViewById(R.id.spinnerCasa);
         spinnerStatus = (Spinner) view.findViewById(R.id.spinnerStatus);
         btnSalvar = (Button) view.findViewById(R.id.btnSalvar);
         btnFechar = (Button) view.findViewById(R.id.btnFechar);
@@ -127,6 +136,10 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
         projetoDBHelper = new ProjetoDBHelper(getContext());
         projetos = projetoDBHelper.listarTodosAtivos(getContext());
         ProjetoList adapterProjeto = new ProjetoList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, projetos, false);
+
+        casaDBHelper = new CasaDBHelper(getContext());
+        casas = casaDBHelper.listarTodos(getContext());
+        CasaList adapterCasa = new CasaList(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, casas);
 
         statusList = new ArrayList<>();
 
@@ -150,6 +163,9 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
         spinnerProjeto.setAdapter(adapterProjeto);
         spinnerProjeto.setOnItemSelectedListener(this);
 
+        spinnerCasa.setAdapter(adapterCasa);
+        spinnerCasa.setOnItemSelectedListener(this);
+
         spinnerStatus.setAdapter(statusAdapter);
 
         btnSalvar.setOnClickListener(this);
@@ -170,6 +186,10 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
             Projeto projeto = getEvento().getProjeto();
             int indexProj = projetos.indexOf(projeto);
             spinnerProjeto.setSelection(indexProj);
+
+            Casa casa = getEvento().getCasa();
+            int indexCasa = casas.indexOf(casa);
+            spinnerCasa.setSelection(indexCasa);
 
             switch(evento.getStatus()){
                 case 0:
@@ -223,6 +243,7 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
                         evento.setData(data);
                         evento.setTipoEvento(tipoEvento);
                         evento.setProjeto(projeto);
+                        evento.setCasa(casa);
                         evento.setUltimaAlteracao(Calendar.getInstance());
                         evento.setEnviado(-1);
 
@@ -234,6 +255,7 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
                         evento.setData(data);
                         evento.setTipoEvento(tipoEvento);
                         evento.setProjeto(projeto);
+                        evento.setCasa(casa);
                         evento.setDataCadastro(Calendar.getInstance());
                         evento.setUltimaAlteracao(Calendar.getInstance());
                         evento.setEnviado(-1);
@@ -274,8 +296,20 @@ public class ModalCadastroEvento extends android.support.v4.app.DialogFragment i
 
         if(parent.getSelectedItem() instanceof TipoEvento){
             tipoEvento = tiposEvento.get(position);
-        } else{
+
+            if(tipoEvento.getNome().equals("Ensaio")){
+                spinnerCasa.setVisibility(View.GONE);
+                casa = null;
+                textViewLabelLocal.setVisibility(View.GONE);
+            } else{
+                spinnerCasa.setVisibility(View.VISIBLE);
+                textViewLabelLocal.setVisibility(View.VISIBLE);
+            }
+
+        } else if(parent.getSelectedItem() instanceof Projeto){
             projeto = projetos.get(position);
+        } else{
+            casa = casas.get(position);
         }
 
 

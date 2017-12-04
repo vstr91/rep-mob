@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.vostre.repertori.model.Casa;
 import br.com.vostre.repertori.model.Evento;
 import br.com.vostre.repertori.model.Projeto;
 import br.com.vostre.repertori.model.TipoEvento;
@@ -47,6 +48,14 @@ public class EventoDBAdapter {
         cv.put("status", evento.getStatus());
         cv.put("enviado", evento.getEnviado());
 
+        if(evento.getCasa() != null){
+            cv.put("id_casa", evento.getCasa().getId());
+        }
+
+        if(evento.getCache() > 0){
+            cv.put("cache", evento.getCache());
+        }
+
         if(evento.getDataCadastro() != null){
             cv.put("data_cadastro", DataUtils.dataParaBanco(evento.getDataCadastro()));
         }
@@ -76,13 +85,14 @@ public class EventoDBAdapter {
 
     public List<Evento> listarTodos(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, id_projeto, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug FROM evento WHERE status = 0", null);
+                "ultima_alteracao, slug, id_casa, cache FROM evento WHERE status = 0", null);
         List<Evento> eventos = new ArrayList<Evento>();
 
         if(cursor.moveToFirst()){
 
             TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
             ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(context);
+            CasaDBHelper casaDBHelper = new CasaDBHelper(context);
 
             do{
                 Evento umEvento = new Evento();
@@ -115,6 +125,15 @@ public class EventoDBAdapter {
                 umEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(8)));
                 umEvento.setSlug(cursor.getString(9));
 
+                if(cursor.getString(10) != null){
+                    Casa casa = new Casa();
+                    casa.setId(cursor.getString(10));
+                    casa = casaDBHelper.carregar(context, casa);
+                    umEvento.setCasa(casa);
+                }
+
+                umEvento.setCache(cursor.getDouble(11));
+
                 eventos.add(umEvento);
             } while (cursor.moveToNext());
         }
@@ -127,13 +146,14 @@ public class EventoDBAdapter {
 
     public List<Evento> listarTodosAEnviar(){
         Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug, id_projeto FROM evento WHERE enviado = -1", null);
+                "ultima_alteracao, slug, id_projeto, id_casa, cache FROM evento WHERE enviado = -1", null);
         List<Evento> eventos = new ArrayList<Evento>();
 
         if(cursor.moveToFirst()){
 
             TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
             ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(context);
+            CasaDBHelper casaDBHelper = new CasaDBHelper(context);
 
             do{
                 Evento umEvento = new Evento();
@@ -165,6 +185,15 @@ public class EventoDBAdapter {
                 projeto.setId(cursor.getString(9));
                 projeto = projetoDBHelper.carregar(context, projeto);
                 umEvento.setProjeto(projeto);
+
+                if(cursor.getString(10) != null){
+                    Casa casa = new Casa();
+                    casa.setId(cursor.getString(10));
+                    casa = casaDBHelper.carregar(context, casa);
+                    umEvento.setCasa(casa);
+                }
+
+                umEvento.setCache(cursor.getDouble(11));
 
                 eventos.add(umEvento);
             } while (cursor.moveToNext());
@@ -366,9 +395,55 @@ public class EventoDBAdapter {
         return eventos;
     }
 
+    public List<Evento> listarTodosPorCasa(Casa casa){
+
+        Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
+                        "ultima_alteracao, slug FROM evento WHERE id_casa = ? AND status != 2 ORDER BY data ASC",
+                new String[]{casa.getId()});
+        List<Evento> eventos = new ArrayList<Evento>();
+
+        if(cursor.moveToFirst()){
+
+            TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
+
+            do{
+                Evento umEvento = new Evento();
+                umEvento.setId(cursor.getString(0));
+
+                umEvento.setNome(cursor.getString(1));
+                umEvento.setData(DataUtils.bancoParaData(cursor.getString(2)));
+
+                TipoEvento tipoEvento = new TipoEvento();
+                tipoEvento.setId(cursor.getString(3));
+                tipoEvento = tipoEventoDBHelper.carregar(context, tipoEvento);
+                umEvento.setTipoEvento(tipoEvento);
+
+                umEvento.setStatus(cursor.getInt(4));
+
+                if(cursor.getString(5) != null){
+                    umEvento.setDataCadastro(DataUtils.bancoParaData(cursor.getString(5)));
+                }
+
+                if(cursor.getString(6) != null){
+                    umEvento.setDataRecebimento(DataUtils.bancoParaData(cursor.getString(6)));
+                }
+
+                umEvento.setUltimaAlteracao(DataUtils.bancoParaData(cursor.getString(7)));
+                umEvento.setSlug(cursor.getString(8));
+
+                eventos.add(umEvento);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+
+        return eventos;
+    }
+
     public Evento carregar(Evento evento){
         Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug, id_projeto FROM evento WHERE _id = ?", new String[]{evento.getId()});
+                "ultima_alteracao, slug, id_projeto, id_casa, cache FROM evento WHERE _id = ?", new String[]{evento.getId()});
 
         Evento umEvento = null;
 
@@ -376,6 +451,7 @@ public class EventoDBAdapter {
 
             TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
             ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(context);
+            CasaDBHelper casaDBHelper = new CasaDBHelper(context);
 
             do{
                 umEvento = new Evento();
@@ -406,6 +482,15 @@ public class EventoDBAdapter {
                 projeto.setId(cursor.getString(9));
                 projeto = projetoDBHelper.carregar(context, projeto);
                 umEvento.setProjeto(projeto);
+
+                if(cursor.getString(10) != null){
+                    Casa casa = new Casa();
+                    casa.setId(cursor.getString(10));
+                    casa = casaDBHelper.carregar(context, casa);
+                    umEvento.setCasa(casa);
+                }
+
+                umEvento.setCache(cursor.getDouble(11));
 
             } while (cursor.moveToNext());
         }
@@ -418,7 +503,7 @@ public class EventoDBAdapter {
 
     public Evento carregarPorSlug(Evento evento){
         Cursor cursor = database.rawQuery("SELECT _id, nome, data, id_tipo_evento, status, data_cadastro, data_recebimento, " +
-                "ultima_alteracao, slug, id_projeto FROM evento WHERE slug = ?", new String[]{evento.getSlug()});
+                "ultima_alteracao, slug, id_projeto, id_casa, cache FROM evento WHERE slug = ?", new String[]{evento.getSlug()});
 
         Evento umEvento = null;
 
@@ -426,6 +511,7 @@ public class EventoDBAdapter {
 
             TipoEventoDBHelper tipoEventoDBHelper = new TipoEventoDBHelper(context);
             ProjetoDBHelper projetoDBHelper = new ProjetoDBHelper(context);
+            CasaDBHelper casaDBHelper = new CasaDBHelper(context);
 
             do{
                 umEvento = new Evento();
@@ -456,6 +542,15 @@ public class EventoDBAdapter {
                 projeto.setId(cursor.getString(9));
                 projeto = projetoDBHelper.carregar(context, projeto);
                 umEvento.setProjeto(projeto);
+
+                if(cursor.getString(10) != null){
+                    Casa casa = new Casa();
+                    casa.setId(cursor.getString(10));
+                    casa = casaDBHelper.carregar(context, casa);
+                    umEvento.setCasa(casa);
+                }
+
+                umEvento.setCache(cursor.getDouble(11));
 
             } while (cursor.moveToNext());
         }

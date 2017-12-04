@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import br.com.vostre.repertori.model.ContatoCasa;
 import br.com.vostre.repertori.model.MusicaBloco;
 import br.com.vostre.repertori.model.MusicaRepertorio;
 import br.com.vostre.repertori.model.Repertorio;
@@ -15,7 +16,7 @@ import br.com.vostre.repertori.model.TipoEvento;
  */
 public class RepDBHelper extends SQLiteOpenHelper {
 
-    public static final int DBVERSION = 2;
+    public static final int DBVERSION = 3;
     public static final String DBNAME = "rep.db";
 
     public RepDBHelper(Context context){
@@ -44,6 +45,9 @@ public class RepDBHelper extends SQLiteOpenHelper {
         db.execSQL(BlocoRepertorioDBHelper.DBCREATE);
         db.execSQL(MusicaBlocoDBHelper.DBCREATE);
         db.execSQL(TempoBlocoRepertorioDBHelper.DBCREATE);
+        db.execSQL(CasaDBHelper.DBCREATE);
+        db.execSQL(ContatoDBHelper.DBCREATE);
+        db.execSQL(ContatoCasaDBHelper.DBCREATE);
 
         db.execSQL(ParametroDBHelper.DBPOPULATE);
 
@@ -72,6 +76,30 @@ public class RepDBHelper extends SQLiteOpenHelper {
                 db.execSQL("DROP TABLE IF EXISTS bloco_repertorio");
                 db.execSQL("DROP TABLE IF EXISTS musica_bloco");
                 db.execSQL("DROP TABLE IF EXISTS tempo_bloco_repertorio");
+                db.execSQL("DROP TABLE IF EXISTS casa");
+                db.execSQL("DROP TABLE IF EXISTS contato");
+                db.execSQL("DROP TABLE IF EXISTS contato_casa");
+                onCreate(db);
+            case 2:
+                db.execSQL("DROP TABLE IF EXISTS artista");
+                db.execSQL("DROP TABLE IF EXISTS tipo_evento");
+                db.execSQL("DROP TABLE IF EXISTS evento");
+                db.execSQL("DROP TABLE IF EXISTS musica");
+                db.execSQL("DROP TABLE IF EXISTS musica_evento");
+                db.execSQL("DROP TABLE IF EXISTS comentario_evento");
+                db.execSQL("DROP TABLE IF EXISTS parametro");
+                db.execSQL("DROP TABLE IF EXISTS musica_projeto");
+                db.execSQL("DROP TABLE IF EXISTS projeto");
+                db.execSQL("DROP TABLE IF EXISTS estilo");
+                db.execSQL("DROP TABLE IF EXISTS tempo_musica_evento");
+                db.execSQL("DROP TABLE IF EXISTS repertorio");
+                db.execSQL("DROP TABLE IF EXISTS musica_repertorio");
+                db.execSQL("DROP TABLE IF EXISTS bloco_repertorio");
+                db.execSQL("DROP TABLE IF EXISTS musica_bloco");
+                db.execSQL("DROP TABLE IF EXISTS tempo_bloco_repertorio");
+                db.execSQL("DROP TABLE IF EXISTS casa");
+                db.execSQL("DROP TABLE IF EXISTS contato");
+                db.execSQL("DROP TABLE IF EXISTS contato_casa");
                 onCreate(db);
                 break;
         }

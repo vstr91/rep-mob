@@ -14,7 +14,10 @@ import java.text.ParseException;
 import br.com.vostre.repertori.listener.UpdateTaskListener;
 import br.com.vostre.repertori.model.Artista;
 import br.com.vostre.repertori.model.BlocoRepertorio;
+import br.com.vostre.repertori.model.Casa;
 import br.com.vostre.repertori.model.ComentarioEvento;
+import br.com.vostre.repertori.model.Contato;
+import br.com.vostre.repertori.model.ContatoCasa;
 import br.com.vostre.repertori.model.Estilo;
 import br.com.vostre.repertori.model.EstiloMusica;
 import br.com.vostre.repertori.model.Evento;
@@ -115,6 +118,10 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             JSONArray musicasBlocos = jObj.getJSONArray("musicas_blocos_repertorios");
             JSONArray temposBlocosRepertorios = jObj.getJSONArray("tempos_blocos_repertorios");
 
+            JSONArray casas = jObj.getJSONArray("casas");
+            JSONArray contatos = jObj.getJSONArray("contatos");
+            JSONArray contatosCasas = jObj.getJSONArray("contatos_casas");
+
             // Objetos que contem os metodos de atualizacao
             Artista artista = new Artista();
             TipoEvento tipoEvento = new TipoEvento();
@@ -135,6 +142,10 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
             BlocoRepertorio blocoRepertorio = new BlocoRepertorio();
             MusicaBloco musicaBloco = new MusicaBloco();
             TempoBlocoRepertorio tempoBlocoRepertorio = new TempoBlocoRepertorio();
+
+            Casa casa = new Casa();
+            Contato contato = new Contato();
+            ContatoCasa contatoCasa = new ContatoCasa();
 
             RepDBHelper repDBHelper = new RepDBHelper(ctx);
 
@@ -175,6 +186,22 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
                 //mostraProgressBar(progressDialog, qtdTiposEvento, "Atualizando Tipos de Evento...");
 
                 projeto.atualizarDados(projetos, qtdProjetos, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdTiposEvento+ " projeto(s) atualizado(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Eventos");
+            } else{
+                publishProgress("Projetos já atualizados."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Eventos");
+            }
+
+            int qtdCasas = casas.length();
+
+            if(qtdCasas > 0){
+                //mostraProgressBar(progressDialog, qtdTiposEvento, "Atualizando Tipos de Evento...");
+
+                casa.atualizarDados(casas, qtdCasas, progressDialog, ctx);
 
                 //escondeProgressBar(progressDialog);
 
@@ -369,6 +396,38 @@ public class UpdateTask extends AsyncTask<String, String, Boolean> {
                 //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
 
                 tempoBlocoRepertorio.atualizarDados(temposBlocosRepertorios, qtdTemposBlocosRepertorios, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdEventos+ " musica(s)-repertorio atualizada(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            } else{
+                publishProgress("Músicas-Repertório já atualizadas."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            }
+
+            int qtdContatos = contatos.length();
+
+            if(qtdContatos > 0){
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+
+                contato.atualizarDados(contatos, qtdContatos, progressDialog, ctx);
+
+                //escondeProgressBar(progressDialog);
+
+                publishProgress(qtdEventos+ " musica(s)-repertorio atualizada(s)."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            } else{
+                publishProgress("Músicas-Repertório já atualizadas."+System.getProperty("line.separator")
+                        +System.getProperty("line.separator"),"Atualizando Estilos");
+            }
+
+            int qtdContatosCasas = contatosCasas.length();
+
+            if(qtdContatosCasas > 0){
+                //mostraProgressBar(progressDialog, qtdEventos, "Atualizando Eventos...");
+
+                contatoCasa.atualizarDados(contatosCasas, qtdContatosCasas, progressDialog, ctx);
 
                 //escondeProgressBar(progressDialog);
 

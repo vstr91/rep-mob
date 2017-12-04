@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_casa_detalhe"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="br.com.vostre.repertori.CasaDetalheActivity">
+
+    <LinearLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/toolbar"></include>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/textViewNome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewMedia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Eventos"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/listViewEventos"
+                android:layout_width="match_parent"
+                android:background="@drawable/lista"
+                android:layout_height="0dp"
+                android:layout_weight="10" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nenhum evento encontrado"
+                android:id="@+id/textViewListaVazia"
+                android:padding="5dp"
+                android:gravity="center"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Contatos"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/listViewContatos"
+                android:layout_width="match_parent"
+                android:background="@drawable/lista"
+                android:layout_height="0dp"
+                android:layout_weight="10" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nenhum contato encontrado"
+                android:id="@+id/textViewListaContatoVazia"
+                android:padding="5dp"
+                android:gravity="center"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnAdicionaContato"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/botao"
+                android:text="Adicionar Contato" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
